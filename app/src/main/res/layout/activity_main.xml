@@ -24,24 +24,51 @@
         android:layout_height="0dp"
         android:visibility="gone"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/tabLayout"
+        app:layout_constraintBottom_toTopOf="@id/bottomBar"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- Tab Layout für Planet-Navigation -->
-    <com.google.android.material.tabs.TabLayout
-        android:id="@+id/tabLayout"
+    <!-- Bottom Navigation Bar -->
+    <LinearLayout
+        android:id="@+id/bottomBar"
         android:layout_width="0dp"
-        android:layout_height="40dp"
+        android:layout_height="48dp"
+        android:orientation="horizontal"
         android:background="#16213e"
         android:visibility="gone"
-        app:tabTextColor="#ffffff"
-        app:tabSelectedTextColor="#64b5f6"
-        app:tabIndicatorColor="#64b5f6"
-        app:tabMode="scrollable"
-        app:tabMinWidth="80dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <!-- Tab Layout für Planeten (scrollbar) -->
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tabLayout"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            app:tabTextColor="#ffffff"
+            app:tabSelectedTextColor="#64b5f6"
+            app:tabIndicatorColor="#64b5f6"
+            app:tabMode="scrollable"
+            app:tabMinWidth="80dp" />
+
+        <!-- Separator -->
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="#2a3f5f" />
+
+        <!-- Settings Button -->
+        <ImageButton
+            android:id="@+id/btnSettings"
+            android:layout_width="56dp"
+            android:layout_height="match_parent"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@android:drawable/ic_menu_manage"
+            android:tint="#ffffff"
+            android:contentDescription="Einstellungen" />
+
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#0a0e27"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- Header -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="24dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Einstellungen"
+                android:textSize="24sp"
+                android:textColor="#ffffff"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/btnClose"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Schließen"
+                android:textColor="#ffffff"
+                android:backgroundTint="#64b5f6" />
+
+        </LinearLayout>
+
+        <!-- Galaxy Formatter Section -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Galaxy-Ansicht"
+            android:textSize="18sp"
+            android:textColor="#64b5f6"
+            android:textStyle="bold"
+            android:layout_marginBottom="8dp" />
+
+        <!-- Galaxy Formatter Toggle -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="16dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Mobile Galaxy-Ansicht aktivieren"
+                android:textSize="14sp"
+                android:textColor="#ffffff" />
+
+            <Switch
+                android:id="@+id/switchGalaxyFormatter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="true" />
+
+        </LinearLayout>
+
+        <!-- Delay Slider -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Lade-Verzögerung (Wartezeit bis Formatierung)"
+            android:textSize="14sp"
+            android:textColor="#ffffff"
+            android:layout_marginBottom="4dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="16dp">
+
+            <SeekBar
+                android:id="@+id/seekBarDelay"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:max="10"
+                android:progress="4"
+                android:progressTint="#64b5f6"
+                android:thumbTint="#64b5f6" />
+
+            <TextView
+                android:id="@+id/tvDelayValue"
+                android:layout_width="70dp"
+                android:layout_height="wrap_content"
+                android:text="200ms"
+                android:textSize="14sp"
+                android:textColor="#ffffff"
+                android:gravity="end"
+                android:layout_marginStart="8dp" />
+
+        </LinearLayout>
+
+        <!-- Row Height Slider -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Zeilenhöhe"
+            android:textSize="14sp"
+            android:textColor="#ffffff"
+            android:layout_marginBottom="4dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="24dp">
+
+            <SeekBar
+                android:id="@+id/seekBarRowHeight"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:max="20"
+                android:progress="4"
+                android:progressTint="#64b5f6"
+                android:thumbTint="#64b5f6" />
+
+            <TextView
+                android:id="@+id/tvRowHeightValue"
+                android:layout_width="70dp"
+                android:layout_height="wrap_content"
+                android:text="16px"
+                android:textSize="14sp"
+                android:textColor="#ffffff"
+                android:gravity="end"
+                android:layout_marginStart="8dp" />
+
+        </LinearLayout>
+
+        <!-- Info Section -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="App Info"
+            android:textSize="18sp"
+            android:textColor="#64b5f6"
+            android:textStyle="bold"
+            android:layout_marginBottom="8dp" />
+
+        <TextView
+            android:id="@+id/tvVersion"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Version 1.0"
+            android:textSize="14sp"
+            android:textColor="#ffffff"
+            android:layout_marginBottom="24dp" />
+
+        <!-- Daten Section -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Daten"
+            android:textSize="18sp"
+            android:textColor="#64b5f6"
+            android:textStyle="bold"
+            android:layout_marginBottom="8dp" />
+
+        <Button
+            android:id="@+id/btnClearData"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Planeten-Cache löschen (Neu einloggen)"
+            android:textColor="#ffffff"
+            android:backgroundTint="#e53935"
+            android:layout_marginBottom="24dp" />
+
+        <!-- Platzhalter für zukünftige Settings -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Weitere Einstellungen"
+            android:textSize="18sp"
+            android:textColor="#64b5f6"
+            android:textStyle="bold"
+            android:layout_marginBottom="8dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Hier werden später weitere Einstellungen hinzugefügt:\n\n• Push-Benachrichtigungen\n• Auto-Refresh\n• Cache-Verwaltung\n• Design-Optionen"
+            android:textSize="14sp"
+            android:textColor="#aaaaaa"
+            android:lineSpacingExtra="4dp" />
+
+    </LinearLayout>
+
+</ScrollView>

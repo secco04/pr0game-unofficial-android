@@ -76,6 +76,19 @@ class PlanetWebViewFragment : Fragment() {
 
                 // Injiziere JavaScript um cp Parameter zu erzwingen
                 injectPlanetLock()
+
+                // Injiziere Galaxy Formatter wenn aktiviert und auf Galaxy-Seite
+                if (url?.contains("page=galaxy") == true) {
+                    val prefs = requireContext().getSharedPreferences("pr0game_settings", android.content.Context.MODE_PRIVATE)
+                    val isEnabled = prefs.getBoolean("galaxy_formatter_enabled", true)
+                    val delay = prefs.getInt("galaxy_formatter_delay", 200).toLong()
+
+                    if (isEnabled) {
+                        webView.postDelayed({
+                            injectGalaxyFormatter()
+                        }, delay)
+                    }
+                }
             }
 
             override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
@@ -161,6 +174,25 @@ class PlanetWebViewFragment : Fragment() {
         """.trimIndent()
 
         webView.evaluateJavascript(js, null)
+    }
+
+    /**
+     * Injiziert Galaxy Formatter für mobile Ansicht
+     */
+    private fun injectGalaxyFormatter() {
+        val prefs = requireContext().getSharedPreferences("pr0game_settings", android.content.Context.MODE_PRIVATE)
+        val rowHeight = prefs.getInt("galaxy_row_height", 20)
+
+        android.util.Log.d("GalaxyFormatter", "Loading row height from prefs: ${rowHeight}px")
+
+        val script = GalaxyFormatter.getFormatterScript(rowHeight)
+
+        // Debug: Log dass wir injizieren
+        android.util.Log.d("GalaxyFormatter", "Injecting Galaxy Formatter Script with row height: ${rowHeight}px")
+
+        webView.evaluateJavascript(script) { result ->
+            android.util.Log.d("GalaxyFormatter", "Script executed: $result")
+        }
     }
 
     fun canGoBack(): Boolean = if (::webView.isInitialized) webView.canGoBack() else false

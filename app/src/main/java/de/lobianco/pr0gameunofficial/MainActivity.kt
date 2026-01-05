@@ -2,10 +2,13 @@ package de.lobianco.pr0gameunofficial
 
 import android.os.Bundle
 import android.view.KeyEvent
+import android.view.View
 import android.webkit.CookieManager
+import android.widget.ImageButton
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
@@ -14,9 +17,12 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var viewPager: ViewPager2
     private lateinit var tabLayout: TabLayout
+    private lateinit var bottomBar: View
+    private lateinit var btnSettings: ImageButton
     private lateinit var adapter: PlanetPagerAdapter
 
     private var planets: List<Planet> = emptyList()
+    private var isSettingsOpen = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,6 +33,13 @@ class MainActivity : AppCompatActivity() {
 
         viewPager = findViewById(R.id.viewPager)
         tabLayout = findViewById(R.id.tabLayout)
+        bottomBar = findViewById(R.id.bottomBar)
+        btnSettings = findViewById(R.id.btnSettings)
+
+        // Settings Button
+        btnSettings.setOnClickListener {
+            openSettings()
+        }
 
         // Lade Planeten aus SharedPreferences
         loadPlanets()
@@ -59,7 +72,7 @@ class MainActivity : AppCompatActivity() {
         }.attach()
 
         viewPager.visibility = ViewPager2.VISIBLE
-        tabLayout.visibility = TabLayout.VISIBLE
+        bottomBar.visibility = View.VISIBLE
     }
 
     fun onPlanetsLoaded(planetList: List<Planet>) {
@@ -81,6 +94,28 @@ class MainActivity : AppCompatActivity() {
         setupViewPager()
     }
 
+    private fun openSettings() {
+        if (isSettingsOpen) return
+
+        isSettingsOpen = true
+        viewPager.visibility = View.GONE
+
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.container, SettingsFragment())
+            .commit()
+    }
+
+    fun closeSettings() {
+        isSettingsOpen = false
+        viewPager.visibility = View.VISIBLE
+
+        supportFragmentManager.findFragmentById(R.id.container)?.let {
+            supportFragmentManager.beginTransaction()
+                .remove(it)
+                .commit()
+        }
+    }
+
     private fun setupInsets() {
         val rootView = findViewById<androidx.constraintlayout.widget.ConstraintLayout>(R.id.root)
         ViewCompat.setOnApplyWindowInsetsListener(rootView) { v, insets ->
@@ -96,11 +131,20 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
-        if (keyCode == KeyEvent.KEYCODE_BACK && ::adapter.isInitialized) {
-            val currentFragment = adapter.getFragmentAtPosition(viewPager.currentItem)
-            if (currentFragment?.canGoBack() == true) {
-                currentFragment.goBack()
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            // Settings schließen wenn offen
+            if (isSettingsOpen) {
+                closeSettings()
                 return true
+            }
+
+            // Sonst WebView zurück
+            if (::adapter.isInitialized) {
+                val currentFragment = adapter.getFragmentAtPosition(viewPager.currentItem)
+                if (currentFragment?.canGoBack() == true) {
+                    currentFragment.goBack()
+                    return true
+                }
             }
         }
         return super.onKeyDown(keyCode, event)

@@ -1,0 +1,4 @@
+<!-- res/values/dimens.xml -->
+<resources>
+    <dimen name="swipe_icon_size">48dp</dimen>
+</resources>

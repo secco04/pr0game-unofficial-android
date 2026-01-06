@@ -11,11 +11,13 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.ProgressBar
 import androidx.fragment.app.Fragment
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 
 class PlanetWebViewFragment : Fragment() {
 
     private lateinit var webView: WebView
     private lateinit var progressBar: ProgressBar
+    private lateinit var swipeRefresh: SwipeRefreshLayout
     private lateinit var planet: Planet
 
     companion object {
@@ -55,13 +57,35 @@ class PlanetWebViewFragment : Fragment() {
         try {
             webView = view.findViewById(R.id.webview)
             progressBar = view.findViewById(R.id.progressBar)
+            swipeRefresh = view.findViewById(R.id.swipeRefresh)
 
+            setupSwipeRefresh()
             setupWebView()
 
             // Lade Planet Overview
             webView.loadUrl(planet.getUrl("overview"))
         } catch (e: Exception) {
             e.printStackTrace()
+        }
+    }
+
+    private fun setupSwipeRefresh() {
+        // Farben für den Refresh-Indicator
+        swipeRefresh.setColorSchemeColors(
+            0xFF64b5f6.toInt(), // Blau
+            0xFF4FC3F7.toInt(), // Hell-Blau
+            0xFF29B6F6.toInt()  // Mittel-Blau
+        )
+        swipeRefresh.setProgressBackgroundColorSchemeColor(0xFF16213e.toInt())
+
+        // Nur aktivieren wenn ViewPager nicht gesperrt ist
+        swipeRefresh.setOnRefreshListener {
+            webView.reload()
+        }
+
+        // Deaktiviere Swipe-to-Refresh wenn WebView nicht ganz oben ist
+        webView.viewTreeObserver.addOnScrollChangedListener {
+            swipeRefresh.isEnabled = webView.scrollY == 0
         }
     }
 
@@ -73,6 +97,7 @@ class PlanetWebViewFragment : Fragment() {
 
             override fun onPageFinished(view: WebView?, url: String?) {
                 progressBar.visibility = View.GONE
+                swipeRefresh.isRefreshing = false // Stop refresh animation
 
                 // Injiziere JavaScript um cp Parameter zu erzwingen
                 injectPlanetLock()

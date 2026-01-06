@@ -192,9 +192,10 @@ Aktuell ist sie noch nicht genehmigt!!!
 - Alle Contributors die geholfen haben
 - Die Android Community
 
-
+---
+[Buy me a Coffee](https://www.buymeacoffee.com/derbutcher)
+---
 ---
 
 **Viel Spaß beim Spielen! 🚀👾**
 
-*Made with ❤️ by the pr0game community*

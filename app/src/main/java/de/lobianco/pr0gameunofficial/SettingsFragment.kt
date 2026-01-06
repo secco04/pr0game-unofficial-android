@@ -35,6 +35,7 @@ class SettingsFragment : Fragment() {
 
         // Galaxy Formatter Settings
         val switchGalaxyFormatter: Switch = view.findViewById(R.id.switchGalaxyFormatter)
+        val switchGalaxyNavigation: Switch = view.findViewById(R.id.switchGalaxyNavigation)
         val seekBarDelay: SeekBar = view.findViewById(R.id.seekBarDelay)
         val tvDelayValue: TextView = view.findViewById(R.id.tvDelayValue)
         val seekBarRowHeight: SeekBar = view.findViewById(R.id.seekBarRowHeight)
@@ -51,16 +52,18 @@ class SettingsFragment : Fragment() {
 
         // Lade gespeicherte Settings
         val galaxyFormatterEnabled = prefs.getBoolean("galaxy_formatter_enabled", true)
+        val galaxyNavigationEnabled = prefs.getBoolean("galaxy_navigation_enabled", true)
         val delayMs = prefs.getInt("galaxy_formatter_delay", 200)
         val rowHeight = prefs.getInt("galaxy_row_height", 20)
 
         switchGalaxyFormatter.isChecked = galaxyFormatterEnabled
+        switchGalaxyNavigation.isChecked = galaxyNavigationEnabled
         seekBarDelay.progress = delayMs / 50 // 0-500ms in 50ms Schritten
         tvDelayValue.text = "${delayMs}ms"
         seekBarRowHeight.progress = rowHeight - 12 // 12-32px, also 20-12=8
         tvRowHeightValue.text = "${rowHeight}px"
 
-        android.util.Log.d("Settings", "Loaded: formatter=$galaxyFormatterEnabled, delay=$delayMs, rowHeight=$rowHeight")
+        android.util.Log.d("Settings", "Loaded: formatter=$galaxyFormatterEnabled, navigation=$galaxyNavigationEnabled, delay=$delayMs, rowHeight=$rowHeight")
 
         // Enable/Disable SeekBars basierend auf Toggle
         seekBarDelay.isEnabled = galaxyFormatterEnabled
@@ -72,6 +75,15 @@ class SettingsFragment : Fragment() {
             seekBarDelay.isEnabled = isChecked
             seekBarRowHeight.isEnabled = isChecked
             android.util.Log.d("Settings", "Galaxy Formatter: $isChecked")
+        }
+
+        // Galaxy Navigation Toggle
+        switchGalaxyNavigation.setOnCheckedChangeListener { _, isChecked ->
+            prefs.edit().putBoolean("galaxy_navigation_enabled", isChecked).apply()
+            android.util.Log.d("Settings", "Galaxy Navigation: $isChecked")
+
+            // Benachrichtige MainActivity über Änderung
+            (activity as? MainActivity)?.onGalaxyNavigationSettingChanged(isChecked)
         }
 
         // Delay SeekBar

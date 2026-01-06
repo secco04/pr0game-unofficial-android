@@ -24,17 +24,21 @@ class MainActivity : AppCompatActivity() {
     private var planets: List<Planet> = emptyList()
     private var isSettingsOpen = false
     private var isSwipeLocked = false
+    private var backPressedTime: Long = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        // Fullscreen Mode - Navigation Bar ausblenden (nach setContentView!)
+        enableEdgeToEdge()
 
         setupInsets()
         setupCookies()
 
         viewPager = findViewById(R.id.viewPager)
         tabLayout = findViewById(R.id.tabLayout)
-        bottomButtons = findViewById(R.id.bottomBar)
+        bottomButtons = findViewById(R.id.buttonBar)
         btnSettings = findViewById(R.id.btnSettings)
         btnSwipeLock = findViewById(R.id.btnSwipeLock)
 
@@ -79,7 +83,15 @@ class MainActivity : AppCompatActivity() {
         viewPager.offscreenPageLimit = 2
 
         TabLayoutMediator(tabLayout, viewPager) { tab, position ->
-            tab.text = planets[position].name
+            // Erstelle Custom View für zweizeilige Tabs
+            val customView = layoutInflater.inflate(R.layout.custom_tab, null)
+            val nameText = customView.findViewById<android.widget.TextView>(R.id.tab_name)
+            val coordsText = customView.findViewById<android.widget.TextView>(R.id.tab_coords)
+
+            nameText.text = planets[position].name
+            coordsText.text = planets[position].coordinates
+
+            tab.customView = customView
         }.attach()
 
         viewPager.visibility = ViewPager2.VISIBLE
@@ -105,6 +117,36 @@ class MainActivity : AppCompatActivity() {
         val status = if (isSwipeLocked) "gesperrt" else "entsperrt"
         android.widget.Toast.makeText(this, "Planeten-Wechsel $status", android.widget.Toast.LENGTH_SHORT).show()
         android.util.Log.d("MainActivity", "Swipe lock toggled: locked=$isSwipeLocked")
+
+        // Benachrichtige alle Fragments über Lock-Änderung (für Galaxy Swipe Navigation)
+        notifyFragmentsOfLockChange(isSwipeLocked)
+    }
+
+    /**
+     * Benachrichtigt alle Fragments über eine Änderung des Lock-Status
+     */
+    private fun notifyFragmentsOfLockChange(isLocked: Boolean) {
+        if (::adapter.isInitialized) {
+            for (i in 0 until planets.size) {
+                val fragment = adapter.getFragmentAtPosition(i)
+                fragment?.onSwipeLockChanged(isLocked)
+            }
+        }
+    }
+
+    /**
+     * Wird aufgerufen wenn sich die Galaxy Navigation Einstellung ändert
+     */
+    fun onGalaxyNavigationSettingChanged(enabled: Boolean) {
+        android.util.Log.d("MainActivity", "Galaxy Navigation setting changed: $enabled")
+
+        // Benachrichtige alle Fragments über die Änderung
+        if (::adapter.isInitialized) {
+            for (i in 0 until planets.size) {
+                val fragment = adapter.getFragmentAtPosition(i)
+                fragment?.onGalaxyNavigationSettingChanged(enabled)
+            }
+        }
     }
 
     /**
@@ -244,8 +286,33 @@ class MainActivity : AppCompatActivity() {
         val rootView = findViewById<androidx.constraintlayout.widget.ConstraintLayout>(R.id.root)
         ViewCompat.setOnApplyWindowInsetsListener(rootView) { v, insets ->
             val bars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(bars.left, bars.top, bars.right, 0)
+            // Padding unten hinzufügen für Gesture Bar
+            v.setPadding(bars.left, bars.top, bars.right, bars.bottom)
             insets
+        }
+    }
+
+    /**
+     * Aktiviert Edge-to-Edge Modus und blendet Gesture Bar aus
+     */
+    private fun enableEdgeToEdge() {
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
+            // Android 11+ (API 30+)
+            window.setDecorFitsSystemWindows(false)
+            window.insetsController?.let { controller ->
+                // Verstecke die Gesture Bar (weißer Strich)
+                controller.hide(android.view.WindowInsets.Type.navigationBars())
+                controller.systemBarsBehavior = android.view.WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+            }
+        } else {
+            // Android 10 und älter
+            @Suppress("DEPRECATION")
+            window.decorView.systemUiVisibility = (
+                    android.view.View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                            or android.view.View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                            or android.view.View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                            or android.view.View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+                    )
         }
     }
 
@@ -269,6 +336,18 @@ class MainActivity : AppCompatActivity() {
                     currentFragment.goBack()
                     return true
                 }
+            }
+
+            // App beenden mit Toast-Warnung (doppelt drücken innerhalb 2 Sekunden)
+            if (backPressedTime + 2000 > System.currentTimeMillis()) {
+                // Zweiter Druck innerhalb 2 Sekunden -> App beenden
+                finish()
+                return true
+            } else {
+                // Erster Druck -> Toast zeigen
+                android.widget.Toast.makeText(this, "Nochmal drücken zum Beenden", android.widget.Toast.LENGTH_SHORT).show()
+                backPressedTime = System.currentTimeMillis()
+                return true
             }
         }
         return super.onKeyDown(keyCode, event)

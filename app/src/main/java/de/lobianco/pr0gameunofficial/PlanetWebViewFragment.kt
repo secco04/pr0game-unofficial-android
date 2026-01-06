@@ -194,55 +194,170 @@ class PlanetWebViewFragment : Fragment() {
         val mainActivity = activity as? MainActivity
         val isSwipeLocked = mainActivity?.isSwipeLocked() ?: false
 
-        if (isSwipeLocked) {
-            android.util.Log.d("GalaxySwipe", "Setting up galaxy swipe navigation")
+        // Prüfe ob Galaxy Navigation in den Einstellungen aktiviert ist
+        val prefs = requireContext().getSharedPreferences("pr0game_settings", android.content.Context.MODE_PRIVATE)
+        val isNavigationEnabled = prefs.getBoolean("galaxy_navigation_enabled", true)
 
-            // Injiziere Touch-Handler für Galaxy Swipe
-            val js = """
-                (function() {
-                    let startX = 0;
-                    let startY = 0;
-                    
-                    document.addEventListener('touchstart', function(e) {
-                        startX = e.touches[0].clientX;
-                        startY = e.touches[0].clientY;
-                    }, { passive: true });
-                    
-                    document.addEventListener('touchend', function(e) {
-                        const endX = e.changedTouches[0].clientX;
-                        const endY = e.changedTouches[0].clientY;
+        if (isSwipeLocked && isNavigationEnabled) {
+            injectGalaxySwipeHandler()
+        } else {
+            removeGalaxySwipeHandler()
+        }
+    }
+
+    /**
+     * Injiziert den Touch-Handler für Galaxy Swipe Navigation
+     */
+    private fun injectGalaxySwipeHandler() {
+        android.util.Log.d("GalaxySwipe", "Injecting galaxy swipe handler")
+
+        val js = """
+            (function() {
+                // Entferne alten Handler falls vorhanden
+                if (window.galaxySwipeHandler) {
+                    document.removeEventListener('touchstart', window.galaxySwipeHandler.start);
+                    document.removeEventListener('touchmove', window.galaxySwipeHandler.move);
+                    document.removeEventListener('touchend', window.galaxySwipeHandler.end);
+                }
+                
+                let startX = 0;
+                let startY = 0;
+                let isHorizontalSwipe = false;
+                
+                const handleTouchStart = function(e) {
+                    startX = e.touches[0].clientX;
+                    startY = e.touches[0].clientY;
+                    isHorizontalSwipe = false;
+                };
+                
+                const handleTouchMove = function(e) {
+                    // Erkenne früh ob es ein horizontaler oder vertikaler Swipe ist
+                    if (!isHorizontalSwipe) {
+                        const currentX = e.touches[0].clientX;
+                        const currentY = e.touches[0].clientY;
+                        const diffX = Math.abs(currentX - startX);
+                        const diffY = Math.abs(currentY - startY);
                         
-                        const diffX = endX - startX;
-                        const diffY = endY - startY;
+                        // Wenn horizontal-Bewegung dominiert
+                        if (diffX > 20 && diffX > diffY * 1.5) {
+                            isHorizontalSwipe = true;
+                            // Verhindere Scroll/Refresh bei horizontalem Swipe
+                            e.preventDefault();
+                        }
+                    } else {
+                        // Weiterhin verhindern während horizontalem Swipe
+                        e.preventDefault();
+                    }
+                };
+                
+                const handleTouchEnd = function(e) {
+                    const endX = e.changedTouches[0].clientX;
+                    const endY = e.changedTouches[0].clientY;
+                    
+                    const diffX = endX - startX;
+                    const diffY = endY - startY;
+                    
+                    const absDiffX = Math.abs(diffX);
+                    const absDiffY = Math.abs(diffY);
+                    
+                    // LOCKERER: Horizontal muss nur 0.7x größer sein als vertikal
+                    // Und nur 60px Mindestdistanz
+                    if (absDiffX > absDiffY * 0.7 && absDiffX > 60) {
+                        const systemInput = document.querySelector('input[name="system"]');
+                        const submitButton = document.querySelector('input[type="submit"][value="Anzeigen"]');
                         
-                        // Nur horizontale Swipes (und mindestens 100px)
-                        if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 100) {
-                            const systemInput = document.querySelector('input[name="system"]');
-                            const submitButton = document.querySelector('input[type="submit"][value="Anzeigen"]');
+                        if (systemInput && submitButton) {
+                            let currentSystem = parseInt(systemInput.value);
                             
-                            if (systemInput && submitButton) {
-                                let currentSystem = parseInt(systemInput.value);
-                                
-                                if (diffX > 0) {
-                                    // Swipe nach rechts = System runter
-                                    currentSystem--;
-                                } else {
-                                    // Swipe nach links = System hoch
-                                    currentSystem++;
-                                }
-                                
-                                // Begrenze auf 1-499
-                                if (currentSystem >= 1 && currentSystem <= 499) {
-                                    systemInput.value = currentSystem;
-                                    submitButton.click();
-                                }
+                            if (diffX > 0) {
+                                // Swipe nach rechts = System runter
+                                currentSystem--;
+                            } else {
+                                // Swipe nach links = System hoch
+                                currentSystem++;
+                            }
+                            
+                            // Begrenze auf 1-499
+                            if (currentSystem >= 1 && currentSystem <= 499) {
+                                systemInput.value = currentSystem;
+                                submitButton.click();
                             }
                         }
-                    }, { passive: true });
-                })();
-            """.trimIndent()
+                    }
+                };
+                
+                document.addEventListener('touchstart', handleTouchStart, { passive: true });
+                document.addEventListener('touchmove', handleTouchMove, { passive: false }); // Nicht passive!
+                document.addEventListener('touchend', handleTouchEnd, { passive: true });
+                
+                // Speichere Handler für späteres Entfernen
+                window.galaxySwipeHandler = {
+                    start: handleTouchStart,
+                    move: handleTouchMove,
+                    end: handleTouchEnd
+                };
+            })();
+        """.trimIndent()
 
-            webView.evaluateJavascript(js, null)
+        webView.evaluateJavascript(js, null)
+    }
+
+    /**
+     * Entfernt den Galaxy Swipe Handler
+     */
+    private fun removeGalaxySwipeHandler() {
+        android.util.Log.d("GalaxySwipe", "Removing galaxy swipe handler")
+
+        val js = """
+            (function() {
+                if (window.galaxySwipeHandler) {
+                    document.removeEventListener('touchstart', window.galaxySwipeHandler.start);
+                    document.removeEventListener('touchmove', window.galaxySwipeHandler.move);
+                    document.removeEventListener('touchend', window.galaxySwipeHandler.end);
+                    delete window.galaxySwipeHandler;
+                }
+            })();
+        """.trimIndent()
+
+        webView.evaluateJavascript(js, null)
+    }
+
+    /**
+     * Wird von MainActivity aufgerufen wenn sich der Lock-Status ändert
+     */
+    fun onSwipeLockChanged(isLocked: Boolean) {
+        // Nur auf Galaxy-Seite reagieren
+        webView.url?.let { url ->
+            if (url.contains("page=galaxy")) {
+                // Prüfe ob Galaxy Navigation aktiviert ist
+                val prefs = requireContext().getSharedPreferences("pr0game_settings", android.content.Context.MODE_PRIVATE)
+                val isNavigationEnabled = prefs.getBoolean("galaxy_navigation_enabled", true)
+
+                if (isLocked && isNavigationEnabled) {
+                    injectGalaxySwipeHandler()
+                } else {
+                    removeGalaxySwipeHandler()
+                }
+            }
+        }
+    }
+
+    /**
+     * Wird von MainActivity aufgerufen wenn sich die Galaxy Navigation Einstellung ändert
+     */
+    fun onGalaxyNavigationSettingChanged(enabled: Boolean) {
+        // Nur auf Galaxy-Seite reagieren
+        webView.url?.let { url ->
+            if (url.contains("page=galaxy")) {
+                val mainActivity = activity as? MainActivity
+                val isSwipeLocked = mainActivity?.isSwipeLocked() ?: false
+
+                if (enabled && isSwipeLocked) {
+                    injectGalaxySwipeHandler()
+                } else {
+                    removeGalaxySwipeHandler()
+                }
+            }
         }
     }
 

@@ -24,40 +24,46 @@
         android:layout_height="0dp"
         android:visibility="gone"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/bottomBar"
+        app:layout_constraintBottom_toTopOf="@id/tabLayout"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- Bottom Navigation Bar -->
+    <!-- Tab Bar für Planeten (schmaler, über Button Bar) -->
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tabLayout"
+        android:layout_width="0dp"
+        android:layout_height="56dp"
+        android:background="#16213e"
+        android:visibility="gone"
+        app:tabTextColor="#ffffff"
+        app:tabSelectedTextColor="#64b5f6"
+        app:tabIndicatorColor="#64b5f6"
+        app:tabMode="scrollable"
+        app:tabMinWidth="100dp"
+        app:tabMaxWidth="200dp"
+        app:tabPaddingStart="8dp"
+        app:tabPaddingEnd="8dp"
+        app:layout_constraintBottom_toTopOf="@id/buttonBar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Button Bar (nur Icons, unten) -->
     <LinearLayout
-        android:id="@+id/bottomBar"
+        android:id="@+id/buttonBar"
         android:layout_width="0dp"
         android:layout_height="48dp"
         android:orientation="horizontal"
-        android:background="#16213e"
+        android:background="#0f1724"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <!-- Tab Layout für Planeten (scrollbar) -->
-        <com.google.android.material.tabs.TabLayout
-            android:id="@+id/tabLayout"
+        <!-- Spacer (nimmt allen freien Platz links) -->
+        <View
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="@android:color/transparent"
-            app:tabTextColor="#ffffff"
-            app:tabSelectedTextColor="#64b5f6"
-            app:tabIndicatorColor="#64b5f6"
-            app:tabMode="scrollable"
-            app:tabMinWidth="80dp" />
-
-        <!-- Separator -->
-        <View
-            android:layout_width="1dp"
-            android:layout_height="match_parent"
-            android:background="#2a3f5f" />
+            android:layout_weight="1" />
 
         <!-- Swipe Lock Button -->
         <ImageButton

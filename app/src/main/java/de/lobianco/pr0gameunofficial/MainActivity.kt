@@ -38,9 +38,6 @@ class MainActivity : AppCompatActivity() {
         btnSettings = findViewById(R.id.btnSettings)
         btnSwipeLock = findViewById(R.id.btnSwipeLock)
 
-        // Initiale Farbe für Settings-Button setzen
-        btnSettings.setColorFilter(0xFFFFFFFF.toInt())
-
         // Settings Button - Toggle öffnen/schließen
         btnSettings.setOnClickListener {
             if (isSettingsOpen) {
@@ -148,6 +145,11 @@ class MainActivity : AppCompatActivity() {
         android.util.Log.d("MainActivity", "ViewPager swipe set to: $enabled")
     }
 
+    /**
+     * Gibt zurück ob der Swipe aktuell manuell gesperrt ist
+     */
+    fun isSwipeLocked(): Boolean = isSwipeLocked
+
     fun onPlanetsLoaded(planetList: List<Planet>) {
         planets = planetList
 
@@ -165,6 +167,46 @@ class MainActivity : AppCompatActivity() {
         }
 
         setupViewPager()
+    }
+
+    /**
+     * Wird automatisch aufgerufen wenn sich die Planetenliste geändert hat
+     * Aktualisiert die Tabs ohne die App neu zu starten
+     */
+    fun onPlanetsUpdated(newPlanets: List<Planet>) {
+        val oldCount = planets.size
+        val newCount = newPlanets.size
+
+        android.util.Log.d("MainActivity", "Planets updated: $oldCount -> $newCount")
+
+        planets = newPlanets
+
+        // Speichere in SharedPreferences
+        val prefs = getSharedPreferences("pr0game_data", MODE_PRIVATE)
+        prefs.edit()
+            .putString("planets_json", PlanetParser.toJson(newPlanets))
+            .apply()
+
+        // Merke aktuellen Planet
+        val currentPosition = if (::viewPager.isInitialized) viewPager.currentItem else 0
+
+        // Aktualisiere ViewPager
+        setupViewPager()
+
+        // Versuche zur gleichen Position zurückzukehren (falls noch vorhanden)
+        if (currentPosition < newPlanets.size) {
+            viewPager.setCurrentItem(currentPosition, false)
+        }
+
+        // Zeige Toast nur wenn neue Planeten hinzugekommen sind
+        if (newCount > oldCount) {
+            val addedCount = newCount - oldCount
+            android.widget.Toast.makeText(
+                this,
+                "✨ $addedCount neue${if (addedCount == 1) "r" else ""} Planet${if (addedCount == 1) "" else "en"} hinzugefügt!",
+                android.widget.Toast.LENGTH_SHORT
+            ).show()
+        }
     }
 
     private fun openSettings() {

@@ -58,21 +58,19 @@ class InitialLoadFragment : Fragment() {
                     val planets = PlanetParser.parseFromHtml(cleanHtml)
 
                     if (planets.isNotEmpty()) {
-                        statusText?.text = "${planets.size} Planeten gefunden!"
-
                         // Übergebe an MainActivity
                         (activity as? MainActivity)?.onPlanetsLoaded(planets)
                     } else {
-                        statusText?.text = "Bitte einloggen..."
-                        // Zeige WebView für Login
+                        // Zeige WebView für Login - OHNE Text-Overlay
                         progressBar.visibility = View.GONE
+                        statusText?.visibility = View.GONE  // Text verstecken!
                         webView.visibility = View.VISIBLE
                     }
                 }
             }
 
             override fun onPageStarted(view: WebView?, url: String?, favicon: android.graphics.Bitmap?) {
-                statusText?.text = "Lade pr0game.com..."
+                // Kein Text mehr während des Ladens
             }
         }
 

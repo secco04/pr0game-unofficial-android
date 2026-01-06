@@ -99,6 +99,9 @@ class PlanetWebViewFragment : Fragment() {
                 progressBar.visibility = View.GONE
                 swipeRefresh.isRefreshing = false // Stop refresh animation
 
+                // Automatisch Planeten aktualisieren wenn neue hinzugekommen sind
+                checkAndUpdatePlanets()
+
                 // Injiziere JavaScript um cp Parameter zu erzwingen
                 injectPlanetLock()
 
@@ -113,6 +116,9 @@ class PlanetWebViewFragment : Fragment() {
                             injectGalaxyFormatter()
                         }, delay)
                     }
+
+                    // Aktiviere Galaxy Navigation wenn Swipe gelockt ist
+                    setupGalaxySwipeNavigation()
                 }
 
                 // Deaktiviere ViewPager Swipen auf Seiten mit horizontalem Scrollen
@@ -178,6 +184,131 @@ class PlanetWebViewFragment : Fragment() {
         modifiedUrl += "${separator}cp=${planet.id}"
 
         return modifiedUrl
+    }
+
+    /**
+     * Richtet Swipe-Navigation für die Galaxy-Ansicht ein
+     * Wenn Swipe gelockt ist, können wir zwischen Systemen navigieren
+     */
+    private fun setupGalaxySwipeNavigation() {
+        val mainActivity = activity as? MainActivity
+        val isSwipeLocked = mainActivity?.isSwipeLocked() ?: false
+
+        if (isSwipeLocked) {
+            android.util.Log.d("GalaxySwipe", "Setting up galaxy swipe navigation")
+
+            // Injiziere Touch-Handler für Galaxy Swipe
+            val js = """
+                (function() {
+                    let startX = 0;
+                    let startY = 0;
+                    
+                    document.addEventListener('touchstart', function(e) {
+                        startX = e.touches[0].clientX;
+                        startY = e.touches[0].clientY;
+                    }, { passive: true });
+                    
+                    document.addEventListener('touchend', function(e) {
+                        const endX = e.changedTouches[0].clientX;
+                        const endY = e.changedTouches[0].clientY;
+                        
+                        const diffX = endX - startX;
+                        const diffY = endY - startY;
+                        
+                        // Nur horizontale Swipes (und mindestens 100px)
+                        if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 100) {
+                            const systemInput = document.querySelector('input[name="system"]');
+                            const submitButton = document.querySelector('input[type="submit"][value="Anzeigen"]');
+                            
+                            if (systemInput && submitButton) {
+                                let currentSystem = parseInt(systemInput.value);
+                                
+                                if (diffX > 0) {
+                                    // Swipe nach rechts = System runter
+                                    currentSystem--;
+                                } else {
+                                    // Swipe nach links = System hoch
+                                    currentSystem++;
+                                }
+                                
+                                // Begrenze auf 1-499
+                                if (currentSystem >= 1 && currentSystem <= 499) {
+                                    systemInput.value = currentSystem;
+                                    submitButton.click();
+                                }
+                            }
+                        }
+                    }, { passive: true });
+                })();
+            """.trimIndent()
+
+            webView.evaluateJavascript(js, null)
+        }
+    }
+
+    /**
+     * Überprüft ob neue Planeten hinzugekommen sind und aktualisiert die Liste automatisch
+     */
+    private fun checkAndUpdatePlanets() {
+        val js = """
+            (function() {
+                const selector = document.getElementById('planetSelector');
+                if (!selector) return null;
+                
+                const planets = [];
+                for (let option of selector.options) {
+                    planets.push({
+                        id: option.value,
+                        name: option.textContent.trim().split('[')[0].trim(),
+                        coords: option.textContent.match(/\[([^\]]+)\]/)?.[1] || ''
+                    });
+                }
+                return JSON.stringify(planets);
+            })();
+        """.trimIndent()
+
+        webView.evaluateJavascript(js) { result ->
+            if (result != null && result != "null" && result != "\"null\"") {
+                try {
+                    // Entferne Anführungszeichen und parse JSON
+                    val cleanResult = result.trim('"').replace("\\\"", "\"")
+                    val jsonArray = org.json.JSONArray(cleanResult)
+
+                    val newPlanets = mutableListOf<Planet>()
+                    for (i in 0 until jsonArray.length()) {
+                        val obj = jsonArray.getJSONObject(i)
+                        newPlanets.add(
+                            Planet(
+                                obj.getString("id"),
+                                obj.getString("name"),
+                                obj.getString("coords")
+                            )
+                        )
+                    }
+
+                    // Vergleiche mit aktuellen Planeten
+                    val prefs = requireContext().getSharedPreferences("pr0game_data", android.content.Context.MODE_PRIVATE)
+                    val savedPlanets = prefs.getString("planets_json", null)
+                    val currentPlanets = if (savedPlanets != null) {
+                        PlanetParser.fromJson(savedPlanets)
+                    } else {
+                        emptyList()
+                    }
+
+                    // Prüfe ob sich die Liste geändert hat
+                    if (newPlanets.size != currentPlanets.size ||
+                        newPlanets.map { it.id }.toSet() != currentPlanets.map { it.id }.toSet()) {
+
+                        android.util.Log.d("PlanetUpdate", "Planet list changed! Old: ${currentPlanets.size}, New: ${newPlanets.size}")
+
+                        // Aktualisiere MainActivity mit neuer Planetenliste
+                        (activity as? MainActivity)?.onPlanetsUpdated(newPlanets)
+                    }
+                } catch (e: Exception) {
+                    android.util.Log.e("PlanetUpdate", "Error parsing planets: ${e.message}")
+                }
+            }
+        }
     }
 
     /**

@@ -81,8 +81,7 @@
             android:layout_width="56dp"
             android:layout_height="match_parent"
             android:background="?attr/selectableItemBackgroundBorderless"
-            android:src="@android:drawable/ic_menu_manage"
-            android:tint="#ffffff"
+            android:src="@drawable/ic_settings_gear"
             android:contentDescription="Einstellungen" />
 
     </LinearLayout>

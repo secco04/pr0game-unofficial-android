@@ -38,9 +38,16 @@ class MainActivity : AppCompatActivity() {
         btnSettings = findViewById(R.id.btnSettings)
         btnSwipeLock = findViewById(R.id.btnSwipeLock)
 
-        // Settings Button
+        // Initiale Farbe für Settings-Button setzen
+        btnSettings.setColorFilter(0xFFFFFFFF.toInt())
+
+        // Settings Button - Toggle öffnen/schließen
         btnSettings.setOnClickListener {
-            openSettings()
+            if (isSettingsOpen) {
+                closeSettings()
+            } else {
+                openSettings()
+            }
         }
 
         // Swipe Lock Button
@@ -166,6 +173,9 @@ class MainActivity : AppCompatActivity() {
         isSettingsOpen = true
         viewPager.visibility = View.GONE
 
+        // Ändere Farbe des Settings-Buttons wenn offen
+        btnSettings.setColorFilter(0xFF64b5f6.toInt()) // Blau = aktiv
+
         supportFragmentManager.beginTransaction()
             .replace(R.id.container, SettingsFragment())
             .commit()
@@ -174,6 +184,9 @@ class MainActivity : AppCompatActivity() {
     fun closeSettings() {
         isSettingsOpen = false
         viewPager.visibility = View.VISIBLE
+
+        // Setze Farbe des Settings-Buttons zurück
+        btnSettings.setColorFilter(0xFFFFFFFF.toInt()) // Weiß = normal
 
         supportFragmentManager.findFragmentById(R.id.container)?.let {
             supportFragmentManager.beginTransaction()

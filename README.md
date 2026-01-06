@@ -184,9 +184,7 @@ Aktuell ist sie noch nicht genehmigt!!!
 - Verwendung auf eigene Verantwortung
 - Keine Garantie für Funktionalität oder Sicherheit
 
-## 👤 Autor
-
-WIP
+## Aktuell ist sie noch nicht genehmigt bitte noch nicht benutzen!!!
 
 ## 🙏 Danksagungen
 

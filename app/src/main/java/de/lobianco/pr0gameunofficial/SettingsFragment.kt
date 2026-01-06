@@ -41,6 +41,10 @@ class SettingsFragment : Fragment() {
         val seekBarRowHeight: SeekBar = view.findViewById(R.id.seekBarRowHeight)
         val tvRowHeightValue: TextView = view.findViewById(R.id.tvRowHeightValue)
 
+        // UI Customization Settings
+        val switchHidePlanetSelector: Switch = view.findViewById(R.id.switchHidePlanetSelector)
+        val switchHideMessageBanner: Switch = view.findViewById(R.id.switchHideMessageBanner)
+
         // Version anzeigen
         try {
             val version = requireContext().packageManager
@@ -55,9 +59,13 @@ class SettingsFragment : Fragment() {
         val galaxyNavigationEnabled = prefs.getBoolean("galaxy_navigation_enabled", true)
         val delayMs = prefs.getInt("galaxy_formatter_delay", 200)
         val rowHeight = prefs.getInt("galaxy_row_height", 20)
+        val hidePlanetSelector = prefs.getBoolean("hide_planet_selector", true)
+        val hideMessageBanner = prefs.getBoolean("hide_message_banner", true)
 
         switchGalaxyFormatter.isChecked = galaxyFormatterEnabled
         switchGalaxyNavigation.isChecked = galaxyNavigationEnabled
+        switchHidePlanetSelector.isChecked = hidePlanetSelector
+        switchHideMessageBanner.isChecked = hideMessageBanner
         seekBarDelay.progress = delayMs / 50 // 0-500ms in 50ms Schritten
         tvDelayValue.text = "${delayMs}ms"
         seekBarRowHeight.progress = rowHeight - 12 // 12-32px, also 20-12=8
@@ -84,6 +92,17 @@ class SettingsFragment : Fragment() {
 
             // Benachrichtige MainActivity über Änderung
             (activity as? MainActivity)?.onGalaxyNavigationSettingChanged(isChecked)
+        }
+
+        // UI Customization Toggles
+        switchHidePlanetSelector.setOnCheckedChangeListener { _, isChecked ->
+            prefs.edit().putBoolean("hide_planet_selector", isChecked).apply()
+            android.util.Log.d("Settings", "Hide Planet Selector: $isChecked")
+        }
+
+        switchHideMessageBanner.setOnCheckedChangeListener { _, isChecked ->
+            prefs.edit().putBoolean("hide_message_banner", isChecked).apply()
+            android.util.Log.d("Settings", "Hide Message Banner: $isChecked")
         }
 
         // Delay SeekBar

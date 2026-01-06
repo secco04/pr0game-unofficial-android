@@ -19,6 +19,10 @@ class MainActivity : AppCompatActivity() {
     private lateinit var bottomButtons: View
     private lateinit var btnSettings: ImageButton
     private lateinit var btnSwipeLock: ImageButton
+    private lateinit var btnMessages: View
+    private lateinit var btnSpyReports: View
+    private lateinit var messagesBadge: android.widget.TextView
+    private lateinit var spyReportsBadge: android.widget.TextView
     private lateinit var adapter: PlanetPagerAdapter
 
     private var planets: List<Planet> = emptyList()
@@ -41,6 +45,37 @@ class MainActivity : AppCompatActivity() {
         bottomButtons = findViewById(R.id.buttonBar)
         btnSettings = findViewById(R.id.btnSettings)
         btnSwipeLock = findViewById(R.id.btnSwipeLock)
+        btnMessages = findViewById(R.id.btnMessages)
+        btnSpyReports = findViewById(R.id.btnSpyReports)
+        messagesBadge = findViewById(R.id.messagesBadge)
+        spyReportsBadge = findViewById(R.id.spyReportsBadge)
+
+        // Mache Badges rund
+        messagesBadge.clipToOutline = true
+        messagesBadge.outlineProvider = object : android.view.ViewOutlineProvider() {
+            override fun getOutline(view: android.view.View, outline: android.graphics.Outline) {
+                outline.setOval(0, 0, view.width, view.height)
+            }
+        }
+
+        spyReportsBadge.clipToOutline = true
+        spyReportsBadge.outlineProvider = object : android.view.ViewOutlineProvider() {
+            override fun getOutline(view: android.view.View, outline: android.graphics.Outline) {
+                outline.setOval(0, 0, view.width, view.height)
+            }
+        }
+
+        // Messages Button
+        btnMessages.setOnClickListener {
+            android.util.Log.d("MainActivity", "Messages button clicked!")
+            openMessages()
+        }
+
+        // Spy Reports Button
+        btnSpyReports.setOnClickListener {
+            android.util.Log.d("MainActivity", "Spy Reports button clicked!")
+            openSpyReports()
+        }
 
         // Settings Button - Toggle öffnen/schließen
         btnSettings.setOnClickListener {
@@ -80,7 +115,7 @@ class MainActivity : AppCompatActivity() {
 
         adapter = PlanetPagerAdapter(this, planets)
         viewPager.adapter = adapter
-        viewPager.offscreenPageLimit = 2
+        viewPager.offscreenPageLimit = 2  // 2 Seiten vorgeladen für besseres Swipen
 
         TabLayoutMediator(tabLayout, viewPager) { tab, position ->
             // Erstelle Custom View für zweizeilige Tabs
@@ -265,6 +300,88 @@ class MainActivity : AppCompatActivity() {
             .commit()
     }
 
+    /**
+     * Öffnet die Nachrichten-Seite auf dem aktuellen Planeten
+     */
+    private fun openMessages() {
+        android.util.Log.d("MainActivity", "openMessages called")
+
+        try {
+            if (planets.isNotEmpty() && ::viewPager.isInitialized) {
+                val currentPosition = viewPager.currentItem
+
+                // Hole Fragment
+                val fragment = supportFragmentManager.findFragmentByTag("f$currentPosition") as? PlanetWebViewFragment
+                    ?: (if (::adapter.isInitialized) adapter.getFragmentAtPosition(currentPosition) else null)
+
+                if (fragment != null) {
+                    android.util.Log.d("MainActivity", "Fragment found, clicking messages link via JavaScript")
+                    fragment.clickMessagesLink()
+                } else {
+                    android.util.Log.e("MainActivity", "Fragment not found!")
+                }
+            }
+        } catch (e: Exception) {
+            android.util.Log.e("MainActivity", "Error opening messages", e)
+        }
+    }
+
+    /**
+     * Öffnet die Spionageberichte auf dem aktuellen Planeten
+     */
+    private fun openSpyReports() {
+        android.util.Log.d("MainActivity", "openSpyReports called")
+
+        try {
+            if (planets.isNotEmpty() && ::viewPager.isInitialized) {
+                val currentPosition = viewPager.currentItem
+
+                // Hole Fragment
+                val fragment = supportFragmentManager.findFragmentByTag("f$currentPosition") as? PlanetWebViewFragment
+                    ?: (if (::adapter.isInitialized) adapter.getFragmentAtPosition(currentPosition) else null)
+
+                if (fragment != null) {
+                    android.util.Log.d("MainActivity", "Fragment found, clicking spy reports link via JavaScript")
+                    fragment.clickSpyReportsLink()
+                } else {
+                    android.util.Log.e("MainActivity", "Fragment not found!")
+                }
+            }
+        } catch (e: Exception) {
+            android.util.Log.e("MainActivity", "Error opening spy reports", e)
+        }
+    }
+
+    /**
+     * Aktualisiert das Nachrichten-Badge
+     * Wird von Fragments aufgerufen wenn neue Nachrichtenzahl erkannt wird
+     */
+    fun updateMessagesBadge(count: Int) {
+        if (::messagesBadge.isInitialized) {
+            if (count > 0) {
+                messagesBadge.visibility = View.VISIBLE
+                messagesBadge.text = if (count >= 50) "50+" else count.toString()
+            } else {
+                messagesBadge.visibility = View.GONE
+            }
+        }
+    }
+
+    /**
+     * Aktualisiert das Spionageberichte-Badge
+     * Wird von Fragments aufgerufen wenn neue Berichtszahl erkannt wird
+     */
+    fun updateSpyReportsBadge(count: Int) {
+        if (::spyReportsBadge.isInitialized) {
+            if (count > 0) {
+                spyReportsBadge.visibility = View.VISIBLE
+                spyReportsBadge.text = if (count >= 50) "50+" else count.toString()
+            } else {
+                spyReportsBadge.visibility = View.GONE
+            }
+        }
+    }
+
     fun closeSettings() {
         isSettingsOpen = false
         viewPager.visibility = View.VISIBLE
@@ -329,7 +446,7 @@ class MainActivity : AppCompatActivity() {
                 return true
             }
 
-            // Sonst WebView zurück
+            // Sonst WebView zurück (OHNE Toast!)
             if (::adapter.isInitialized) {
                 val currentFragment = adapter.getFragmentAtPosition(viewPager.currentItem)
                 if (currentFragment?.canGoBack() == true) {
@@ -338,7 +455,8 @@ class MainActivity : AppCompatActivity() {
                 }
             }
 
-            // App beenden mit Toast-Warnung (doppelt drücken innerhalb 2 Sekunden)
+            // NUR HIER: App beenden mit Toast-Warnung (doppelt drücken innerhalb 2 Sekunden)
+            // Dieser Code wird nur erreicht wenn WebView NICHT zurück kann
             if (backPressedTime + 2000 > System.currentTimeMillis()) {
                 // Zweiter Druck innerhalb 2 Sekunden -> App beenden
                 finish()

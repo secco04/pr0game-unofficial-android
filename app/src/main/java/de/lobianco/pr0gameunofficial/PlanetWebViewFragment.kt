@@ -19,6 +19,7 @@ class PlanetWebViewFragment : Fragment() {
     private lateinit var progressBar: ProgressBar
     private lateinit var swipeRefresh: SwipeRefreshLayout
     private lateinit var planet: Planet
+    private var lastPlanetCheckTime: Long = 0
 
     companion object {
         fun newInstance(planet: Planet): PlanetWebViewFragment {
@@ -83,9 +84,9 @@ class PlanetWebViewFragment : Fragment() {
             webView.reload()
         }
 
-        // Deaktiviere Swipe-to-Refresh wenn WebView nicht ganz oben ist
-        webView.viewTreeObserver.addOnScrollChangedListener {
-            swipeRefresh.isEnabled = webView.scrollY == 0
+        // OPTIMIERT: Nutze setOnScrollChangeListener statt ViewTreeObserver
+        webView.setOnScrollChangeListener { _, _, scrollY, _, _ ->
+            swipeRefresh.isEnabled = scrollY == 0
         }
     }
 
@@ -99,11 +100,18 @@ class PlanetWebViewFragment : Fragment() {
                 progressBar.visibility = View.GONE
                 swipeRefresh.isRefreshing = false // Stop refresh animation
 
-                // Automatisch Planeten aktualisieren wenn neue hinzugekommen sind
-                checkAndUpdatePlanets()
+                // OPTIMIERT: Planeten nur alle 30 Sekunden überprüfen (nicht bei jeder Seite!)
+                val currentTime = System.currentTimeMillis()
+                if (currentTime - lastPlanetCheckTime > 30000) { // 30 Sekunden
+                    checkAndUpdatePlanets()
+                    lastPlanetCheckTime = currentTime
+                }
 
                 // Injiziere JavaScript um cp Parameter zu erzwingen
                 injectPlanetLock()
+
+                // Prüfe auf neue Nachrichten und aktualisiere Badge
+                checkForNewMessages()
 
                 // Injiziere Galaxy Formatter wenn aktiviert und auf Galaxy-Seite
                 if (url?.contains("page=galaxy") == true) {
@@ -143,7 +151,7 @@ class PlanetWebViewFragment : Fragment() {
                     return true
                 }
 
-                // Füge cp Parameter hinzu wenn nicht vorhanden
+                // Füge cp Parameter hinzu
                 val modifiedUrl = ensurePlanetParameter(url)
                 view?.loadUrl(modifiedUrl)
                 return true
@@ -159,11 +167,23 @@ class PlanetWebViewFragment : Fragment() {
         // MAXIMALES CACHING
         settings.cacheMode = WebSettings.LOAD_CACHE_ELSE_NETWORK
 
-        // Performance
+        // PERFORMANCE OPTIMIERUNGEN
         settings.setRenderPriority(WebSettings.RenderPriority.HIGH)
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
             settings.offscreenPreRaster = true
         }
+
+        // Hardware-Beschleunigung aktivieren
+        webView.setLayerType(android.view.View.LAYER_TYPE_HARDWARE, null)
+
+        // Unnötige Features deaktivieren für bessere Performance
+        settings.setGeolocationEnabled(false)
+        settings.setSupportZoom(false)
+        settings.builtInZoomControls = false
+        settings.displayZoomControls = false
+
+        // Medien nur auf Anfrage laden (spart CPU/Bandbreite)
+        settings.mediaPlaybackRequiresUserGesture = true
 
         // Cookies
         val cookieManager = CookieManager.getInstance()
@@ -326,6 +346,12 @@ class PlanetWebViewFragment : Fragment() {
      * Wird von MainActivity aufgerufen wenn sich der Lock-Status ändert
      */
     fun onSwipeLockChanged(isLocked: Boolean) {
+        // Prüfe ob WebView bereits initialisiert ist
+        if (!::webView.isInitialized) {
+            android.util.Log.d("PlanetFragment", "WebView not initialized yet, ignoring lock change")
+            return
+        }
+
         // Nur auf Galaxy-Seite reagieren
         webView.url?.let { url ->
             if (url.contains("page=galaxy")) {
@@ -346,6 +372,12 @@ class PlanetWebViewFragment : Fragment() {
      * Wird von MainActivity aufgerufen wenn sich die Galaxy Navigation Einstellung ändert
      */
     fun onGalaxyNavigationSettingChanged(enabled: Boolean) {
+        // Prüfe ob WebView bereits initialisiert ist
+        if (!::webView.isInitialized) {
+            android.util.Log.d("PlanetFragment", "WebView not initialized yet, ignoring setting change")
+            return
+        }
+
         // Nur auf Galaxy-Seite reagieren
         webView.url?.let { url ->
             if (url.contains("page=galaxy")) {
@@ -357,6 +389,141 @@ class PlanetWebViewFragment : Fragment() {
                 } else {
                     removeGalaxySwipeHandler()
                 }
+            }
+        }
+    }
+
+    /**
+     * Prüft auf neue Nachrichten und aktualisiert das Badge
+     */
+    private fun checkForNewMessages() {
+        // Gesamte Nachrichten
+        val jsMessages = """
+            (function() {
+                const newMesNum = document.getElementById('newmesnum');
+                if (newMesNum) {
+                    return parseInt(newMesNum.textContent);
+                }
+                return 0;
+            })();
+        """.trimIndent()
+
+        webView.evaluateJavascript(jsMessages) { result ->
+            try {
+                val count = result?.replace("\"", "")?.toIntOrNull() ?: 0
+                (activity as? MainActivity)?.updateMessagesBadge(count)
+            } catch (e: Exception) {
+                android.util.Log.e("Messages", "Error parsing message count: ${e.message}")
+            }
+        }
+
+        // Spionageberichte (unread_0)
+        val jsSpyReports = """
+            (function() {
+                const unreadSpyReports = document.getElementById('unread_0');
+                if (unreadSpyReports) {
+                    return parseInt(unreadSpyReports.textContent);
+                }
+                return 0;
+            })();
+        """.trimIndent()
+
+        webView.evaluateJavascript(jsSpyReports) { result ->
+            try {
+                val count = result?.replace("\"", "")?.toIntOrNull() ?: 0
+                (activity as? MainActivity)?.updateSpyReportsBadge(count)
+                android.util.Log.d("SpyReports", "Unread spy reports: $count")
+            } catch (e: Exception) {
+                android.util.Log.e("SpyReports", "Error parsing spy report count: ${e.message}")
+            }
+        }
+    }
+
+    /**
+     * Lädt die Nachrichten-Seite
+     */
+    fun loadMessagesPage() {
+        if (::webView.isInitialized) {
+            val messagesUrl = planet.getUrl("messages")
+            android.util.Log.d("Messages", "Loading messages page: $messagesUrl")
+            webView.loadUrl(messagesUrl)
+        } else {
+            android.util.Log.e("Messages", "WebView not initialized")
+        }
+    }
+
+    /**
+     * Lädt eine beliebige URL in der WebView
+     */
+    fun loadUrl(url: String) {
+        if (::webView.isInitialized) {
+            // Füge cp Parameter hinzu
+            val urlWithCp = ensurePlanetParameter(url)
+            android.util.Log.d("PlanetFragment", "Direct loadUrl: $urlWithCp")
+
+            // Lade direkt - wird durch shouldOverrideUrlLoading gehen aber URL ist schon korrekt
+            webView.loadUrl(urlWithCp)
+        } else {
+            android.util.Log.e("PlanetFragment", "WebView not initialized")
+        }
+    }
+
+    /**
+     * Klickt auf den Nachrichten-Link im Menü via JavaScript
+     */
+    fun clickMessagesLink() {
+        if (::webView.isInitialized) {
+            val js = """
+                (function() {
+                    // Prüfe ob wir bereits auf der Nachrichten-Seite sind
+                    const currentUrl = window.location.href;
+                    if (currentUrl.includes('page=messages') && !currentUrl.includes('category=')) {
+                        return 'already on page';
+                    }
+                    
+                    // Finde den Nachrichten-Link im Menü (ohne category)
+                    const links = document.querySelectorAll('a[href*="page=messages"]:not([href*="category"])');
+                    if (links.length > 0) {
+                        links[0].click();
+                        return 'clicked';
+                    }
+                    return 'not found';
+                })();
+            """.trimIndent()
+
+            webView.evaluateJavascript(js) { result ->
+                android.util.Log.d("PlanetFragment", "Click messages link result: $result")
+            }
+        }
+    }
+
+    /**
+     * Klickt auf den Spionageberichte-Link via JavaScript
+     */
+    fun clickSpyReportsLink() {
+        if (::webView.isInitialized) {
+            val js = """
+                (function() {
+                    // Prüfe ob wir bereits auf der Spionageberichte-Seite sind
+                    const currentUrl = window.location.href;
+                    if (currentUrl.includes('page=messages') && currentUrl.includes('category=0')) {
+                        return 'already on page';
+                    }
+                    
+                    // Finde den Spionageberichte-Link (category=0)
+                    const links = document.querySelectorAll('a[href*="page=messages"][href*="category=0"]');
+                    if (links.length > 0) {
+                        links[0].click();
+                        return 'clicked';
+                    }
+                    // Fallback: Lade URL direkt
+                    window.location.href = 'game.php?page=messages&category=0';
+                    return 'fallback';
+                })();
+            """.trimIndent()
+
+            webView.evaluateJavascript(js) { result ->
+                android.util.Log.d("PlanetFragment", "Click spy reports link result: $result")
             }
         }
     }
@@ -430,8 +597,36 @@ class PlanetWebViewFragment : Fragment() {
      * Injiziert JavaScript um Planet-Wechsel zu verhindern
      */
     private fun injectPlanetLock() {
+        val prefs = requireContext().getSharedPreferences("pr0game_settings", android.content.Context.MODE_PRIVATE)
+        val hidePlanetSelector = prefs.getBoolean("hide_planet_selector", true)
+        val hideMessageBanner = prefs.getBoolean("hide_message_banner", true)
+
         val js = """
             (function() {
+                // CSS injizieren basierend auf Einstellungen
+                const style = document.createElement('style');
+                let css = '';
+                
+                ${if (hidePlanetSelector) """
+                css += `
+                    #planetSelector { 
+                        display: none !important; 
+                    }
+                `;
+                """ else ""}
+                
+                ${if (hideMessageBanner) """
+                css += `
+                    .message-box,
+                    div.message-box {
+                        display: none !important;
+                    }
+                `;
+                """ else ""}
+                
+                style.textContent = css;
+                document.head.appendChild(style);
+                
                 // Blockiere planetSelector Änderungen
                 const selector = document.getElementById('planetSelector');
                 if (selector) {

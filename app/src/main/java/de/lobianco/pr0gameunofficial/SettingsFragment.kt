@@ -31,6 +31,7 @@ class SettingsFragment : Fragment() {
         val closeButton: Button = view.findViewById(R.id.btnClose)
         val clearDataButton: Button = view.findViewById(R.id.btnClearData)
         val versionText: TextView = view.findViewById(R.id.tvVersion)
+        val btnDonate: Button = view.findViewById(R.id.btnDonate)
 
         // Galaxy Formatter Settings
         val switchGalaxyFormatter: Switch = view.findViewById(R.id.switchGalaxyFormatter)
@@ -97,12 +98,17 @@ class SettingsFragment : Fragment() {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 val height = progress + 12 // 12-32px
                 tvRowHeightValue.text = "${height}px"
+                if (fromUser) {
+                    android.util.Log.d("Settings", "Row height slider moved to: ${height}px")
+                }
             }
 
-            override fun onStartTrackingTouch(seekBar: SeekBar?) {}
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {
+                android.util.Log.d("Settings", "Started touching row height slider")
+            }
 
             override fun onStopTrackingTouch(seekBar: SeekBar?) {
-                val height = (seekBar?.progress ?: 4) + 12
+                val height = (seekBar?.progress ?: 8) + 12
                 prefs.edit().putInt("galaxy_row_height", height).apply()
                 android.util.Log.d("Settings", "Row height saved: ${height}px")
             }
@@ -120,6 +126,29 @@ class SettingsFragment : Fragment() {
 
             // Neustart der App
             requireActivity().recreate()
+        }
+
+        // Spenden Button
+        btnDonate.setOnClickListener {
+            openDonateLink()
+        }
+    }
+
+    /**
+     * Öffnet den Buy Me A Coffee Link im Browser
+     */
+    private fun openDonateLink() {
+        try {
+            val intent = android.content.Intent(android.content.Intent.ACTION_VIEW)
+            intent.data = android.net.Uri.parse("https://www.buymeacoffee.com/derbutcher")
+            startActivity(intent)
+        } catch (e: Exception) {
+            android.util.Log.e("SettingsFragment", "Could not open donate link: ${e.message}")
+            android.widget.Toast.makeText(
+                requireContext(),
+                "Browser konnte nicht geöffnet werden",
+                android.widget.Toast.LENGTH_SHORT
+            ).show()
         }
     }
 }

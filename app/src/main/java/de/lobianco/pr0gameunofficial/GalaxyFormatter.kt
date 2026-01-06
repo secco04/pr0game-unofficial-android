@@ -30,13 +30,13 @@ object GalaxyFormatter {
     
     // Erstelle Mobile Table
     const mobileTable = document.createElement('div');
-    mobileTable.style.cssText = 'background: #13181f; color: #fff; font-size: 14px; overflow-x: auto;';
+    mobileTable.style.cssText = 'background: #13181f; color: #fff; font-size: 11px; overflow-x: auto; overflow-y: auto; -webkit-overflow-scrolling: touch;';
     
     // Table Header
     const header = document.createElement('div');
     header.style.cssText = 'display: flex; background: #13181f; font-weight: bold; padding: 10px 4px; border-bottom: 2px solid #64b5f6; font-size: 14px; color: #849ab7;';
     header.innerHTML = `
-        <div style="width: 15px; text-align: center;"></div>
+        <div style="width: 35px; text-align: center;">Pos</div>
         <div style="width: 150px; padding-left: 4px;">Planet</div>
         <div style="width: 30px; text-align: center;">M</div>
         <div style="width: 30px; text-align: center;">T</div>
@@ -82,7 +82,7 @@ object GalaxyFormatter {
         }
         
         const row = document.createElement('div');
-        const bgColor = position % 2 === 0 ? '#1e2530' : '#1f2631';
+        const bgColor = position % 2 === 0 ? '#1e2530' : '#1e2b39';
         
         // Prüfe ob eigener Planet
         const isOwn = originalRow.querySelector('.galaxy-planet a')?.textContent.includes('(*)');
@@ -92,7 +92,7 @@ object GalaxyFormatter {
         
         // Spalte 1: Position (klickbar mit Tooltip)
         const posCell = document.createElement('div');
-        posCell.style.cssText = 'width: 15px; height: 14px; display: flex; align-items: center; justify-content: center;';
+        posCell.style.cssText = 'width: 35px; height: 16px; display: flex; align-items: center; justify-content: center;';
         
         // Finde Original Position Cell mit Tooltip
         const originalPosCell = originalRow.querySelector('.galaxy-grid-item.position');
@@ -109,7 +109,7 @@ object GalaxyFormatter {
         
         // Spalte 2: Planet
         const planetCell = document.createElement('div');
-        planetCell.style.cssText = 'width: 150px; padding-left: 4px; display: flex; align-items: center; gap: 4px; auto: hidden;';
+        planetCell.style.cssText = 'width: 150px; padding-left: 4px; display: flex; align-items: center; gap: 4px; overflow: hidden;';
         
         const originalPlanetCell = originalRow.querySelector('.galaxy-planet');
         if (originalPlanetCell) {
@@ -252,7 +252,7 @@ object GalaxyFormatter {
         
         // Spalte 6: Aktion (Spionage-Button)
         const actionCell = document.createElement('div');
-        actionCell.style.cssText = 'width: 50px; height: 16px; display: flex; align-items: center; justify-content: center;';
+        actionCell.style.cssText = 'width: 50px; height: ' + ROW_HEIGHT + 'px; display: flex; align-items: center; justify-content: center;';
         
         const actionsOriginal = originalRow.querySelector('.galaxy-actions');
         if (actionsOriginal) {
@@ -260,7 +260,7 @@ object GalaxyFormatter {
             if (spyLink) {
                 // Clone kompletten Link mit allen Attributen
                 const newSpyLink = spyLink.cloneNode(true);
-                newSpyLink.style.cssText = 'display: inline-flex; align-items: center; justify-content: center; line-height: 16px;';
+                newSpyLink.style.cssText = 'display: inline-flex; align-items: center; justify-content: center; line-height: ' + ROW_HEIGHT + 'px;';
                 
                 // Behalte Original Bildgröße
                 const spyImg = newSpyLink.querySelector('img');
@@ -288,13 +288,13 @@ object GalaxyFormatter {
         
         // Position
         const posCell = document.createElement('div');
-        posCell.style.cssText = 'width: 15px; text-align: center; color: #64b5f6; font-weight: bold;';
+        posCell.style.cssText = 'width: 30px; text-align: center; color: #64b5f6; font-weight: bold;';
         posCell.textContent = position;
         row.appendChild(posCell);
         
         // Spanning cell
         const textCell = document.createElement('div');
-        textCell.style.cssText = 'flex: 1; text-align: center; color: #64b5f6; font-weight: 500; font-size: 14px;';
+        textCell.style.cssText = 'flex: 1; text-align: center; color: #64b5f6; font-weight: 500; font-size: 11px;';
         textCell.textContent = position === 16 ? '🌌 Expedition' : '💱 Handelszone';
         row.appendChild(textCell);
         

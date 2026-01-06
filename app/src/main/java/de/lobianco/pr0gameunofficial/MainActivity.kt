@@ -8,7 +8,6 @@ import android.widget.ImageButton
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
@@ -17,12 +16,14 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var viewPager: ViewPager2
     private lateinit var tabLayout: TabLayout
-    private lateinit var bottomBar: View
+    private lateinit var bottomButtons: View
     private lateinit var btnSettings: ImageButton
+    private lateinit var btnSwipeLock: ImageButton
     private lateinit var adapter: PlanetPagerAdapter
 
     private var planets: List<Planet> = emptyList()
     private var isSettingsOpen = false
+    private var isSwipeLocked = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,12 +34,18 @@ class MainActivity : AppCompatActivity() {
 
         viewPager = findViewById(R.id.viewPager)
         tabLayout = findViewById(R.id.tabLayout)
-        bottomBar = findViewById(R.id.bottomBar)
+        bottomButtons = findViewById(R.id.bottomBar)
         btnSettings = findViewById(R.id.btnSettings)
+        btnSwipeLock = findViewById(R.id.btnSwipeLock)
 
         // Settings Button
         btnSettings.setOnClickListener {
             openSettings()
+        }
+
+        // Swipe Lock Button
+        btnSwipeLock.setOnClickListener {
+            toggleSwipeLock()
         }
 
         // Lade Planeten aus SharedPreferences
@@ -72,7 +79,66 @@ class MainActivity : AppCompatActivity() {
         }.attach()
 
         viewPager.visibility = ViewPager2.VISIBLE
-        bottomBar.visibility = View.VISIBLE
+        tabLayout.visibility = TabLayout.VISIBLE
+        bottomButtons.visibility = View.VISIBLE
+
+        // Setup ViewPager mit Helper
+        ViewPagerHelper.setupViewPager(viewPager)
+        ViewPagerHelper.setSwipeEnabled(true)
+
+        // Update Lock Icon
+        updateSwipeLockIcon()
+    }
+
+    /**
+     * Togglet den Swipe Lock manuell
+     */
+    private fun toggleSwipeLock() {
+        isSwipeLocked = !isSwipeLocked
+        ViewPagerHelper.setSwipeEnabled(!isSwipeLocked)
+        updateSwipeLockIcon()
+
+        val status = if (isSwipeLocked) "gesperrt" else "entsperrt"
+        android.widget.Toast.makeText(this, "Planeten-Wechsel $status", android.widget.Toast.LENGTH_SHORT).show()
+        android.util.Log.d("MainActivity", "Swipe lock toggled: locked=$isSwipeLocked")
+    }
+
+    /**
+     * Aktualisiert das Lock-Icon (offen/geschlossen)
+     */
+    private fun updateSwipeLockIcon() {
+        if (::btnSwipeLock.isInitialized) {
+            val iconRes = if (isSwipeLocked) {
+                android.R.drawable.ic_lock_lock // Geschlossen
+            } else {
+                android.R.drawable.ic_lock_idle_lock // Offen
+            }
+            btnSwipeLock.setImageResource(iconRes)
+
+            // Farbe anpassen
+            val color = if (isSwipeLocked) {
+                0xFFFF6B6B.toInt() // Rot = gesperrt
+            } else {
+                0xFFFFFFFF.toInt() // Weiß = offen
+            }
+            btnSwipeLock.setColorFilter(color)
+        }
+    }
+
+    /**
+     * Aktiviert/Deaktiviert das Swipen zwischen Planeten
+     * Wird von Fragments aufgerufen (z.B. Empire-Seite)
+     * ABER: Nur wenn nicht manuell gesperrt
+     */
+    fun setViewPagerSwipeEnabled(enabled: Boolean) {
+        // Wenn manuell gesperrt, ignoriere automatische Änderungen
+        if (isSwipeLocked && enabled) {
+            android.util.Log.d("MainActivity", "Swipe manually locked, ignoring auto-enable")
+            return
+        }
+
+        ViewPagerHelper.setSwipeEnabled(enabled)
+        android.util.Log.d("MainActivity", "ViewPager swipe set to: $enabled")
     }
 
     fun onPlanetsLoaded(planetList: List<Planet>) {
@@ -114,6 +180,9 @@ class MainActivity : AppCompatActivity() {
                 .remove(it)
                 .commit()
         }
+
+        // Update Lock Icon nach Settings-Schließen
+        updateSwipeLockIcon()
     }
 
     private fun setupInsets() {

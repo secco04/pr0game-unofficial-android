@@ -89,6 +89,19 @@ class PlanetWebViewFragment : Fragment() {
                         }, delay)
                     }
                 }
+
+                // Deaktiviere ViewPager Swipen auf Seiten mit horizontalem Scrollen
+                val mainActivity = activity as? MainActivity
+                if (url?.contains("page=Empire") == true ||
+                    url?.contains("page=empire") == true ||
+                    url?.contains("page=fleetTable") == true ||
+                    url?.contains("page=FleetTable") == true) {
+                    mainActivity?.setViewPagerSwipeEnabled(false)
+                    android.util.Log.d("PlanetFragment", "Disabled ViewPager swipe on page with horizontal scrolling")
+                } else {
+                    mainActivity?.setViewPagerSwipeEnabled(true)
+                    android.util.Log.d("PlanetFragment", "Enabled ViewPager swipe")
+                }
             }
 
             override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {

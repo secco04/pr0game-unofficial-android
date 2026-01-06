@@ -59,6 +59,22 @@
             android:layout_height="match_parent"
             android:background="#2a3f5f" />
 
+        <!-- Swipe Lock Button -->
+        <ImageButton
+            android:id="@+id/btnSwipeLock"
+            android:layout_width="56dp"
+            android:layout_height="match_parent"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@android:drawable/ic_lock_idle_lock"
+            android:tint="#ffffff"
+            android:contentDescription="Planeten-Wechsel sperren/entsperren" />
+
+        <!-- Separator -->
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="#2a3f5f" />
+
         <!-- Settings Button -->
         <ImageButton
             android:id="@+id/btnSettings"

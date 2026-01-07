@@ -269,25 +269,6 @@
             android:backgroundTint="#e53935"
             android:layout_marginBottom="24dp" />
 
-        <!-- Platzhalter für zukünftige Settings -->
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Weitere Einstellungen"
-            android:textSize="18sp"
-            android:textColor="#64b5f6"
-            android:textStyle="bold"
-            android:layout_marginBottom="8dp" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Hier werden später weitere Einstellungen hinzugefügt:\n\n• Push-Benachrichtigungen\n• Auto-Refresh\n• Cache-Verwaltung\n• Design-Optionen"
-            android:textSize="14sp"
-            android:textColor="#aaaaaa"
-            android:lineSpacingExtra="4dp"
-            android:layout_marginBottom="24dp" />
-
         <!-- Spenden Section -->
         <TextView
             android:layout_width="match_parent"

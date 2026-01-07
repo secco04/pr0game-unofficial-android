@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="12dp"
+    android:background="?attr/selectableItemBackground"
+    android:gravity="center_vertical">
+
+    <!-- Drag Handle -->
+    <ImageView
+        android:id="@+id/dragHandle"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:src="@android:drawable/ic_menu_sort_by_size"
+        android:tint="#aaaaaa"
+        android:contentDescription="Drag handle" />
+
+    <!-- Icon -->
+    <ImageView
+        android:id="@+id/iconImage"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_marginStart="16dp"
+        android:contentDescription="Icon" />
+
+    <!-- Name -->
+    <TextView
+        android:id="@+id/iconName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_marginStart="16dp"
+        android:text="Icon Name"
+        android:textSize="16sp"
+        android:textColor="#ffffff" />
+
+    <!-- Toggle Switch -->
+    <androidx.appcompat.widget.SwitchCompat
+        android:id="@+id/iconToggle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:checked="true" />
+
+</LinearLayout>

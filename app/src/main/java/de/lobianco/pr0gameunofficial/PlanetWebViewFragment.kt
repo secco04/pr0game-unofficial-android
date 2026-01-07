@@ -529,6 +529,64 @@ class PlanetWebViewFragment : Fragment() {
     }
 
     /**
+     * Klickt auf den Imperium-Link via JavaScript
+     */
+    fun clickEmpireLink() {
+        if (::webView.isInitialized) {
+            val js = """
+                (function() {
+                    // Prüfe ob wir bereits auf der Imperium-Seite sind
+                    const currentUrl = window.location.href;
+                    if (currentUrl.includes('page=Empire') || currentUrl.includes('page=empire')) {
+                        return 'already on page';
+                    }
+                    
+                    // Finde den Imperium-Link
+                    const links = document.querySelectorAll('a[href*="page=Empire"], a[href*="page=empire"]');
+                    if (links.length > 0) {
+                        links[0].click();
+                        return 'clicked';
+                    }
+                    return 'not found';
+                })();
+            """.trimIndent()
+
+            webView.evaluateJavascript(js) { result ->
+                android.util.Log.d("PlanetFragment", "Click empire link result: $result")
+            }
+        }
+    }
+
+    /**
+     * Klickt auf den Flotten-Link via JavaScript
+     */
+    fun clickFleetLink() {
+        if (::webView.isInitialized) {
+            val js = """
+                (function() {
+                    // Prüfe ob wir bereits auf der Flotten-Seite sind
+                    const currentUrl = window.location.href;
+                    if (currentUrl.includes('page=fleetTable') || currentUrl.includes('page=FleetTable')) {
+                        return 'already on page';
+                    }
+                    
+                    // Finde den Flotten-Link
+                    const links = document.querySelectorAll('a[href*="page=fleetTable"], a[href*="page=FleetTable"]');
+                    if (links.length > 0) {
+                        links[0].click();
+                        return 'clicked';
+                    }
+                    return 'not found';
+                })();
+            """.trimIndent()
+
+            webView.evaluateJavascript(js) { result ->
+                android.util.Log.d("PlanetFragment", "Click fleet link result: $result")
+            }
+        }
+    }
+
+    /**
      * Überprüft ob neue Planeten hinzugekommen sind und aktualisiert die Liste automatisch
      */
     private fun checkAndUpdatePlanets() {

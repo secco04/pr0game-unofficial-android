@@ -21,6 +21,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var btnSwipeLock: ImageButton
     private lateinit var btnMessages: View
     private lateinit var btnSpyReports: View
+    private lateinit var btnEmpire: ImageButton
+    private lateinit var btnFleet: ImageButton
     private lateinit var messagesBadge: android.widget.TextView
     private lateinit var spyReportsBadge: android.widget.TextView
     private lateinit var adapter: PlanetPagerAdapter
@@ -28,7 +30,6 @@ class MainActivity : AppCompatActivity() {
     private var planets: List<Planet> = emptyList()
     private var isSettingsOpen = false
     private var isSwipeLocked = false
-    private var backPressedTime: Long = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,6 +48,8 @@ class MainActivity : AppCompatActivity() {
         btnSwipeLock = findViewById(R.id.btnSwipeLock)
         btnMessages = findViewById(R.id.btnMessages)
         btnSpyReports = findViewById(R.id.btnSpyReports)
+        btnEmpire = findViewById(R.id.btnEmpire)
+        btnFleet = findViewById(R.id.btnFleet)
         messagesBadge = findViewById(R.id.messagesBadge)
         spyReportsBadge = findViewById(R.id.spyReportsBadge)
 
@@ -75,6 +78,18 @@ class MainActivity : AppCompatActivity() {
         btnSpyReports.setOnClickListener {
             android.util.Log.d("MainActivity", "Spy Reports button clicked!")
             openSpyReports()
+        }
+
+        // Empire Button
+        btnEmpire.setOnClickListener {
+            android.util.Log.d("MainActivity", "Empire button clicked!")
+            openEmpire()
+        }
+
+        // Fleet Button
+        btnFleet.setOnClickListener {
+            android.util.Log.d("MainActivity", "Fleet button clicked!")
+            openFleet()
         }
 
         // Settings Button - Toggle öffnen/schließen
@@ -353,6 +368,58 @@ class MainActivity : AppCompatActivity() {
     }
 
     /**
+     * Öffnet das Imperium auf dem aktuellen Planeten
+     */
+    private fun openEmpire() {
+        android.util.Log.d("MainActivity", "openEmpire called")
+
+        try {
+            if (planets.isNotEmpty() && ::viewPager.isInitialized) {
+                val currentPosition = viewPager.currentItem
+
+                // Hole Fragment
+                val fragment = supportFragmentManager.findFragmentByTag("f$currentPosition") as? PlanetWebViewFragment
+                    ?: (if (::adapter.isInitialized) adapter.getFragmentAtPosition(currentPosition) else null)
+
+                if (fragment != null) {
+                    android.util.Log.d("MainActivity", "Fragment found, clicking empire link via JavaScript")
+                    fragment.clickEmpireLink()
+                } else {
+                    android.util.Log.e("MainActivity", "Fragment not found!")
+                }
+            }
+        } catch (e: Exception) {
+            android.util.Log.e("MainActivity", "Error opening empire", e)
+        }
+    }
+
+    /**
+     * Öffnet die Flotte auf dem aktuellen Planeten
+     */
+    private fun openFleet() {
+        android.util.Log.d("MainActivity", "openFleet called")
+
+        try {
+            if (planets.isNotEmpty() && ::viewPager.isInitialized) {
+                val currentPosition = viewPager.currentItem
+
+                // Hole Fragment
+                val fragment = supportFragmentManager.findFragmentByTag("f$currentPosition") as? PlanetWebViewFragment
+                    ?: (if (::adapter.isInitialized) adapter.getFragmentAtPosition(currentPosition) else null)
+
+                if (fragment != null) {
+                    android.util.Log.d("MainActivity", "Fragment found, clicking fleet link via JavaScript")
+                    fragment.clickFleetLink()
+                } else {
+                    android.util.Log.e("MainActivity", "Fragment not found!")
+                }
+            }
+        } catch (e: Exception) {
+            android.util.Log.e("MainActivity", "Error opening fleet", e)
+        }
+    }
+
+    /**
      * Aktualisiert das Nachrichten-Badge
      * Wird von Fragments aufgerufen wenn neue Nachrichtenzahl erkannt wird
      */
@@ -446,7 +513,7 @@ class MainActivity : AppCompatActivity() {
                 return true
             }
 
-            // Sonst WebView zurück (OHNE Toast!)
+            // Sonst WebView zurück
             if (::adapter.isInitialized) {
                 val currentFragment = adapter.getFragmentAtPosition(viewPager.currentItem)
                 if (currentFragment?.canGoBack() == true) {
@@ -455,18 +522,7 @@ class MainActivity : AppCompatActivity() {
                 }
             }
 
-            // NUR HIER: App beenden mit Toast-Warnung (doppelt drücken innerhalb 2 Sekunden)
-            // Dieser Code wird nur erreicht wenn WebView NICHT zurück kann
-            if (backPressedTime + 2000 > System.currentTimeMillis()) {
-                // Zweiter Druck innerhalb 2 Sekunden -> App beenden
-                finish()
-                return true
-            } else {
-                // Erster Druck -> Toast zeigen
-                android.widget.Toast.makeText(this, "Nochmal drücken zum Beenden", android.widget.Toast.LENGTH_SHORT).show()
-                backPressedTime = System.currentTimeMillis()
-                return true
-            }
+            // Keine weitere Logik - lass Android die App normal schließen
         }
         return super.onKeyDown(keyCode, event)
     }

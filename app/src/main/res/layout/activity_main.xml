@@ -7,7 +7,6 @@
     android:layout_height="match_parent"
     android:background="#0a0e27">
 
-    <!-- Container für InitialLoadFragment -->
     <FrameLayout
         android:id="@+id/container"
         android:layout_width="0dp"
@@ -17,7 +16,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- ViewPager für Planeten (anfangs unsichtbar) -->
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/viewPager"
         android:layout_width="0dp"
@@ -28,7 +26,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- Tab Bar für Planeten (schmaler, über Button Bar) -->
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabLayout"
         android:layout_width="0dp"
@@ -47,7 +44,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- Button Bar (nur Icons, unten) -->
     <LinearLayout
         android:id="@+id/buttonBar"
         android:layout_width="0dp"
@@ -59,13 +55,37 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <!-- Spacer (nimmt allen freien Platz links) -->
         <View
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1" />
 
-        <!-- Messages Button -->
+        <ImageButton
+            android:id="@+id/btnEmpire"
+            android:layout_width="56dp"
+            android:layout_height="match_parent"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_empire"
+            android:contentDescription="Imperium" />
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="#2a3f5f" />
+
+        <ImageButton
+            android:id="@+id/btnFleet"
+            android:layout_width="56dp"
+            android:layout_height="match_parent"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_fleet"
+            android:contentDescription="Flotte" />
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="#2a3f5f" />
+
         <FrameLayout
             android:id="@+id/btnMessages"
             android:layout_width="56dp"
@@ -82,7 +102,6 @@
                 android:tint="#ffffff"
                 android:contentDescription="Nachrichten" />
 
-            <!-- Badge für neue Nachrichten -->
             <TextView
                 android:id="@+id/messagesBadge"
                 android:layout_width="20dp"
@@ -99,13 +118,11 @@
                 android:visibility="gone" />
         </FrameLayout>
 
-        <!-- Separator -->
         <View
             android:layout_width="1dp"
             android:layout_height="match_parent"
             android:background="#2a3f5f" />
 
-        <!-- Spy Reports Button -->
         <FrameLayout
             android:id="@+id/btnSpyReports"
             android:layout_width="56dp"
@@ -122,7 +139,6 @@
                 android:tint="#FFFF00"
                 android:contentDescription="Spionageberichte" />
 
-            <!-- Badge für neue Spionageberichte -->
             <TextView
                 android:id="@+id/spyReportsBadge"
                 android:layout_width="20dp"
@@ -139,29 +155,25 @@
                 android:visibility="gone" />
         </FrameLayout>
 
-        <!-- Separator -->
         <View
             android:layout_width="1dp"
             android:layout_height="match_parent"
             android:background="#2a3f5f" />
 
-        <!-- Swipe Lock Button -->
         <ImageButton
             android:id="@+id/btnSwipeLock"
             android:layout_width="56dp"
             android:layout_height="match_parent"
             android:background="?attr/selectableItemBackgroundBorderless"
-            android:src="@android:drawable/ic_lock_idle_lock"
+            android:src="@android:drawable/ic_lock_lock"
             android:tint="#ffffff"
-            android:contentDescription="Planeten-Wechsel sperren/entsperren" />
+            android:contentDescription="Swipe Lock" />
 
-        <!-- Separator -->
         <View
             android:layout_width="1dp"
             android:layout_height="match_parent"
             android:background="#2a3f5f" />
 
-        <!-- Settings Button -->
         <ImageButton
             android:id="@+id/btnSettings"
             android:layout_width="56dp"

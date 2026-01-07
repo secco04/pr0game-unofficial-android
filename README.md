@@ -8,21 +8,33 @@ Eine inoffizielle Android-App für das Browser-Spiel [pr0game.com](https://pr0ga
 
 ## 📱 Features
 
-- ✨ **Multi-Planet Management**: Verwalte alle deine Planeten in einer App
+### 🌍 Navigation & Verwaltung
+- ✨ **Multi-Planet Management**: Verwalte alle deine Planeten in einer App mit Tab-Navigation
 - 🔄 **Swipe-Navigation**: Wechsle schnell zwischen deinen Planeten durch Wischen
-- 🔒 **Swipe-Lock**: Sperre die Planeten-Navigation bei Bedarf
-- ⚙️ **Einstellungen**: Passe die App nach deinen Wünschen an
-- 🌐 **WebView Integration**: Vollständige pr0game-Funktionalität
-- 💾 **Cookie-Verwaltung**: Bleibe automatisch eingeloggt (bis session cockie erlischt)
-- 📊 **Tab-Navigation**: Übersichtliche Anzeige aller Planeten
+- 🔒 **Swipe-Lock**: Sperre die Planeten-Navigation bei Bedarf (verhindert versehentliches Wechseln)
+- 🌌 **Galaxy Navigation**: Wische zwischen Systemen in der Galaxy-Ansicht (wenn Swipe gelockt)
+
+### 🎯 Quick-Access Icons
+- 🏛️ **Imperium**: Direktzugriff auf deine Imperiums-Übersicht
+- 🚀 **Flotte**: Schnellzugriff auf die Flotten-Verwaltung
+- 📧 **Nachrichten**: Mit Badge für ungelesene Nachrichten
+- 🔍 **Spionageberichte**: Direkter Zugang zu Spionageberichten mit Badge
+- ⚙️ **Einstellungen**: Umfangreiche Anpassungsmöglichkeiten
+
+### 🎨 Anpassung & Optimierung
+- 📐 **Galaxy Formatter**: Passt die Darstellung der Galaxy-Ansicht an (Zeilenhöhe, Ladeanimation)
+- 🎯 **UI-Anpassungen**: Verstecke Planeten-Dropdown oder Nachrichten-Banner nach Belieben
+- 🌐 **WebView Integration**: Vollständige pr0game-Funktionalität ohne Einschränkungen
+- 💾 **Cookie-Verwaltung**: Bleibe automatisch eingeloggt (bis Session-Cookie erlischt)
 - ⚡ **Swipe-to-Refresh**: Aktualisiere Seiten durch Herunterziehen
+- 🎯 **Performance-Optimiert**: Hardware-Beschleunigung, optimierte Scroll-Performance
 
 ## 📸 Screenshots
 
 WIP
 
 ## 🔧 Technische Details
-WIP
+
 ### Voraussetzungen
 
 - **Android Studio**: Arctic Fox oder neuer
@@ -38,6 +50,7 @@ WIP
 - ViewPager2
 - SwipeRefreshLayout
 - Fragment KTX
+- ConstraintLayout
 
 ## 🚀 Installation
 
@@ -45,7 +58,7 @@ WIP
 
 1. **Repository klonen**
 ```bash
-git clone https://github.com/dein-username/pr0game-unofficial-android.git
+git clone https://github.com/secco04/pr0game-unofficial-android.git
 cd pr0game-unofficial-android
 ```
 
@@ -59,7 +72,7 @@ cd pr0game-unofficial-android
 
 ### Für Nutzer
 
-1. Lade die neueste APK aus den [Releases](https://github.com/dein-username/pr0game-unofficial-android/releases)
+1. Lade die neueste APK aus den [Releases](https://github.com/secco04/pr0game-unofficial-android/releases)
 2. Installiere die APK auf deinem Android-Gerät
 3. Öffne die App und logge dich mit deinen pr0game-Zugangsdaten ein
 
@@ -77,8 +90,12 @@ cd pr0game-unofficial-android
 
 | Aktion | Beschreibung |
 |--------|--------------|
-| **Wischen** | Zwischen Planeten wechseln |
+| **Wischen** | Zwischen Planeten wechseln (wenn nicht gelockt) |
 | **🔒 Lock-Button** | Planeten-Navigation sperren/entsperren |
+| **🏛️ Empire-Icon** | Direkt zum Imperium |
+| **🚀 Fleet-Icon** | Direkt zur Flotten-Übersicht |
+| **📧 Messages-Icon** | Direkt zu den Nachrichten (mit Badge) |
+| **🔍 Spy-Icon** | Direkt zu Spionageberichten (mit Badge) |
 | **⚙️ Settings-Button** | Einstellungen öffnen/schließen |
 | **Zurück-Taste** | Schließt Einstellungen oder geht in WebView zurück |
 | **Herunterziehen** | Seite aktualisieren (Swipe-to-Refresh) |
@@ -89,26 +106,56 @@ cd pr0game-unofficial-android
 - Verhindert versehentliches Wechseln der Planeten
 - Icon wird rot wenn gesperrt
 - Nützlich beim Scrollen in der WebView
+- Aktiviert Galaxy-Navigation in der Galaxy-Ansicht
+
+#### 🌌 Galaxy Navigation
+- Automatisch aktiv in der Galaxy-Ansicht wenn Swipe gelockt ist
+- Wische nach links/rechts um zwischen Systemen zu navigieren (1-499)
+- Anpassbare Verzögerung und Zeilenhöhe in den Einstellungen
+- Ein/Ausschaltbar in den Einstellungen
+
+#### 📧 Nachrichten & Spionage Badges
+- Zeigen Anzahl ungelesener Nachrichten/Berichte
+- Aktualisieren sich automatisch bei jedem Seitenwechsel
+- Badge verschwindet wenn keine neuen Nachrichten vorhanden
+- Direkter Klick öffnet die entsprechende Seite
 
 #### ⚙️ Einstellungen
-- Öffnet/schließt mit einem Klick auf das Zahnrad
-- Icon wird blau wenn Einstellungen geöffnet sind
-- Planeten neu laden
-- App-Informationen
+
+**Galaxy-Ansicht:**
+- Galaxy Formatter ein/ausschalten
+- Galaxy Swipe-Navigation aktivieren/deaktivieren
+- Ladeanimation-Verzögerung anpassen (0-2000ms)
+- Zeilenhöhe anpassen (20-60px)
+
+**Generelle UI Anpassung:**
+- Planeten-Dropdown ausblenden
+- Nachrichten-Banner ausblenden
+
+**Daten:**
+- Planeten-Cache löschen (erzwingt Neuanmeldung)
 
 ## 🏗️ Architektur
 
 ```
 app/
-├── MainActivity.kt              # Hauptaktivität mit ViewPager
-├── PlanetWebViewFragment.kt     # WebView für jeden Planeten
+├── MainActivity.kt              # Hauptaktivität mit ViewPager & Bottom-Icons
+├── PlanetWebViewFragment.kt     # WebView für jeden Planeten + JavaScript-Injection
 ├── InitialLoadFragment.kt       # Erstes Login & Planeten-Erkennung
-├── SettingsFragment.kt          # Einstellungen
+├── SettingsFragment.kt          # Einstellungen-Dialog
 ├── PlanetPagerAdapter.kt        # Adapter für ViewPager2
 ├── ViewPagerHelper.kt           # Swipe-Steuerung
 ├── Planet.kt                    # Datenmodell für Planeten
 ├── PlanetParser.kt              # JSON Serialisierung
-└── GalaxyFormatter.kt           # Planeten-Koordinaten Formatierung
+└── res/
+    ├── layout/
+    │   ├── activity_main.xml    # Main Layout mit Button-Bar
+    │   ├── custom_tab.xml       # Custom Tab mit Name + Koordinaten
+    │   └── fragment_settings.xml # Settings UI
+    └── drawable/
+        ├── ic_empire.xml        # Custom Skyline-Icon
+        ├── ic_fleet.xml         # Custom Raumschiff-Icon
+        └── ic_settings_gear.xml # Custom Settings-Icon
 ```
 
 ## 🤝 Beitragen
@@ -124,7 +171,7 @@ Contributions sind willkommen! Bitte beachte:
 ### Code Style
 
 - Folge den [Kotlin Coding Conventions](https://kotlinlang.org/docs/coding-conventions.html)
-- Kommentare auf Deutsch /englisch für Benutzer-relevante Funktionen
+- Kommentare auf Deutsch/Englisch für Benutzer-relevante Funktionen
 - Englische Variablennamen und technische Kommentare sind OK
 
 ## 🐛 Bug Reports
@@ -137,9 +184,17 @@ Gefunden einen Bug? [Erstelle ein Issue](https://github.com/secco04/pr0game-unof
 - Screenshots (wenn relevant)
 - Android-Version und Gerätemodell
 
-## 📝 To-Do
+## 📝 Changelog
 
-WIP
+### Version 1.0 (Current)
+- ✅ Multi-Planet Tab-Navigation mit Koordinaten
+- ✅ Quick-Access Icons (Empire, Fleet, Messages, Spy)
+- ✅ Badges für ungelesene Nachrichten/Berichte
+- ✅ Galaxy Formatter & Navigation
+- ✅ Swipe-Lock Funktion
+- ✅ UI Anpassungsoptionen
+- ✅ Custom Icons (Skyline, Raumschiff)
+- ✅ Performance-Optimierungen
 
 ## ⚖️ Lizenz
 
@@ -163,7 +218,7 @@ Dieses Projekt steht unter der **Creative Commons Attribution-NonCommercial 4.0 
 ```
 Creative Commons Attribution-NonCommercial 4.0 International
 
-Copyright (c) 2024 [Dein Name]
+Copyright (c) 2024-2026
 
 Diese Arbeit ist lizenziert unter einer Creative Commons 
 Attribution-NonCommercial 4.0 International License.
@@ -177,25 +232,27 @@ https://creativecommons.org/licenses/by-nc/4.0/
 ## ⚠️ Disclaimer
 
 Diese App ist **NICHT offiziell** und wird nicht von den Betreibern von pr0game.com unterstützt oder endorsed. Dies ist ein Community-Projekt von Fans für Fans.
-Aktuell ist sie noch nicht genehmigt!!!
+
+**⚠️ WICHTIG: Aktuell ist sie noch nicht von pr0game.com genehmigt! Bitte noch nicht im produktiven Einsatz verwenden!**
 
 - Die App nutzt die öffentlich zugängliche Website von pr0game.com
 - Alle Rechte an pr0game.com liegen bei den jeweiligen Eigentümern
 - Verwendung auf eigene Verantwortung
 - Keine Garantie für Funktionalität oder Sicherheit
 
-## Aktuell ist sie noch nicht genehmigt bitte noch nicht benutzen!!!
-
 ## 🙏 Danksagungen
 
-- pr0game.com Team 
+- pr0game.com Team für das großartige Spiel
 - Alle Contributors die geholfen haben
-- Die Android Community
+- Die Android & Kotlin Community
+- Claude (Anthropic) für Unterstützung bei der Entwicklung
 
 ---
-[Buy me a Coffee](https://www.buymeacoffee.com/derbutcher)
----
+
+**Made with ❤️ for the pr0game Community**
+
+[Buy me a Coffee ☕](https://www.buymeacoffee.com/derbutcher)
+
 ---
 
 **Viel Spaß beim Spielen! 🚀👾**
-

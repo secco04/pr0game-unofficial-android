@@ -95,34 +95,12 @@ class SettingsFragment : Fragment() {
 
     private fun setupButtonBar(view: View) {
         val switchTwoRows: Switch = view.findViewById(R.id.switchTwoRowButtons)
-        val radioGroupAlignment: android.widget.RadioGroup = view.findViewById(R.id.radioGroupAlignment)
-        val radioAlignLeft: android.widget.RadioButton = view.findViewById(R.id.radioAlignLeft)
-        val radioAlignCenter: android.widget.RadioButton = view.findViewById(R.id.radioAlignCenter)
-        val radioAlignRight: android.widget.RadioButton = view.findViewById(R.id.radioAlignRight)
         val seekBarButtonSize: SeekBar = view.findViewById(R.id.seekBarButtonSize)
         val tvButtonSizeValue: TextView = view.findViewById(R.id.tvButtonSizeValue)
 
         switchTwoRows.isChecked = prefs.getBoolean("two_row_buttons", false)
         switchTwoRows.setOnCheckedChangeListener { _, isChecked ->
             prefs.edit().putBoolean("two_row_buttons", isChecked).apply()
-            (activity as? MainActivity)?.updateButtonBarVisibility()
-        }
-
-        // Alignment
-        val alignment = prefs.getString("button_alignment", "right") ?: "right"
-        when (alignment) {
-            "left" -> radioAlignLeft.isChecked = true
-            "center" -> radioAlignCenter.isChecked = true
-            else -> radioAlignRight.isChecked = true
-        }
-
-        radioGroupAlignment.setOnCheckedChangeListener { _, checkedId ->
-            val newAlignment = when (checkedId) {
-                R.id.radioAlignLeft -> "left"
-                R.id.radioAlignCenter -> "center"
-                else -> "right"
-            }
-            prefs.edit().putString("button_alignment", newAlignment).apply()
             (activity as? MainActivity)?.updateButtonBarVisibility()
         }
 

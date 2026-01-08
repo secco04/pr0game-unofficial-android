@@ -81,51 +81,10 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/button_alignment"
-            android:textSize="14sp"
-            android:textColor="#ffffff"
-            android:layout_marginTop="12dp"
-            android:layout_marginBottom="8dp" />
-
-        <RadioGroup
-            android:id="@+id/radioGroupAlignment"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginBottom="12dp">
-
-            <RadioButton
-                android:id="@+id/radioAlignLeft"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/align_left"
-                android:textColor="#ffffff" />
-
-            <RadioButton
-                android:id="@+id/radioAlignCenter"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/align_center"
-                android:textColor="#ffffff" />
-
-            <RadioButton
-                android:id="@+id/radioAlignRight"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/align_right"
-                android:textColor="#ffffff"
-                android:checked="true" />
-        </RadioGroup>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
             android:text="@string/button_size"
             android:textSize="14sp"
             android:textColor="#ffffff"
+            android:layout_marginTop="12dp"
             android:layout_marginBottom="8dp" />
 
         <LinearLayout

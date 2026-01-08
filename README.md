@@ -48,12 +48,6 @@ This is a comprehensive update package for the pr0game Unofficial Android app wi
 - **Two Rows** - First 6 buttons in row 1, rest in row 2
     - Fills horizontally: 1-2-3-4-5-6 | 7-8-9-10-11-12
 
-#### **Button Alignment:**
-- **Left** - Buttons start from left edge
-- **Center** - Buttons centered (when they fit)
-- **Right** - Buttons right-aligned (DEFAULT)
-    - Auto-scrolls to right position
-
 #### **Button Size Slider:**
 - **Range:** 48dp - 112dp
 - **Default:** 56dp
@@ -99,7 +93,6 @@ This is a comprehensive update package for the pr0game Unofficial Android app wi
 - **Hide Planet Dropdown** - Remove planet selector from web view
 - **Hide Message Banner** - Remove message notification banner
 - **Fullscreen Mode** - Toggle navigation bar visibility
-- **Button Alignment** - Choose left/center/right alignment
 - **Button Size** - Customize button and icon size
 - **Two Row Layout** - Split buttons into two rows
 
@@ -131,9 +124,6 @@ All icons from Google Material Symbols (Apache 2.0 licensed)
 ```
 🎛️ Button Bar
    ✓ Show Two Rows
-   
-   Button Alignment:
-   ○ Left  ○ Center  ● Right
    
    Button Size:
    ━━━━━━━━━━━━━ 56dp
@@ -242,11 +232,6 @@ iconSizePx = buttonSize * 0.57f * density
 paddingPx = (buttonSizePx - iconSizePx) / 2
 ```
 
-### **Alignment Implementation:**
-- **Gravity:** Applied to LinearLayout containers
-- **Scroll Position:** Auto-scroll for right-aligned buttons
-- **Two-Row Support:** Separate ScrollViews for each row
-
 ### **Fullscreen Modes:**
 ```kotlin
 // Android 11+ (R/API 30)
@@ -298,7 +283,6 @@ object Config {
 All settings are stored in SharedPreferences (`pr0game_settings`):
 - `app_language`: "en" (English)
 - `two_row_buttons`: false
-- `button_alignment`: "right"
 - `button_size`: 56
 - `show_button_*`: true (all buttons visible)
 - `fullscreen_enabled`: true
@@ -334,10 +318,10 @@ All settings are stored in SharedPreferences (`pr0game_settings`):
 - Rebuild Project
 - Check all `values-*/strings.xml` files are present
 
-### **Alignment doesn't work:**
-- Change setting → Close settings
-- Should apply immediately
-- Check if buttons overflow (need scrolling)
+### **Build fails:**
+- Clean Project
+- Rebuild Project
+- Check all `values-*/strings.xml` files are present
 
 ---
 
@@ -354,7 +338,6 @@ All settings are stored in SharedPreferences (`pr0game_settings`):
 ### **Version 1.3 (January 2026):**
 - ✅ 10 language support with language picker
 - ✅ 12 customizable navigation buttons
-- ✅ Button alignment (left/center/right)
 - ✅ Button size slider with proper icon scaling
 - ✅ Two-row layout option
 - ✅ Individual button show/hide toggles

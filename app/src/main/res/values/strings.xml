@@ -34,11 +34,7 @@
     <string name="button_bar">Button Bar</string>
     <string name="two_row_buttons">Show Two Rows</string>
     <string name="visible_buttons">Select Visible Buttons</string>
-    <string name="button_alignment">Button Alignment</string>
     <string name="button_size">Button Size</string>
-    <string name="align_left">Left</string>
-    <string name="align_center">Center</string>
-    <string name="align_right">Right</string>
     <string name="language">Language</string>
     <string name="language_desc">Select interface language</string>
     <string name="app_info">App Info</string>

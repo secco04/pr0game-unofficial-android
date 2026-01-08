@@ -150,50 +150,15 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupButtons() {
         val twoRows = prefs.getBoolean("two_row_buttons", false)
-        val alignment = prefs.getString("button_alignment", "right") ?: "right"
-
-        // Apply gravity to containers based on alignment
-        val gravity = when (alignment) {
-            "left" -> android.view.Gravity.START
-            "center" -> android.view.Gravity.CENTER_HORIZONTAL
-            else -> android.view.Gravity.END
-        }
 
         if (twoRows) {
             buttonBarScrollSingle.visibility = View.GONE
             buttonBarDouble.visibility = View.VISIBLE
-            buttonBarRow1.gravity = gravity
-            buttonBarRow2.gravity = gravity
             setupButtonsTwoRows()
-
-            // Scroll to position based on alignment after layout
-            if (alignment == "right") {
-                buttonBarRow1.post {
-                    val scroll1 = findViewById<android.widget.HorizontalScrollView>(R.id.buttonBarScrollRow1)
-                    val scroll2 = findViewById<android.widget.HorizontalScrollView>(R.id.buttonBarScrollRow2)
-                    scroll1?.postDelayed({
-                        val maxScroll = buttonBarRow1.width - scroll1.width
-                        if (maxScroll > 0) scroll1.scrollTo(maxScroll, 0)
-                    }, 100)
-                    scroll2?.postDelayed({
-                        val maxScroll = buttonBarRow2.width - scroll2.width
-                        if (maxScroll > 0) scroll2.scrollTo(maxScroll, 0)
-                    }, 100)
-                }
-            }
         } else {
             buttonBarScrollSingle.visibility = View.VISIBLE
             buttonBarDouble.visibility = View.GONE
-            buttonBarSingle.gravity = gravity
             setupButtonsSingleRow()
-
-            // Scroll to position based on alignment after layout
-            if (alignment == "right") {
-                buttonBarSingle.postDelayed({
-                    val maxScroll = buttonBarSingle.width - buttonBarScrollSingle.width
-                    if (maxScroll > 0) buttonBarScrollSingle.scrollTo(maxScroll, 0)
-                }, 100)
-            }
         }
     }
 

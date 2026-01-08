@@ -124,7 +124,7 @@ class PlanetWebViewFragment : Fragment() {
                             injectGalaxyFormatter()
                         }, delay)
                     }
-
+                    
                     // Aktiviere Galaxy Navigation wenn Swipe gelockt ist
                     setupGalaxySwipeNavigation()
                 }
@@ -135,19 +135,18 @@ class PlanetWebViewFragment : Fragment() {
                     url?.contains("page=empire") == true ||
                     url?.contains("page=fleetTable") == true ||
                     url?.contains("page=FleetTable") == true) {
-                    mainActivity?.setViewPagerSwipeEnabled(false)
-                    android.util.Log.d("PlanetFragment", "Disabled ViewPager swipe on page with horizontal scrolling")
+                    // Galaxy/Empire pages - swipe handled by lock state
+                    android.util.Log.d("PlanetFragment", "Page with horizontal scrolling detected")
                 } else {
-                    mainActivity?.setViewPagerSwipeEnabled(true)
-                    android.util.Log.d("PlanetFragment", "Enabled ViewPager swipe")
+                    android.util.Log.d("PlanetFragment", "Normal page")
                 }
             }
 
             override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
                 val url = request?.url.toString()
 
-                // Nur pr0game.com URLs erlauben
-                if (!url.contains("pr0game.com")) {
+                // Nur pr0game URLs erlauben
+                if (!url.contains(Config.BASE_DOMAIN)) {
                     return true
                 }
 
@@ -172,16 +171,16 @@ class PlanetWebViewFragment : Fragment() {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
             settings.offscreenPreRaster = true
         }
-
+        
         // Hardware-Beschleunigung aktivieren
         webView.setLayerType(android.view.View.LAYER_TYPE_HARDWARE, null)
-
+        
         // Unnötige Features deaktivieren für bessere Performance
         settings.setGeolocationEnabled(false)
         settings.setSupportZoom(false)
         settings.builtInZoomControls = false
         settings.displayZoomControls = false
-
+        
         // Medien nur auf Anfrage laden (spart CPU/Bandbreite)
         settings.mediaPlaybackRequiresUserGesture = true
 
@@ -212,25 +211,25 @@ class PlanetWebViewFragment : Fragment() {
      */
     private fun setupGalaxySwipeNavigation() {
         val mainActivity = activity as? MainActivity
-        val isSwipeLocked = mainActivity?.isSwipeLocked() ?: false
-
+        val isSwipeLocked = mainActivity?.isSwipeLocked ?: false
+        
         // Prüfe ob Galaxy Navigation in den Einstellungen aktiviert ist
         val prefs = requireContext().getSharedPreferences("pr0game_settings", android.content.Context.MODE_PRIVATE)
         val isNavigationEnabled = prefs.getBoolean("galaxy_navigation_enabled", true)
-
+        
         if (isSwipeLocked && isNavigationEnabled) {
             injectGalaxySwipeHandler()
         } else {
             removeGalaxySwipeHandler()
         }
     }
-
+    
     /**
      * Injiziert den Touch-Handler für Galaxy Swipe Navigation
      */
     private fun injectGalaxySwipeHandler() {
         android.util.Log.d("GalaxySwipe", "Injecting galaxy swipe handler")
-
+        
         val js = """
             (function() {
                 // Entferne alten Handler falls vorhanden
@@ -318,16 +317,16 @@ class PlanetWebViewFragment : Fragment() {
                 };
             })();
         """.trimIndent()
-
+        
         webView.evaluateJavascript(js, null)
     }
-
+    
     /**
      * Entfernt den Galaxy Swipe Handler
      */
     private fun removeGalaxySwipeHandler() {
         android.util.Log.d("GalaxySwipe", "Removing galaxy swipe handler")
-
+        
         val js = """
             (function() {
                 if (window.galaxySwipeHandler) {
@@ -338,10 +337,10 @@ class PlanetWebViewFragment : Fragment() {
                 }
             })();
         """.trimIndent()
-
+        
         webView.evaluateJavascript(js, null)
     }
-
+    
     /**
      * Wird von MainActivity aufgerufen wenn sich der Lock-Status ändert
      */
@@ -351,14 +350,14 @@ class PlanetWebViewFragment : Fragment() {
             android.util.Log.d("PlanetFragment", "WebView not initialized yet, ignoring lock change")
             return
         }
-
+        
         // Nur auf Galaxy-Seite reagieren
         webView.url?.let { url ->
             if (url.contains("page=galaxy")) {
                 // Prüfe ob Galaxy Navigation aktiviert ist
                 val prefs = requireContext().getSharedPreferences("pr0game_settings", android.content.Context.MODE_PRIVATE)
                 val isNavigationEnabled = prefs.getBoolean("galaxy_navigation_enabled", true)
-
+                
                 if (isLocked && isNavigationEnabled) {
                     injectGalaxySwipeHandler()
                 } else {
@@ -377,13 +376,13 @@ class PlanetWebViewFragment : Fragment() {
             android.util.Log.d("PlanetFragment", "WebView not initialized yet, ignoring setting change")
             return
         }
-
+        
         // Nur auf Galaxy-Seite reagieren
         webView.url?.let { url ->
             if (url.contains("page=galaxy")) {
                 val mainActivity = activity as? MainActivity
-                val isSwipeLocked = mainActivity?.isSwipeLocked() ?: false
-
+                val isSwipeLocked = mainActivity?.isSwipeLocked ?: false
+                
                 if (enabled && isSwipeLocked) {
                     injectGalaxySwipeHandler()
                 } else {
@@ -396,7 +395,7 @@ class PlanetWebViewFragment : Fragment() {
     /**
      * Prüft auf neue Nachrichten und aktualisiert das Badge
      */
-    private fun checkForNewMessages() {
+    fun checkForNewMessages() {
         // Gesamte Nachrichten
         val jsMessages = """
             (function() {
@@ -407,16 +406,16 @@ class PlanetWebViewFragment : Fragment() {
                 return 0;
             })();
         """.trimIndent()
-
+        
         webView.evaluateJavascript(jsMessages) { result ->
             try {
                 val count = result?.replace("\"", "")?.toIntOrNull() ?: 0
-                (activity as? MainActivity)?.updateMessagesBadge(count)
+                (activity as? MainActivity)?.updateMessageBadge(count)
             } catch (e: Exception) {
                 android.util.Log.e("Messages", "Error parsing message count: ${e.message}")
             }
         }
-
+        
         // Spionageberichte (unread_0)
         val jsSpyReports = """
             (function() {
@@ -427,7 +426,7 @@ class PlanetWebViewFragment : Fragment() {
                 return 0;
             })();
         """.trimIndent()
-
+        
         webView.evaluateJavascript(jsSpyReports) { result ->
             try {
                 val count = result?.replace("\"", "")?.toIntOrNull() ?: 0
@@ -460,7 +459,7 @@ class PlanetWebViewFragment : Fragment() {
             // Füge cp Parameter hinzu
             val urlWithCp = ensurePlanetParameter(url)
             android.util.Log.d("PlanetFragment", "Direct loadUrl: $urlWithCp")
-
+            
             // Lade direkt - wird durch shouldOverrideUrlLoading gehen aber URL ist schon korrekt
             webView.loadUrl(urlWithCp)
         } else {
@@ -490,7 +489,7 @@ class PlanetWebViewFragment : Fragment() {
                     return 'not found';
                 })();
             """.trimIndent()
-
+            
             webView.evaluateJavascript(js) { result ->
                 android.util.Log.d("PlanetFragment", "Click messages link result: $result")
             }
@@ -521,7 +520,7 @@ class PlanetWebViewFragment : Fragment() {
                     return 'fallback';
                 })();
             """.trimIndent()
-
+            
             webView.evaluateJavascript(js) { result ->
                 android.util.Log.d("PlanetFragment", "Click spy reports link result: $result")
             }
@@ -550,7 +549,7 @@ class PlanetWebViewFragment : Fragment() {
                     return 'not found';
                 })();
             """.trimIndent()
-
+            
             webView.evaluateJavascript(js) { result ->
                 android.util.Log.d("PlanetFragment", "Click empire link result: $result")
             }
@@ -579,9 +578,63 @@ class PlanetWebViewFragment : Fragment() {
                     return 'not found';
                 })();
             """.trimIndent()
-
+            
             webView.evaluateJavascript(js) { result ->
                 android.util.Log.d("PlanetFragment", "Click fleet link result: $result")
+            }
+        }
+    }
+
+    /**
+     * Klickt auf den Übersicht-Link via JavaScript
+     */
+    fun clickOverviewLink() {
+        if (::webView.isInitialized) {
+            val js = """
+                (function() {
+                    const currentUrl = window.location.href;
+                    if (currentUrl.includes('page=overview') || currentUrl.includes('page=Overview')) {
+                        return 'already on page';
+                    }
+                    
+                    const links = document.querySelectorAll('a[href*="page=overview"], a[href*="page=Overview"]');
+                    if (links.length > 0) {
+                        links[0].click();
+                        return 'clicked';
+                    }
+                    return 'not found';
+                })();
+            """.trimIndent()
+            
+            webView.evaluateJavascript(js) { result ->
+                android.util.Log.d("PlanetFragment", "Click overview link result: $result")
+            }
+        }
+    }
+
+    /**
+     * Klickt auf den Galaxy-Link via JavaScript
+     */
+    fun clickGalaxyLink() {
+        if (::webView.isInitialized) {
+            val js = """
+                (function() {
+                    const currentUrl = window.location.href;
+                    if (currentUrl.includes('page=galaxy') || currentUrl.includes('page=Galaxy')) {
+                        return 'already on page';
+                    }
+                    
+                    const links = document.querySelectorAll('a[href*="page=galaxy"], a[href*="page=Galaxy"]');
+                    if (links.length > 0) {
+                        links[0].click();
+                        return 'clicked';
+                    }
+                    return 'not found';
+                })();
+            """.trimIndent()
+            
+            webView.evaluateJavascript(js) { result ->
+                android.util.Log.d("PlanetFragment", "Click galaxy link result: $result")
             }
         }
     }
@@ -613,7 +666,7 @@ class PlanetWebViewFragment : Fragment() {
                     // Entferne Anführungszeichen und parse JSON
                     val cleanResult = result.trim('"').replace("\\\"", "\"")
                     val jsonArray = org.json.JSONArray(cleanResult)
-
+                    
                     val newPlanets = mutableListOf<Planet>()
                     for (i in 0 until jsonArray.length()) {
                         val obj = jsonArray.getJSONObject(i)
@@ -636,13 +689,13 @@ class PlanetWebViewFragment : Fragment() {
                     }
 
                     // Prüfe ob sich die Liste geändert hat
-                    if (newPlanets.size != currentPlanets.size ||
+                    if (newPlanets.size != currentPlanets.size || 
                         newPlanets.map { it.id }.toSet() != currentPlanets.map { it.id }.toSet()) {
-
+                        
                         android.util.Log.d("PlanetUpdate", "Planet list changed! Old: ${currentPlanets.size}, New: ${newPlanets.size}")
-
+                        
                         // Aktualisiere MainActivity mit neuer Planetenliste
-                        (activity as? MainActivity)?.onPlanetsUpdated(newPlanets)
+                        (activity as? MainActivity)?.onPlanetsLoaded(newPlanets)
                     }
                 } catch (e: Exception) {
                     android.util.Log.e("PlanetUpdate", "Error parsing planets: ${e.message}")
@@ -658,7 +711,7 @@ class PlanetWebViewFragment : Fragment() {
         val prefs = requireContext().getSharedPreferences("pr0game_settings", android.content.Context.MODE_PRIVATE)
         val hidePlanetSelector = prefs.getBoolean("hide_planet_selector", true)
         val hideMessageBanner = prefs.getBoolean("hide_message_banner", true)
-
+        
         val js = """
             (function() {
                 // CSS injizieren basierend auf Einstellungen
@@ -701,7 +754,7 @@ class PlanetWebViewFragment : Fragment() {
                 
                 // Überschreibe alle Links mit cp Parameter
                 document.querySelectorAll('a').forEach(function(link) {
-                    if (link.href.includes('pr0game.com')) {
+                    if (link.href.includes('${Config.BASE_DOMAIN}')) {
                         const url = new URL(link.href);
                         url.searchParams.set('cp', '${planet.id}');
                         link.href = url.toString();
@@ -750,6 +803,62 @@ class PlanetWebViewFragment : Fragment() {
         super.onResume()
         if (::webView.isInitialized) {
             webView.onResume()
+        }
+    }
+
+    fun clickBuildingsLink() {
+        if (::webView.isInitialized) {
+            webView.evaluateJavascript("""
+                (function() {
+                    const url = window.location.href;
+                    if (url.includes('page=buildings') || url.includes('page=Buildings')) return 'already';
+                    const links = document.querySelectorAll('a[href*="page=buildings"], a[href*="page=Buildings"]');
+                    if (links.length > 0) { links[0].click(); return 'clicked'; }
+                    return 'not found';
+                })();
+            """.trimIndent()) { }
+        }
+    }
+
+    fun clickShipyardLink() {
+        if (::webView.isInitialized) {
+            webView.evaluateJavascript("""
+                (function() {
+                    const url = window.location.href;
+                    if (url.includes('page=shipyard') && url.includes('mode=fleet')) return 'already';
+                    const links = document.querySelectorAll('a[href*="page=shipyard"][href*="mode=fleet"]');
+                    if (links.length > 0) { links[0].click(); return 'clicked'; }
+                    return 'not found';
+                })();
+            """.trimIndent()) { }
+        }
+    }
+
+    fun clickDefenseLink() {
+        if (::webView.isInitialized) {
+            webView.evaluateJavascript("""
+                (function() {
+                    const url = window.location.href;
+                    if (url.includes('page=shipyard') && url.includes('mode=defense')) return 'already';
+                    const links = document.querySelectorAll('a[href*="page=shipyard"][href*="mode=defense"]');
+                    if (links.length > 0) { links[0].click(); return 'clicked'; }
+                    return 'not found';
+                })();
+            """.trimIndent()) { }
+        }
+    }
+
+    fun clickResearchLink() {
+        if (::webView.isInitialized) {
+            webView.evaluateJavascript("""
+                (function() {
+                    const url = window.location.href;
+                    if (url.includes('page=research')) return 'already';
+                    const links = document.querySelectorAll('a[href*="page=research"]');
+                    if (links.length > 0) { links[0].click(); return 'clicked'; }
+                    return 'not found';
+                })();
+            """.trimIndent()) { }
         }
     }
 }

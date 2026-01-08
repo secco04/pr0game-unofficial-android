@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">pr0game Unofficial</string>
+    
+    <!-- Buttons -->
+    <string name="btn_overview">Przegląd</string>
+    <string name="btn_empire">Imperium</string>
+    <string name="btn_buildings">Budynki</string>
+    <string name="btn_shipyard">Stocznia</string>
+    <string name="btn_defense">Obrona</string>
+    <string name="btn_research">Badania</string>
+    <string name="btn_fleet">Flota</string>
+    <string name="btn_galaxy">Galaktyka</string>
+    <string name="btn_messages">Wiadomości</string>
+    <string name="btn_spy_reports">Raporty Szpiegowskie</string>
+    <string name="btn_swipe_lock">Blokada</string>
+    <string name="btn_settings">Ustawienia</string>
+    
+    <!-- Settings -->
+    <string name="settings_title">Ustawienia</string>
+    <string name="settings_close">Zamknij</string>
+    <string name="galaxy_view">Widok Galaktyki</string>
+    <string name="galaxy_formatter">Formatowanie Galaktyki</string>
+    <string name="galaxy_formatter_desc">Optymalizuje wyświetlanie galaktyki</string>
+    <string name="galaxy_navigation">Nawigacja Przesuwania Galaktyki</string>
+    <string name="galaxy_navigation_desc">Przesuwaj między systemami gdy zablokowane</string>
+    <string name="loading_delay">Opóźnienie Animacji Ładowania</string>
+    <string name="row_height">Wysokość Wiersza</string>
+    <string name="ui_customization">Dostosowanie Interfejsu</string>
+    <string name="hide_planet_selector">Ukryj Menu Planet</string>
+    <string name="hide_message_banner">Ukryj Banner Wiadomości</string>
+    <string name="button_bar">Pasek Przycisków</string>
+    <string name="two_row_buttons">Pokaż Dwa Wiersze</string>
+    <string name="visible_buttons">Wybierz Widoczne Przyciski</string>
+    <string name="language">Język</string>
+    <string name="language_desc">Wybierz język interfejsu</string>
+    <string name="app_info">Informacje o Aplikacji</string>
+    <string name="version">Wersja</string>
+    <string name="data">Dane</string>
+    <string name="clear_cache">Wyczyść Pamięć Podręczną Planet (Zaloguj się ponownie)</string>
+    <string name="support">Wsparcie</string>
+    <string name="support_desc">Podoba Ci się aplikacja? Wesprzyj rozwój!</string>
+    <string name="buy_coffee">☕ Postaw mi kawę</string>
+    <string name="swipe_locked">Nawigacja planet zablokowana</string>
+    <string name="swipe_unlocked">Nawigacja planet odblokowana</string>
+    <string name="cache_cleared">Pamięć podręczna wyczyszczona! Zaloguj się ponownie.</string>
+    <string name="browser_error">Nie można otworzyć przeglądarki</string>
+    
+    <!-- Languages -->
+    <string name="lang_turkish">Türkçe</string>
+    <string name="lang_portuguese">Português</string>
+    <string name="lang_polish">Polski</string>
+    <string name="lang_ogre">Ogerfränkisch</string>
+    <string name="lang_russian">Русский</string>
+    <string name="lang_german">Deutsch</string>
+    <string name="lang_pirate">SetSails</string>
+    <string name="lang_english">English</string>
+    <string name="lang_spanish">Español</string>
+    <string name="lang_french">Français</string>
+</resources>

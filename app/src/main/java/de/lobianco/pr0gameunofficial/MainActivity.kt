@@ -1,13 +1,18 @@
 package de.lobianco.pr0gameunofficial
 
+import android.content.Context
+import android.graphics.Color
 import android.os.Bundle
-import android.view.KeyEvent
 import android.view.View
+import android.view.ViewGroup
 import android.webkit.CookieManager
+import android.widget.FrameLayout
 import android.widget.ImageButton
+import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
+import androidx.core.content.ContextCompat
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
@@ -16,519 +21,467 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var viewPager: ViewPager2
     private lateinit var tabLayout: TabLayout
-    private lateinit var bottomButtons: View
-    private lateinit var btnSettings: ImageButton
-    private lateinit var btnSwipeLock: ImageButton
-    private lateinit var btnMessages: View
-    private lateinit var btnSpyReports: View
-    private lateinit var btnEmpire: ImageButton
-    private lateinit var btnFleet: ImageButton
-    private lateinit var messagesBadge: android.widget.TextView
-    private lateinit var spyReportsBadge: android.widget.TextView
-    private lateinit var adapter: PlanetPagerAdapter
+    private lateinit var buttonBarContainer: FrameLayout
+    private lateinit var buttonBarScrollSingle: View
+    private lateinit var buttonBarSingle: LinearLayout
+    private lateinit var buttonBarDouble: View
+    private lateinit var buttonBarRow1: LinearLayout
+    private lateinit var buttonBarRow2: LinearLayout
 
-    private var planets: List<Planet> = emptyList()
+    private lateinit var adapter: PlanetPagerAdapter
+    private lateinit var prefs: android.content.SharedPreferences
+
+    private var planets: MutableList<Planet> = mutableListOf()
+    var isSwipeLocked = false
     private var isSettingsOpen = false
-    private var isSwipeLocked = false
+
+    // Badge TextViews
+    private var messagesBadge: TextView? = null
+    private var spyReportsBadge: TextView? = null
+
+    // Button references for updates
+    private var btnSwipeLock: ImageButton? = null
+    private var btnSettings: ImageButton? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContentView(R.layout.activity_main)
 
-        // Fullscreen Mode - Navigation Bar ausblenden (nach setContentView!)
-        enableEdgeToEdge()
+        // Fullscreen Mode (optional, user configurable)
+        prefs = getSharedPreferences("pr0game_settings", Context.MODE_PRIVATE)
+        val fullscreenEnabled = prefs.getBoolean("fullscreen_enabled", true)
 
-        setupInsets()
-        setupCookies()
+        if (fullscreenEnabled) {
+            // Modern approach using WindowInsetsController (less intrusive)
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
+                window.setDecorFitsSystemWindows(false)
+                window.insetsController?.let {
+                    it.hide(android.view.WindowInsets.Type.statusBars() or android.view.WindowInsets.Type.navigationBars())
+                    it.systemBarsBehavior = android.view.WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+                }
+            } else {
+                // Fallback for older Android versions
+                @Suppress("DEPRECATION")
+                window.decorView.systemUiVisibility = (
+                        android.view.View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                                or android.view.View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                                or android.view.View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                                or android.view.View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                                or android.view.View.SYSTEM_UI_FLAG_FULLSCREEN
+                                or android.view.View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+                        )
+            }
+        }
+
+        prefs = getSharedPreferences("pr0game_settings", Context.MODE_PRIVATE)
 
         viewPager = findViewById(R.id.viewPager)
         tabLayout = findViewById(R.id.tabLayout)
-        bottomButtons = findViewById(R.id.buttonBar)
-        btnSettings = findViewById(R.id.btnSettings)
-        btnSwipeLock = findViewById(R.id.btnSwipeLock)
-        btnMessages = findViewById(R.id.btnMessages)
-        btnSpyReports = findViewById(R.id.btnSpyReports)
-        btnEmpire = findViewById(R.id.btnEmpire)
-        btnFleet = findViewById(R.id.btnFleet)
-        messagesBadge = findViewById(R.id.messagesBadge)
-        spyReportsBadge = findViewById(R.id.spyReportsBadge)
+        buttonBarContainer = findViewById(R.id.buttonBarContainer)
+        buttonBarScrollSingle = findViewById(R.id.buttonBarScrollSingle)
+        buttonBarSingle = findViewById(R.id.buttonBarSingle)
+        buttonBarDouble = findViewById(R.id.buttonBarDouble)
+        buttonBarRow1 = findViewById(R.id.buttonBarRow1)
+        buttonBarRow2 = findViewById(R.id.buttonBarRow2)
 
-        // Mache Badges rund
-        messagesBadge.clipToOutline = true
-        messagesBadge.outlineProvider = object : android.view.ViewOutlineProvider() {
-            override fun getOutline(view: android.view.View, outline: android.graphics.Outline) {
-                outline.setOval(0, 0, view.width, view.height)
-            }
-        }
-
-        spyReportsBadge.clipToOutline = true
-        spyReportsBadge.outlineProvider = object : android.view.ViewOutlineProvider() {
-            override fun getOutline(view: android.view.View, outline: android.graphics.Outline) {
-                outline.setOval(0, 0, view.width, view.height)
-            }
-        }
-
-        // Messages Button
-        btnMessages.setOnClickListener {
-            android.util.Log.d("MainActivity", "Messages button clicked!")
-            openMessages()
-        }
-
-        // Spy Reports Button
-        btnSpyReports.setOnClickListener {
-            android.util.Log.d("MainActivity", "Spy Reports button clicked!")
-            openSpyReports()
-        }
-
-        // Empire Button
-        btnEmpire.setOnClickListener {
-            android.util.Log.d("MainActivity", "Empire button clicked!")
-            openEmpire()
-        }
-
-        // Fleet Button
-        btnFleet.setOnClickListener {
-            android.util.Log.d("MainActivity", "Fleet button clicked!")
-            openFleet()
-        }
-
-        // Settings Button - Toggle öffnen/schließen
-        btnSettings.setOnClickListener {
-            if (isSettingsOpen) {
-                closeSettings()
-            } else {
-                openSettings()
-            }
-        }
-
-        // Swipe Lock Button
-        btnSwipeLock.setOnClickListener {
-            toggleSwipeLock()
-        }
-
-        // Lade Planeten aus SharedPreferences
-        loadPlanets()
+        loadPlanetsAndSetup()
     }
 
-    private fun loadPlanets() {
-        val prefs = getSharedPreferences("pr0game_data", MODE_PRIVATE)
+    private fun loadPlanetsAndSetup() {
         val savedPlanets = prefs.getString("planets_json", null)
 
         if (savedPlanets != null) {
-            planets = PlanetParser.fromJson(savedPlanets)
-            setupViewPager()
+            planets = PlanetParser.fromJson(savedPlanets).toMutableList()
+            setupPlanets()
         } else {
-            // Zeige InitialLoadFragment zum Planeten auslesen
-            supportFragmentManager.beginTransaction()
-                .replace(R.id.container, InitialLoadFragment())
-                .commit()
+            showInitialLoadFragment()
         }
     }
 
-    fun setupViewPager() {
-        if (planets.isEmpty()) return
+    private fun showInitialLoadFragment() {
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.container, InitialLoadFragment())
+            .commit()
+    }
+
+    fun onPlanetsLoaded(loadedPlanets: List<Planet>) {
+        planets.clear()
+        planets.addAll(loadedPlanets)
+
+        val json = PlanetParser.toJson(planets)
+        prefs.edit().putString("planets_json", json).apply()
+
+        setupPlanets()
+    }
+
+    private fun setupPlanets() {
+        supportFragmentManager.findFragmentById(R.id.container)?.let {
+            supportFragmentManager.beginTransaction().remove(it).commit()
+        }
 
         adapter = PlanetPagerAdapter(this, planets)
         viewPager.adapter = adapter
-        viewPager.offscreenPageLimit = 2  // 2 Seiten vorgeladen für besseres Swipen
+        viewPager.offscreenPageLimit = 2
 
+        setupTabs()
+        setupButtons()
+
+        viewPager.visibility = View.VISIBLE
+        tabLayout.visibility = View.VISIBLE
+        buttonBarContainer.visibility = View.VISIBLE
+
+        updateSwipeLockIcon()
+    }
+
+    private fun setupTabs() {
         TabLayoutMediator(tabLayout, viewPager) { tab, position ->
-            // Erstelle Custom View für zweizeilige Tabs
             val customView = layoutInflater.inflate(R.layout.custom_tab, null)
-            val nameText = customView.findViewById<android.widget.TextView>(R.id.tab_name)
-            val coordsText = customView.findViewById<android.widget.TextView>(R.id.tab_coords)
+            val tvName = customView.findViewById<TextView>(R.id.tvPlanetName)
+            val tvCoords = customView.findViewById<TextView>(R.id.tvPlanetCoords)
 
-            nameText.text = planets[position].name
-            coordsText.text = planets[position].coordinates
+            val planet = planets[position]
+            tvName.text = planet.name
+            tvCoords.text = planet.getCoordinatesString()
 
             tab.customView = customView
         }.attach()
-
-        viewPager.visibility = ViewPager2.VISIBLE
-        tabLayout.visibility = TabLayout.VISIBLE
-        bottomButtons.visibility = View.VISIBLE
-
-        // Setup ViewPager mit Helper
-        ViewPagerHelper.setupViewPager(viewPager)
-        ViewPagerHelper.setSwipeEnabled(true)
-
-        // Update Lock Icon
-        updateSwipeLockIcon()
     }
 
-    /**
-     * Togglet den Swipe Lock manuell
-     */
+    private fun setupButtons() {
+        val twoRows = prefs.getBoolean("two_row_buttons", false)
+        val alignment = prefs.getString("button_alignment", "right") ?: "right"
+
+        // Apply gravity to containers based on alignment
+        val gravity = when (alignment) {
+            "left" -> android.view.Gravity.START
+            "center" -> android.view.Gravity.CENTER_HORIZONTAL
+            else -> android.view.Gravity.END
+        }
+
+        if (twoRows) {
+            buttonBarScrollSingle.visibility = View.GONE
+            buttonBarDouble.visibility = View.VISIBLE
+            buttonBarRow1.gravity = gravity
+            buttonBarRow2.gravity = gravity
+            setupButtonsTwoRows()
+
+            // Scroll to position based on alignment after layout
+            if (alignment == "right") {
+                buttonBarRow1.post {
+                    val scroll1 = findViewById<android.widget.HorizontalScrollView>(R.id.buttonBarScrollRow1)
+                    val scroll2 = findViewById<android.widget.HorizontalScrollView>(R.id.buttonBarScrollRow2)
+                    scroll1?.postDelayed({
+                        val maxScroll = buttonBarRow1.width - scroll1.width
+                        if (maxScroll > 0) scroll1.scrollTo(maxScroll, 0)
+                    }, 100)
+                    scroll2?.postDelayed({
+                        val maxScroll = buttonBarRow2.width - scroll2.width
+                        if (maxScroll > 0) scroll2.scrollTo(maxScroll, 0)
+                    }, 100)
+                }
+            }
+        } else {
+            buttonBarScrollSingle.visibility = View.VISIBLE
+            buttonBarDouble.visibility = View.GONE
+            buttonBarSingle.gravity = gravity
+            setupButtonsSingleRow()
+
+            // Scroll to position based on alignment after layout
+            if (alignment == "right") {
+                buttonBarSingle.postDelayed({
+                    val maxScroll = buttonBarSingle.width - buttonBarScrollSingle.width
+                    if (maxScroll > 0) buttonBarScrollSingle.scrollTo(maxScroll, 0)
+                }, 100)
+            }
+        }
+    }
+
+    private fun setupButtonsSingleRow() {
+        buttonBarSingle.removeAllViews()
+
+        val buttons = getButtonConfigs()
+        buttons.forEach { config ->
+            if (isButtonVisible(config.id)) {
+                addButton(buttonBarSingle, config)
+            }
+        }
+    }
+
+    private fun setupButtonsTwoRows() {
+        buttonBarRow1.removeAllViews()
+        buttonBarRow2.removeAllViews()
+
+        val buttons = getButtonConfigs()
+        val visibleButtons = buttons.filter { isButtonVisible(it.id) }
+
+        // Fill horizontally: first 6 buttons in row 1, rest in row 2
+        val maxFirstRow = 6
+
+        visibleButtons.take(maxFirstRow).forEach { config ->
+            addButton(buttonBarRow1, config)
+        }
+
+        if (visibleButtons.size > maxFirstRow) {
+            visibleButtons.drop(maxFirstRow).forEach { config ->
+                addButton(buttonBarRow2, config)
+            }
+        }
+    }
+
+    private fun getButtonConfigs(): List<ButtonConfig> {
+        return listOf(
+            ButtonConfig("overview", R.string.btn_overview, R.drawable.ic_overview, Color.WHITE, false) { openOverview() },
+            ButtonConfig("empire", R.string.btn_empire, R.drawable.ic_empire, null, false) { openEmpire() },
+            ButtonConfig("buildings", R.string.btn_buildings, R.drawable.ic_buildings, Color.WHITE, false) { openBuildings() },
+            ButtonConfig("shipyard", R.string.btn_shipyard, R.drawable.ic_shipyard, Color.WHITE, false) { openShipyard() },
+            ButtonConfig("defense", R.string.btn_defense, R.drawable.ic_defense, Color.WHITE, false) { openDefense() },
+            ButtonConfig("research", R.string.btn_research, R.drawable.ic_research, Color.WHITE, false) { openResearch() },
+            ButtonConfig("fleet", R.string.btn_fleet, R.drawable.ic_fleet, null, false) { openFleet() },
+            ButtonConfig("galaxy", R.string.btn_galaxy, R.drawable.ic_galaxy, Color.WHITE, false) { openGalaxy() },
+            ButtonConfig("messages", R.string.btn_messages, android.R.drawable.ic_dialog_email, Color.WHITE, true) { openMessages() },
+            ButtonConfig("spy_reports", R.string.btn_spy_reports, R.drawable.ic_spyreport, Color.parseColor("#FFFF00"), true) { openSpyReports() },
+            ButtonConfig("swipe_lock", R.string.btn_swipe_lock, android.R.drawable.ic_lock_lock, Color.WHITE, false) { toggleSwipeLock() },
+            ButtonConfig("settings", R.string.btn_settings, R.drawable.ic_settings_gear, null, false) { toggleSettings() }
+        )
+    }
+
+    private fun isButtonVisible(id: String): Boolean {
+        return prefs.getBoolean("show_button_$id", true)
+    }
+
+    private fun addSeparator(parent: LinearLayout) {
+        val separator = View(this)
+        separator.layoutParams = LinearLayout.LayoutParams(
+            resources.displayMetrics.density.toInt(),
+            ViewGroup.LayoutParams.MATCH_PARENT
+        )
+        separator.setBackgroundColor(Color.parseColor("#2a3f5f"))
+        parent.addView(separator)
+    }
+
+    private fun addButton(parent: LinearLayout, config: ButtonConfig) {
+        val buttonSize = prefs.getInt("button_size", 56)
+        val buttonSizePx = (buttonSize * resources.displayMetrics.density).toInt()
+        val iconSizePx = (buttonSize * 0.57f * resources.displayMetrics.density).toInt() // 57% of button size
+
+        if (config.hasBadge) {
+            val frameLayout = FrameLayout(this)
+            frameLayout.layoutParams = LinearLayout.LayoutParams(
+                buttonSizePx,
+                ViewGroup.LayoutParams.MATCH_PARENT  // Match bar height (48dp)
+            )
+
+            val imageView = ImageView(this)
+            imageView.layoutParams = FrameLayout.LayoutParams(
+                iconSizePx,
+                iconSizePx,
+                android.view.Gravity.CENTER
+            )
+            imageView.setImageResource(config.iconRes)
+            config.tintColor?.let { imageView.setColorFilter(it) }
+            imageView.contentDescription = getString(config.nameResId)
+
+            val badge = TextView(this)
+            val badgeSize = (20 * resources.displayMetrics.density).toInt()
+            val badgeParams = FrameLayout.LayoutParams(badgeSize, badgeSize)
+            badgeParams.gravity = android.view.Gravity.TOP or android.view.Gravity.END
+            badgeParams.topMargin = (4 * resources.displayMetrics.density).toInt()
+            badgeParams.rightMargin = (4 * resources.displayMetrics.density).toInt()
+            badge.layoutParams = badgeParams
+            badge.gravity = android.view.Gravity.CENTER
+            badge.textSize = 10f
+            badge.setTextColor(if (config.id == "spy_reports") Color.BLACK else Color.WHITE)
+            badge.setBackgroundColor(if (config.id == "spy_reports") Color.parseColor("#FFFF00") else Color.parseColor("#FF4444"))
+            badge.visibility = View.GONE
+
+            if (config.id == "messages") messagesBadge = badge
+            if (config.id == "spy_reports") spyReportsBadge = badge
+
+            frameLayout.addView(imageView)
+            frameLayout.addView(badge)
+            frameLayout.setOnClickListener { config.onClick() }
+            frameLayout.isClickable = true
+            frameLayout.isFocusable = true
+
+            // Set ripple effect foreground
+            val outValue = android.util.TypedValue()
+            theme.resolveAttribute(android.R.attr.selectableItemBackground, outValue, true)
+            frameLayout.foreground = ContextCompat.getDrawable(this, outValue.resourceId)
+
+            parent.addView(frameLayout)
+        } else {
+            val button = ImageButton(this)
+            button.layoutParams = LinearLayout.LayoutParams(
+                buttonSizePx,
+                ViewGroup.LayoutParams.MATCH_PARENT
+            )
+
+            // Calculate padding to center and scale icon properly
+            val paddingPx = ((buttonSizePx - iconSizePx) / 2)
+            button.setPadding(paddingPx, paddingPx, paddingPx, paddingPx)
+            button.scaleType = ImageView.ScaleType.FIT_CENTER
+
+            button.setImageResource(config.iconRes)
+            config.tintColor?.let { button.setColorFilter(it) }
+            button.contentDescription = getString(config.nameResId)
+
+            // Set ripple effect background
+            val outValue = android.util.TypedValue()
+            theme.resolveAttribute(android.R.attr.selectableItemBackgroundBorderless, outValue, true)
+            button.setBackgroundResource(outValue.resourceId)
+
+            button.setOnClickListener { config.onClick() }
+
+            if (config.id == "swipe_lock") btnSwipeLock = button
+            if (config.id == "settings") btnSettings = button
+
+            parent.addView(button)
+        }
+    }
+
+    fun updateButtonBarVisibility() {
+        setupButtons()
+    }
+
+    fun checkForNewMessages() {
+        if (planets.isEmpty() || !::viewPager.isInitialized) return
+
+        val currentPosition = viewPager.currentItem
+        val fragment = supportFragmentManager.findFragmentByTag("f$currentPosition") as? PlanetWebViewFragment
+            ?: (if (::adapter.isInitialized) adapter.getFragmentAtPosition(currentPosition) else null)
+
+        fragment?.checkForNewMessages()
+    }
+
+    fun updateMessageBadge(count: Int) {
+        messagesBadge?.let {
+            if (count > 0) {
+                it.text = if (count > 50) "50+" else count.toString()
+                it.visibility = View.VISIBLE
+            } else {
+                it.visibility = View.GONE
+            }
+        }
+    }
+
+    fun updateSpyReportsBadge(count: Int) {
+        spyReportsBadge?.let {
+            if (count > 0) {
+                it.text = if (count > 50) "50+" else count.toString()
+                it.visibility = View.VISIBLE
+            } else {
+                it.visibility = View.GONE
+            }
+        }
+    }
+
     private fun toggleSwipeLock() {
         isSwipeLocked = !isSwipeLocked
-        ViewPagerHelper.setSwipeEnabled(!isSwipeLocked)
         updateSwipeLockIcon()
 
-        val status = if (isSwipeLocked) "gesperrt" else "entsperrt"
-        android.widget.Toast.makeText(this, "Planeten-Wechsel $status", android.widget.Toast.LENGTH_SHORT).show()
-        android.util.Log.d("MainActivity", "Swipe lock toggled: locked=$isSwipeLocked")
+        viewPager.isUserInputEnabled = !isSwipeLocked
 
-        // Benachrichtige alle Fragments über Lock-Änderung (für Galaxy Swipe Navigation)
-        notifyFragmentsOfLockChange(isSwipeLocked)
+        val message = if (isSwipeLocked) R.string.swipe_locked else R.string.swipe_unlocked
+        android.widget.Toast.makeText(this, message, android.widget.Toast.LENGTH_SHORT).show()
+
+        notifyFragmentsOfSwipeLockChange(isSwipeLocked)
     }
 
-    /**
-     * Benachrichtigt alle Fragments über eine Änderung des Lock-Status
-     */
-    private fun notifyFragmentsOfLockChange(isLocked: Boolean) {
-        if (::adapter.isInitialized) {
-            for (i in 0 until planets.size) {
-                val fragment = adapter.getFragmentAtPosition(i)
-                fragment?.onSwipeLockChanged(isLocked)
-            }
-        }
-    }
-
-    /**
-     * Wird aufgerufen wenn sich die Galaxy Navigation Einstellung ändert
-     */
-    fun onGalaxyNavigationSettingChanged(enabled: Boolean) {
-        android.util.Log.d("MainActivity", "Galaxy Navigation setting changed: $enabled")
-
-        // Benachrichtige alle Fragments über die Änderung
-        if (::adapter.isInitialized) {
-            for (i in 0 until planets.size) {
-                val fragment = adapter.getFragmentAtPosition(i)
-                fragment?.onGalaxyNavigationSettingChanged(enabled)
-            }
-        }
-    }
-
-    /**
-     * Aktualisiert das Lock-Icon (offen/geschlossen)
-     */
     private fun updateSwipeLockIcon() {
-        if (::btnSwipeLock.isInitialized) {
-            val iconRes = if (isSwipeLocked) {
-                android.R.drawable.ic_lock_lock // Geschlossen
-            } else {
-                android.R.drawable.ic_lock_idle_lock // Offen
-            }
-            btnSwipeLock.setImageResource(iconRes)
-
-            // Farbe anpassen
-            val color = if (isSwipeLocked) {
-                0xFFFF6B6B.toInt() // Rot = gesperrt
-            } else {
-                0xFFFFFFFF.toInt() // Weiß = offen
-            }
-            btnSwipeLock.setColorFilter(color)
-        }
+        btnSwipeLock?.setColorFilter(if (isSwipeLocked) Color.RED else Color.WHITE)
     }
 
-    /**
-     * Aktiviert/Deaktiviert das Swipen zwischen Planeten
-     * Wird von Fragments aufgerufen (z.B. Empire-Seite)
-     * ABER: Nur wenn nicht manuell gesperrt
-     */
-    fun setViewPagerSwipeEnabled(enabled: Boolean) {
-        // Wenn manuell gesperrt, ignoriere automatische Änderungen
-        if (isSwipeLocked && enabled) {
-            android.util.Log.d("MainActivity", "Swipe manually locked, ignoring auto-enable")
-            return
-        }
-
-        ViewPagerHelper.setSwipeEnabled(enabled)
-        android.util.Log.d("MainActivity", "ViewPager swipe set to: $enabled")
-    }
-
-    /**
-     * Gibt zurück ob der Swipe aktuell manuell gesperrt ist
-     */
-    fun isSwipeLocked(): Boolean = isSwipeLocked
-
-    fun onPlanetsLoaded(planetList: List<Planet>) {
-        planets = planetList
-
-        // Speichere in SharedPreferences
-        val prefs = getSharedPreferences("pr0game_data", MODE_PRIVATE)
-        prefs.edit()
-            .putString("planets_json", PlanetParser.toJson(planetList))
-            .apply()
-
-        // Entferne InitialLoadFragment
-        supportFragmentManager.findFragmentById(R.id.container)?.let {
-            supportFragmentManager.beginTransaction()
-                .remove(it)
-                .commit()
-        }
-
-        setupViewPager()
-    }
-
-    /**
-     * Wird automatisch aufgerufen wenn sich die Planetenliste geändert hat
-     * Aktualisiert die Tabs ohne die App neu zu starten
-     */
-    fun onPlanetsUpdated(newPlanets: List<Planet>) {
-        val oldCount = planets.size
-        val newCount = newPlanets.size
-
-        android.util.Log.d("MainActivity", "Planets updated: $oldCount -> $newCount")
-
-        planets = newPlanets
-
-        // Speichere in SharedPreferences
-        val prefs = getSharedPreferences("pr0game_data", MODE_PRIVATE)
-        prefs.edit()
-            .putString("planets_json", PlanetParser.toJson(newPlanets))
-            .apply()
-
-        // Merke aktuellen Planet
-        val currentPosition = if (::viewPager.isInitialized) viewPager.currentItem else 0
-
-        // Aktualisiere ViewPager
-        setupViewPager()
-
-        // Versuche zur gleichen Position zurückzukehren (falls noch vorhanden)
-        if (currentPosition < newPlanets.size) {
-            viewPager.setCurrentItem(currentPosition, false)
-        }
-
-        // Zeige Toast nur wenn neue Planeten hinzugekommen sind
-        if (newCount > oldCount) {
-            val addedCount = newCount - oldCount
-            android.widget.Toast.makeText(
-                this,
-                "✨ $addedCount neue${if (addedCount == 1) "r" else ""} Planet${if (addedCount == 1) "" else "en"} hinzugefügt!",
-                android.widget.Toast.LENGTH_SHORT
-            ).show()
+    private fun toggleSettings() {
+        if (isSettingsOpen) {
+            closeSettings()
+        } else {
+            openSettings()
         }
     }
 
     private fun openSettings() {
-        if (isSettingsOpen) return
-
         isSettingsOpen = true
         viewPager.visibility = View.GONE
-
-        // Ändere Farbe des Settings-Buttons wenn offen
-        btnSettings.setColorFilter(0xFF64b5f6.toInt()) // Blau = aktiv
+        btnSettings?.setColorFilter(Color.parseColor("#64b5f6"))
 
         supportFragmentManager.beginTransaction()
             .replace(R.id.container, SettingsFragment())
             .commit()
     }
 
-    /**
-     * Öffnet die Nachrichten-Seite auf dem aktuellen Planeten
-     */
-    private fun openMessages() {
-        android.util.Log.d("MainActivity", "openMessages called")
-
-        try {
-            if (planets.isNotEmpty() && ::viewPager.isInitialized) {
-                val currentPosition = viewPager.currentItem
-
-                // Hole Fragment
-                val fragment = supportFragmentManager.findFragmentByTag("f$currentPosition") as? PlanetWebViewFragment
-                    ?: (if (::adapter.isInitialized) adapter.getFragmentAtPosition(currentPosition) else null)
-
-                if (fragment != null) {
-                    android.util.Log.d("MainActivity", "Fragment found, clicking messages link via JavaScript")
-                    fragment.clickMessagesLink()
-                } else {
-                    android.util.Log.e("MainActivity", "Fragment not found!")
-                }
-            }
-        } catch (e: Exception) {
-            android.util.Log.e("MainActivity", "Error opening messages", e)
-        }
-    }
-
-    /**
-     * Öffnet die Spionageberichte auf dem aktuellen Planeten
-     */
-    private fun openSpyReports() {
-        android.util.Log.d("MainActivity", "openSpyReports called")
-
-        try {
-            if (planets.isNotEmpty() && ::viewPager.isInitialized) {
-                val currentPosition = viewPager.currentItem
-
-                // Hole Fragment
-                val fragment = supportFragmentManager.findFragmentByTag("f$currentPosition") as? PlanetWebViewFragment
-                    ?: (if (::adapter.isInitialized) adapter.getFragmentAtPosition(currentPosition) else null)
-
-                if (fragment != null) {
-                    android.util.Log.d("MainActivity", "Fragment found, clicking spy reports link via JavaScript")
-                    fragment.clickSpyReportsLink()
-                } else {
-                    android.util.Log.e("MainActivity", "Fragment not found!")
-                }
-            }
-        } catch (e: Exception) {
-            android.util.Log.e("MainActivity", "Error opening spy reports", e)
-        }
-    }
-
-    /**
-     * Öffnet das Imperium auf dem aktuellen Planeten
-     */
-    private fun openEmpire() {
-        android.util.Log.d("MainActivity", "openEmpire called")
-
-        try {
-            if (planets.isNotEmpty() && ::viewPager.isInitialized) {
-                val currentPosition = viewPager.currentItem
-
-                // Hole Fragment
-                val fragment = supportFragmentManager.findFragmentByTag("f$currentPosition") as? PlanetWebViewFragment
-                    ?: (if (::adapter.isInitialized) adapter.getFragmentAtPosition(currentPosition) else null)
-
-                if (fragment != null) {
-                    android.util.Log.d("MainActivity", "Fragment found, clicking empire link via JavaScript")
-                    fragment.clickEmpireLink()
-                } else {
-                    android.util.Log.e("MainActivity", "Fragment not found!")
-                }
-            }
-        } catch (e: Exception) {
-            android.util.Log.e("MainActivity", "Error opening empire", e)
-        }
-    }
-
-    /**
-     * Öffnet die Flotte auf dem aktuellen Planeten
-     */
-    private fun openFleet() {
-        android.util.Log.d("MainActivity", "openFleet called")
-
-        try {
-            if (planets.isNotEmpty() && ::viewPager.isInitialized) {
-                val currentPosition = viewPager.currentItem
-
-                // Hole Fragment
-                val fragment = supportFragmentManager.findFragmentByTag("f$currentPosition") as? PlanetWebViewFragment
-                    ?: (if (::adapter.isInitialized) adapter.getFragmentAtPosition(currentPosition) else null)
-
-                if (fragment != null) {
-                    android.util.Log.d("MainActivity", "Fragment found, clicking fleet link via JavaScript")
-                    fragment.clickFleetLink()
-                } else {
-                    android.util.Log.e("MainActivity", "Fragment not found!")
-                }
-            }
-        } catch (e: Exception) {
-            android.util.Log.e("MainActivity", "Error opening fleet", e)
-        }
-    }
-
-    /**
-     * Aktualisiert das Nachrichten-Badge
-     * Wird von Fragments aufgerufen wenn neue Nachrichtenzahl erkannt wird
-     */
-    fun updateMessagesBadge(count: Int) {
-        if (::messagesBadge.isInitialized) {
-            if (count > 0) {
-                messagesBadge.visibility = View.VISIBLE
-                messagesBadge.text = if (count >= 50) "50+" else count.toString()
-            } else {
-                messagesBadge.visibility = View.GONE
-            }
-        }
-    }
-
-    /**
-     * Aktualisiert das Spionageberichte-Badge
-     * Wird von Fragments aufgerufen wenn neue Berichtszahl erkannt wird
-     */
-    fun updateSpyReportsBadge(count: Int) {
-        if (::spyReportsBadge.isInitialized) {
-            if (count > 0) {
-                spyReportsBadge.visibility = View.VISIBLE
-                spyReportsBadge.text = if (count >= 50) "50+" else count.toString()
-            } else {
-                spyReportsBadge.visibility = View.GONE
-            }
-        }
-    }
-
     fun closeSettings() {
         isSettingsOpen = false
         viewPager.visibility = View.VISIBLE
-
-        // Setze Farbe des Settings-Buttons zurück
-        btnSettings.setColorFilter(0xFFFFFFFF.toInt()) // Weiß = normal
+        btnSettings?.setColorFilter(Color.WHITE)
 
         supportFragmentManager.findFragmentById(R.id.container)?.let {
-            supportFragmentManager.beginTransaction()
-                .remove(it)
-                .commit()
+            supportFragmentManager.beginTransaction().remove(it).commit()
         }
 
-        // Update Lock Icon nach Settings-Schließen
         updateSwipeLockIcon()
     }
 
-    private fun setupInsets() {
-        val rootView = findViewById<androidx.constraintlayout.widget.ConstraintLayout>(R.id.root)
-        ViewCompat.setOnApplyWindowInsetsListener(rootView) { v, insets ->
-            val bars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            // Padding unten hinzufügen für Gesture Bar
-            v.setPadding(bars.left, bars.top, bars.right, bars.bottom)
-            insets
+    private fun notifyFragmentsOfSwipeLockChange(isLocked: Boolean) {
+        for (i in 0 until planets.size) {
+            val fragment = supportFragmentManager.findFragmentByTag("f$i") as? PlanetWebViewFragment
+                ?: (if (::adapter.isInitialized) adapter.getFragmentAtPosition(i) else null)
+            fragment?.onSwipeLockChanged(isLocked)
         }
     }
 
-    /**
-     * Aktiviert Edge-to-Edge Modus und blendet Gesture Bar aus
-     */
-    private fun enableEdgeToEdge() {
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
-            // Android 11+ (API 30+)
-            window.setDecorFitsSystemWindows(false)
-            window.insetsController?.let { controller ->
-                // Verstecke die Gesture Bar (weißer Strich)
-                controller.hide(android.view.WindowInsets.Type.navigationBars())
-                controller.systemBarsBehavior = android.view.WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
-            }
-        } else {
-            // Android 10 und älter
-            @Suppress("DEPRECATION")
-            window.decorView.systemUiVisibility = (
-                    android.view.View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                            or android.view.View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                            or android.view.View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                            or android.view.View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-                    )
-        }
+    private fun getCurrentFragment(): PlanetWebViewFragment? {
+        if (planets.isEmpty() || !::viewPager.isInitialized) return null
+        val currentPosition = viewPager.currentItem
+        return supportFragmentManager.findFragmentByTag("f$currentPosition") as? PlanetWebViewFragment
+            ?: (if (::adapter.isInitialized) adapter.getFragmentAtPosition(currentPosition) else null)
     }
 
-    private fun setupCookies() {
-        val cookieManager = CookieManager.getInstance()
-        cookieManager.setAcceptCookie(true)
-    }
+    private fun openOverview() { getCurrentFragment()?.clickOverviewLink() }
+    private fun openEmpire() { getCurrentFragment()?.clickEmpireLink() }
+    private fun openBuildings() { getCurrentFragment()?.clickBuildingsLink() }
+    private fun openShipyard() { getCurrentFragment()?.clickShipyardLink() }
+    private fun openDefense() { getCurrentFragment()?.clickDefenseLink() }
+    private fun openResearch() { getCurrentFragment()?.clickResearchLink() }
+    private fun openFleet() { getCurrentFragment()?.clickFleetLink() }
+    private fun openGalaxy() { getCurrentFragment()?.clickGalaxyLink() }
+    private fun openMessages() { getCurrentFragment()?.clickMessagesLink() }
+    private fun openSpyReports() { getCurrentFragment()?.clickSpyReportsLink() }
 
-    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
-        if (keyCode == KeyEvent.KEYCODE_BACK) {
-            // Settings schließen wenn offen
-            if (isSettingsOpen) {
-                closeSettings()
-                return true
-            }
+    fun clearPlanetCache() {
+        prefs.edit().remove("planets_json").apply()
+        planets.clear()
 
-            // Sonst WebView zurück
-            if (::adapter.isInitialized) {
-                val currentFragment = adapter.getFragmentAtPosition(viewPager.currentItem)
-                if (currentFragment?.canGoBack() == true) {
-                    currentFragment.goBack()
-                    return true
-                }
-            }
+        android.widget.Toast.makeText(this, R.string.cache_cleared, android.widget.Toast.LENGTH_LONG).show()
 
-            // Keine weitere Logik - lass Android die App normal schließen
-        }
-        return super.onKeyDown(keyCode, event)
+        recreate()
     }
 
     override fun onPause() {
         super.onPause()
         CookieManager.getInstance().flush()
+    }
+
+    override fun onBackPressed() {
+        // If settings are open, close them
+        if (isSettingsOpen) {
+            closeSettings()
+            return
+        }
+
+        // Check if any WebView can go back
+        if (::adapter.isInitialized && planets.isNotEmpty()) {
+            val currentPosition = viewPager.currentItem
+            val fragment = supportFragmentManager.findFragmentByTag("f$currentPosition") as? PlanetWebViewFragment
+                ?: adapter.getFragmentAtPosition(currentPosition)
+
+            if (fragment?.canGoBack() == true) {
+                fragment.goBack()
+                return
+            }
+        }
+
+        // Default back behavior
+        super.onBackPressed()
     }
 }

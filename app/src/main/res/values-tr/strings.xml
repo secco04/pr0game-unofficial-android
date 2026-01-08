@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">pr0game Unofficial</string>
+    
+    <!-- Buttons -->
+    <string name="btn_overview">Genel Bakış</string>
+    <string name="btn_empire">İmparatorluk</string>
+    <string name="btn_buildings">Binalar</string>
+    <string name="btn_shipyard">Tersane</string>
+    <string name="btn_defense">Savunma</string>
+    <string name="btn_research">Araştırma</string>
+    <string name="btn_fleet">Filo</string>
+    <string name="btn_galaxy">Galaksi</string>
+    <string name="btn_messages">Mesajlar</string>
+    <string name="btn_spy_reports">Casus Raporları</string>
+    <string name="btn_swipe_lock">Kilit</string>
+    <string name="btn_settings">Ayarlar</string>
+    
+    <!-- Settings -->
+    <string name="settings_title">Ayarlar</string>
+    <string name="settings_close">Kapat</string>
+    <string name="galaxy_view">Galaksi Görünümü</string>
+    <string name="galaxy_formatter">Galaksi Biçimlendirici</string>
+    <string name="galaxy_formatter_desc">Galaksi görüntüsünü optimize eder</string>
+    <string name="galaxy_navigation">Galaksi Kaydırma Navigasyonu</string>
+    <string name="galaxy_navigation_desc">Kilitliyken sistemler arasında kaydırın</string>
+    <string name="loading_delay">Yükleme Animasyon Gecikmesi</string>
+    <string name="row_height">Satır Yüksekliği</string>
+    <string name="ui_customization">Arayüz Özelleştirme</string>
+    <string name="hide_planet_selector">Gezegen Menüsünü Gizle</string>
+    <string name="hide_message_banner">Mesaj Başlığını Gizle</string>
+    <string name="button_bar">Düğme Çubuğu</string>
+    <string name="two_row_buttons">İki Satır Göster</string>
+    <string name="visible_buttons">Görünür Düğmeleri Seç</string>
+    <string name="language">Dil</string>
+    <string name="language_desc">Arayüz dilini seçin</string>
+    <string name="app_info">Uygulama Bilgisi</string>
+    <string name="version">Sürüm</string>
+    <string name="data">Veri</string>
+    <string name="clear_cache">Gezegen Önbelleğini Temizle (Yeniden Giriş)</string>
+    <string name="support">Destek</string>
+    <string name="support_desc">Uygulamayı beğendiniz mi? Geliştirmeyi destekleyin!</string>
+    <string name="buy_coffee">☕ Bana bir kahve ısmarla</string>
+    <string name="swipe_locked">Gezegen navigasyonu kilitli</string>
+    <string name="swipe_unlocked">Gezegen navigasyonu kilidi açık</string>
+    <string name="cache_cleared">Önbellek temizlendi! Lütfen tekrar giriş yapın.</string>
+    <string name="browser_error">Tarayıcı açılamadı</string>
+    
+    <!-- Languages -->
+    <string name="lang_turkish">Türkçe</string>
+    <string name="lang_portuguese">Português</string>
+    <string name="lang_polish">Polski</string>
+    <string name="lang_ogre">Ogerfränkisch</string>
+    <string name="lang_russian">Русский</string>
+    <string name="lang_german">Deutsch</string>
+    <string name="lang_pirate">SetSails</string>
+    <string name="lang_english">English</string>
+    <string name="lang_spanish">Español</string>
+    <string name="lang_french">Français</string>
+</resources>

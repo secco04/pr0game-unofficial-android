@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">pr0game Unofficial</string>
+    
+    <!-- Buttons -->
+    <string name="btn_overview">Ibäsicht</string>
+    <string name="btn_empire">Bäerium</string>
+    <string name="btn_buildings">Häiser</string>
+    <string name="btn_shipyard">Schiffswärfd</string>
+    <string name="btn_defense">Ferdeijigung</string>
+    <string name="btn_research">Forschung</string>
+    <string name="btn_fleet">Flodde</string>
+    <string name="btn_galaxy">Galaksi</string>
+    <string name="btn_messages">Nochrichte</string>
+    <string name="btn_spy_reports">Schbionageberichde</string>
+    <string name="btn_swipe_lock">Schberre</string>
+    <string name="btn_settings">Oinstellunge</string>
+    
+    <!-- Settings -->
+    <string name="settings_title">Oinstellunge</string>
+    <string name="settings_close">Zumache</string>
+    <string name="galaxy_view">Galaksi-Ansichd</string>
+    <string name="galaxy_formatter">Galaksi Formaddierer</string>
+    <string name="galaxy_formatter_desc">Obdimiert die Galaksi-Anzeije</string>
+    <string name="galaxy_navigation">Galaksi Wisch-Navigadion</string>
+    <string name="galaxy_navigation_desc">Wische zwische Süsdeme wennde geschberrt is</string>
+    <string name="loading_delay">Ladeanimadions-Ferzögerung</string>
+    <string name="row_height">Zeilehöhe</string>
+    <string name="ui_customization">UI Abassung</string>
+    <string name="hide_planet_selector">Blanete-Menü ausblende</string>
+    <string name="hide_message_banner">Nochrichte-Banner ausblende</string>
+    <string name="button_bar">Buddon-Leischde</string>
+    <string name="two_row_buttons">Zwoi Zeile anzeije</string>
+    <string name="visible_buttons">Sichdbare Buddons auswähle</string>
+    <string name="language">Schbrache</string>
+    <string name="language_desc">Inderfäis-Schbrache auswähle</string>
+    <string name="app_info">Abb Info</string>
+    <string name="version">Fersion</string>
+    <string name="data">Dade</string>
+    <string name="clear_cache">Blanete-Cache lösche (Noi oinlogge)</string>
+    <string name="support">Unnersdützung</string>
+    <string name="support_desc">Gefälld dir die Abb? Unnersdütze die Endwicklung!</string>
+    <string name="buy_coffee">☕ Kaaf mir än Kaffee</string>
+    <string name="swipe_locked">Blanete-Navigadion geschberrt</string>
+    <string name="swipe_unlocked">Blanete-Navigadion endschberrt</string>
+    <string name="cache_cleared">Cache gelöschd! Bidde noi oinlogge.</string>
+    <string name="browser_error">Browser konnd ned geöffned werre</string>
+    
+    <!-- Languages -->
+    <string name="lang_turkish">Türkçe</string>
+    <string name="lang_portuguese">Português</string>
+    <string name="lang_polish">Polski</string>
+    <string name="lang_ogre">Ogerfränkisch</string>
+    <string name="lang_russian">Русский</string>
+    <string name="lang_german">Deutsch</string>
+    <string name="lang_pirate">SetSails</string>
+    <string name="lang_english">English</string>
+    <string name="lang_spanish">Español</string>
+    <string name="lang_french">Français</string>
+</resources>

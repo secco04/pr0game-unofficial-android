@@ -1,58 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">pr0game Unofficial</string>
-
+    
     <!-- Buttons -->
-    <string name="btn_overview">Overview</string>
-    <string name="btn_empire">Empire</string>
-    <string name="btn_buildings">Buildings</string>
+    <string name="btn_overview">Chart o\' th\' Seas</string>
+    <string name="btn_empire">Me Empire</string>
+    <string name="btn_buildings">Structures</string>
     <string name="btn_shipyard">Shipyard</string>
-    <string name="btn_defense">Defense</string>
-    <string name="btn_research">Research</string>
-    <string name="btn_fleet">Fleet</string>
-    <string name="btn_galaxy">Galaxy</string>
-    <string name="btn_messages">Messages</string>
+    <string name="btn_defense">Cannons</string>
+    <string name="btn_research">Discovery</string>
+    <string name="btn_fleet">Armada</string>
+    <string name="btn_galaxy">Seven Seas</string>
+    <string name="btn_messages">Bottles</string>
     <string name="btn_spy_reports">Spy Reports</string>
-    <string name="btn_swipe_lock">Swipe Lock</string>
+    <string name="btn_swipe_lock">Lock</string>
     <string name="btn_settings">Settings</string>
-
+    
     <!-- Settings -->
     <string name="settings_title">Settings</string>
     <string name="settings_close">Close</string>
-    <string name="galaxy_view">Galaxy View</string>
-    <string name="galaxy_formatter">Galaxy Formatter</string>
-    <string name="galaxy_formatter_desc">Optimizes galaxy display</string>
-    <string name="galaxy_navigation">Galaxy Swipe Navigation</string>
-    <string name="galaxy_navigation_desc">Swipe between systems when locked</string>
+    <string name="galaxy_view">Sea View</string>
+    <string name="galaxy_formatter">Sea Formatter</string>
+    <string name="galaxy_formatter_desc">Optimizes sea display</string>
+    <string name="galaxy_navigation">Sea Swipe Navigation</string>
+    <string name="galaxy_navigation_desc">Swipe between waters when locked</string>
     <string name="loading_delay">Loading Animation Delay</string>
     <string name="row_height">Row Height</string>
     <string name="ui_customization">UI Customization</string>
-    <string name="hide_planet_selector">Hide Planet Dropdown</string>
+    <string name="hide_planet_selector">Hide Island Dropdown</string>
     <string name="hide_message_banner">Hide Message Banner</string>
-    <string name="fullscreen_mode">Fullscreen Mode</string>
-    <string name="fullscreen_mode_desc">Hide navigation bar (requires app restart)</string>
     <string name="button_bar">Button Bar</string>
     <string name="two_row_buttons">Show Two Rows</string>
     <string name="visible_buttons">Select Visible Buttons</string>
-    <string name="button_alignment">Button Alignment</string>
-    <string name="button_size">Button Size</string>
-    <string name="align_left">Left</string>
-    <string name="align_center">Center</string>
-    <string name="align_right">Right</string>
     <string name="language">Language</string>
     <string name="language_desc">Select interface language</string>
     <string name="app_info">App Info</string>
     <string name="version">Version</string>
     <string name="data">Data</string>
-    <string name="clear_cache">Clear Planet Cache (Re-login)</string>
+    <string name="clear_cache">Clear Island Cache (Re-login)</string>
     <string name="support">Support</string>
-    <string name="support_desc">Like the app? Support development!</string>
-    <string name="buy_coffee">☕ Buy me a coffee</string>
-    <string name="swipe_locked">Planet navigation locked</string>
-    <string name="swipe_unlocked">Planet navigation unlocked</string>
+    <string name="support_desc">Like th\' app? Support development!</string>
+    <string name="buy_coffee">☕ Buy me some rum</string>
+    <string name="swipe_locked">Island navigation locked</string>
+    <string name="swipe_unlocked">Island navigation unlocked</string>
     <string name="cache_cleared">Cache cleared! Please log in again.</string>
     <string name="browser_error">Could not open browser</string>
-
+    
     <!-- Languages -->
     <string name="lang_turkish">Türkçe</string>
     <string name="lang_portuguese">Português</string>

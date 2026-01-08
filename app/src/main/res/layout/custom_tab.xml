@@ -7,7 +7,7 @@
     android:padding="8dp">
 
     <TextView
-        android:id="@+id/tab_name"
+        android:id="@+id/tvPlanetName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="13sp"
@@ -18,7 +18,7 @@
         android:maxWidth="120dp" />
 
     <TextView
-        android:id="@+id/tab_coords"
+        android:id="@+id/tvPlanetCoords"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="10sp"

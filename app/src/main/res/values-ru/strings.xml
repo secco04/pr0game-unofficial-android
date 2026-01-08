@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">pr0game Unofficial</string>
+    
+    <!-- Buttons -->
+    <string name="btn_overview">Обзор</string>
+    <string name="btn_empire">Империя</string>
+    <string name="btn_buildings">Здания</string>
+    <string name="btn_shipyard">Верфь</string>
+    <string name="btn_defense">Оборона</string>
+    <string name="btn_research">Исследования</string>
+    <string name="btn_fleet">Флот</string>
+    <string name="btn_galaxy">Галактика</string>
+    <string name="btn_messages">Сообщения</string>
+    <string name="btn_spy_reports">Шпионские Отчеты</string>
+    <string name="btn_swipe_lock">Блокировка</string>
+    <string name="btn_settings">Настройки</string>
+    
+    <!-- Settings -->
+    <string name="settings_title">Настройки</string>
+    <string name="settings_close">Закрыть</string>
+    <string name="galaxy_view">Вид Галактики</string>
+    <string name="galaxy_formatter">Форматирование Галактики</string>
+    <string name="galaxy_formatter_desc">Оптимизирует отображение галактики</string>
+    <string name="galaxy_navigation">Навигация Свайпом по Галактике</string>
+    <string name="galaxy_navigation_desc">Свайп между системами при блокировке</string>
+    <string name="loading_delay">Задержка Анимации Загрузки</string>
+    <string name="row_height">Высота Строки</string>
+    <string name="ui_customization">Настройка Интерфейса</string>
+    <string name="hide_planet_selector">Скрыть Меню Планет</string>
+    <string name="hide_message_banner">Скрыть Баннер Сообщений</string>
+    <string name="button_bar">Панель Кнопок</string>
+    <string name="two_row_buttons">Показать Два Ряда</string>
+    <string name="visible_buttons">Выбрать Видимые Кнопки</string>
+    <string name="language">Язык</string>
+    <string name="language_desc">Выбрать язык интерфейса</string>
+    <string name="app_info">Информация о Приложении</string>
+    <string name="version">Версия</string>
+    <string name="data">Данные</string>
+    <string name="clear_cache">Очистить Кэш Планет (Повторный Вход)</string>
+    <string name="support">Поддержка</string>
+    <string name="support_desc">Нравится приложение? Поддержите разработку!</string>
+    <string name="buy_coffee">☕ Купите мне кофе</string>
+    <string name="swipe_locked">Навигация планет заблокирована</string>
+    <string name="swipe_unlocked">Навигация планет разблокирована</string>
+    <string name="cache_cleared">Кэш очищен! Войдите снова.</string>
+    <string name="browser_error">Не удалось открыть браузер</string>
+    
+    <!-- Languages -->
+    <string name="lang_turkish">Türkçe</string>
+    <string name="lang_portuguese">Português</string>
+    <string name="lang_polish">Polski</string>
+    <string name="lang_ogre">Ogerfränkisch</string>
+    <string name="lang_russian">Русский</string>
+    <string name="lang_german">Deutsch</string>
+    <string name="lang_pirate">SetSails</string>
+    <string name="lang_english">English</string>
+    <string name="lang_spanish">Español</string>
+    <string name="lang_french">Français</string>
+</resources>

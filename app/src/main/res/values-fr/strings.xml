@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">pr0game Unofficial</string>
+    
+    <!-- Buttons -->
+    <string name="btn_overview">Aperçu</string>
+    <string name="btn_empire">Empire</string>
+    <string name="btn_buildings">Bâtiments</string>
+    <string name="btn_shipyard">Chantier Naval</string>
+    <string name="btn_defense">Défense</string>
+    <string name="btn_research">Recherche</string>
+    <string name="btn_fleet">Flotte</string>
+    <string name="btn_galaxy">Galaxie</string>
+    <string name="btn_messages">Messages</string>
+    <string name="btn_spy_reports">Rapports d\'Espionnage</string>
+    <string name="btn_swipe_lock">Verrouillage</string>
+    <string name="btn_settings">Paramètres</string>
+    
+    <!-- Settings -->
+    <string name="settings_title">Paramètres</string>
+    <string name="settings_close">Fermer</string>
+    <string name="galaxy_view">Vue Galaxie</string>
+    <string name="galaxy_formatter">Formateur de Galaxie</string>
+    <string name="galaxy_formatter_desc">Optimise l\'affichage de la galaxie</string>
+    <string name="galaxy_navigation">Navigation par Balayage de Galaxie</string>
+    <string name="galaxy_navigation_desc">Balayer entre systèmes quand verrouillé</string>
+    <string name="loading_delay">Délai d\'Animation de Chargement</string>
+    <string name="row_height">Hauteur de Ligne</string>
+    <string name="ui_customization">Personnalisation de l\'Interface</string>
+    <string name="hide_planet_selector">Masquer le Menu des Planètes</string>
+    <string name="hide_message_banner">Masquer la Bannière de Messages</string>
+    <string name="button_bar">Barre de Boutons</string>
+    <string name="two_row_buttons">Afficher Deux Lignes</string>
+    <string name="visible_buttons">Sélectionner les Boutons Visibles</string>
+    <string name="language">Langue</string>
+    <string name="language_desc">Sélectionner la langue de l\'interface</string>
+    <string name="app_info">Informations sur l\'App</string>
+    <string name="version">Version</string>
+    <string name="data">Données</string>
+    <string name="clear_cache">Effacer le Cache des Planètes (Se Reconnecter)</string>
+    <string name="support">Soutien</string>
+    <string name="support_desc">Vous aimez l\'app? Soutenez le développement!</string>
+    <string name="buy_coffee">☕ Offrez-moi un café</string>
+    <string name="swipe_locked">Navigation des planètes verrouillée</string>
+    <string name="swipe_unlocked">Navigation des planètes déverrouillée</string>
+    <string name="cache_cleared">Cache effacé! Veuillez vous reconnecter.</string>
+    <string name="browser_error">Impossible d\'ouvrir le navigateur</string>
+    
+    <!-- Languages -->
+    <string name="lang_turkish">Türkçe</string>
+    <string name="lang_portuguese">Português</string>
+    <string name="lang_polish">Polski</string>
+    <string name="lang_ogre">Ogerfränkisch</string>
+    <string name="lang_russian">Русский</string>
+    <string name="lang_german">Deutsch</string>
+    <string name="lang_pirate">SetSails</string>
+    <string name="lang_english">English</string>
+    <string name="lang_spanish">Español</string>
+    <string name="lang_french">Français</string>
+</resources>

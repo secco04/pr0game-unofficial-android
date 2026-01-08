@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">pr0game Unofficial</string>
+    
+    <!-- Buttons -->
+    <string name="btn_overview">Visão Geral</string>
+    <string name="btn_empire">Império</string>
+    <string name="btn_buildings">Edifícios</string>
+    <string name="btn_shipyard">Estaleiro</string>
+    <string name="btn_defense">Defesa</string>
+    <string name="btn_research">Pesquisa</string>
+    <string name="btn_fleet">Frota</string>
+    <string name="btn_galaxy">Galáxia</string>
+    <string name="btn_messages">Mensagens</string>
+    <string name="btn_spy_reports">Relatórios de Espionagem</string>
+    <string name="btn_swipe_lock">Bloqueio</string>
+    <string name="btn_settings">Configurações</string>
+    
+    <!-- Settings -->
+    <string name="settings_title">Configurações</string>
+    <string name="settings_close">Fechar</string>
+    <string name="galaxy_view">Visualização da Galáxia</string>
+    <string name="galaxy_formatter">Formatador de Galáxia</string>
+    <string name="galaxy_formatter_desc">Otimiza a exibição da galáxia</string>
+    <string name="galaxy_navigation">Navegação por Deslize na Galáxia</string>
+    <string name="galaxy_navigation_desc">Deslize entre sistemas quando bloqueado</string>
+    <string name="loading_delay">Atraso da Animação de Carregamento</string>
+    <string name="row_height">Altura da Linha</string>
+    <string name="ui_customization">Personalização da Interface</string>
+    <string name="hide_planet_selector">Ocultar Menu de Planetas</string>
+    <string name="hide_message_banner">Ocultar Banner de Mensagens</string>
+    <string name="button_bar">Barra de Botões</string>
+    <string name="two_row_buttons">Mostrar Duas Linhas</string>
+    <string name="visible_buttons">Selecionar Botões Visíveis</string>
+    <string name="language">Idioma</string>
+    <string name="language_desc">Selecionar idioma da interface</string>
+    <string name="app_info">Informações do App</string>
+    <string name="version">Versão</string>
+    <string name="data">Dados</string>
+    <string name="clear_cache">Limpar Cache de Planetas (Re-login)</string>
+    <string name="support">Apoiar</string>
+    <string name="support_desc">Gostou do app? Apoie o desenvolvimento!</string>
+    <string name="buy_coffee">☕ Me pague um café</string>
+    <string name="swipe_locked">Navegação de planetas bloqueada</string>
+    <string name="swipe_unlocked">Navegação de planetas desbloqueada</string>
+    <string name="cache_cleared">Cache limpo! Por favor, faça login novamente.</string>
+    <string name="browser_error">Não foi possível abrir o navegador</string>
+    
+    <!-- Languages -->
+    <string name="lang_turkish">Türkçe</string>
+    <string name="lang_portuguese">Português</string>
+    <string name="lang_polish">Polski</string>
+    <string name="lang_ogre">Ogerfränkisch</string>
+    <string name="lang_russian">Русский</string>
+    <string name="lang_german">Deutsch</string>
+    <string name="lang_pirate">SetSails</string>
+    <string name="lang_english">English</string>
+    <string name="lang_spanish">Español</string>
+    <string name="lang_french">Français</string>
+</resources>

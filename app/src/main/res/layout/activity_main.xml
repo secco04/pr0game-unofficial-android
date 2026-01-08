@@ -40,148 +40,69 @@
         app:tabMaxWidth="200dp"
         app:tabPaddingStart="8dp"
         app:tabPaddingEnd="8dp"
-        app:layout_constraintBottom_toTopOf="@id/buttonBar"
+        app:layout_constraintBottom_toTopOf="@id/buttonBarContainer"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <LinearLayout
-        android:id="@+id/buttonBar"
+    <!-- Button Bar Container - switches between 1 and 2 rows -->
+    <FrameLayout
+        android:id="@+id/buttonBarContainer"
         android:layout_width="0dp"
-        android:layout_height="48dp"
-        android:orientation="horizontal"
+        android:layout_height="wrap_content"
         android:background="#0f1724"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <View
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1" />
+        <!-- Single Row Layout -->
+        <HorizontalScrollView
+            android:id="@+id/buttonBarScrollSingle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scrollbars="none">
 
-        <ImageButton
-            android:id="@+id/btnEmpire"
-            android:layout_width="56dp"
-            android:layout_height="match_parent"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:src="@drawable/ic_empire"
-            android:contentDescription="Imperium" />
+            <LinearLayout
+                android:id="@+id/buttonBarSingle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal" />
+        </HorizontalScrollView>
 
-        <View
-            android:layout_width="1dp"
-            android:layout_height="match_parent"
-            android:background="#2a3f5f" />
+        <!-- Two Row Layout -->
+        <LinearLayout
+            android:id="@+id/buttonBarDouble"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone">
 
-        <ImageButton
-            android:id="@+id/btnFleet"
-            android:layout_width="56dp"
-            android:layout_height="match_parent"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:src="@drawable/ic_fleet"
-            android:contentDescription="Flotte" />
+            <HorizontalScrollView
+                android:id="@+id/buttonBarScrollRow1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:scrollbars="none">
 
-        <View
-            android:layout_width="1dp"
-            android:layout_height="match_parent"
-            android:background="#2a3f5f" />
+                <LinearLayout
+                    android:id="@+id/buttonBarRow1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal" />
+            </HorizontalScrollView>
 
-        <FrameLayout
-            android:id="@+id/btnMessages"
-            android:layout_width="56dp"
-            android:layout_height="match_parent"
-            android:clickable="true"
-            android:focusable="true"
-            android:background="?attr/selectableItemBackgroundBorderless">
+            <HorizontalScrollView
+                android:id="@+id/buttonBarScrollRow2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:scrollbars="none">
 
-            <ImageView
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:layout_gravity="center"
-                android:src="@android:drawable/ic_dialog_email"
-                android:tint="#ffffff"
-                android:contentDescription="Nachrichten" />
-
-            <TextView
-                android:id="@+id/messagesBadge"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_gravity="top|end"
-                android:layout_marginTop="4dp"
-                android:layout_marginEnd="4dp"
-                android:background="#FF4444"
-                android:gravity="center"
-                android:text=""
-                android:textColor="#ffffff"
-                android:textSize="10sp"
-                android:textStyle="bold"
-                android:visibility="gone" />
-        </FrameLayout>
-
-        <View
-            android:layout_width="1dp"
-            android:layout_height="match_parent"
-            android:background="#2a3f5f" />
-
-        <FrameLayout
-            android:id="@+id/btnSpyReports"
-            android:layout_width="56dp"
-            android:layout_height="match_parent"
-            android:clickable="true"
-            android:focusable="true"
-            android:background="?attr/selectableItemBackgroundBorderless">
-
-            <ImageView
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:layout_gravity="center"
-                android:src="@android:drawable/ic_dialog_email"
-                android:tint="#FFFF00"
-                android:contentDescription="Spionageberichte" />
-
-            <TextView
-                android:id="@+id/spyReportsBadge"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_gravity="top|end"
-                android:layout_marginTop="4dp"
-                android:layout_marginEnd="4dp"
-                android:background="#FFFF00"
-                android:gravity="center"
-                android:text=""
-                android:textColor="#000000"
-                android:textSize="10sp"
-                android:textStyle="bold"
-                android:visibility="gone" />
-        </FrameLayout>
-
-        <View
-            android:layout_width="1dp"
-            android:layout_height="match_parent"
-            android:background="#2a3f5f" />
-
-        <ImageButton
-            android:id="@+id/btnSwipeLock"
-            android:layout_width="56dp"
-            android:layout_height="match_parent"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:src="@android:drawable/ic_lock_lock"
-            android:tint="#ffffff"
-            android:contentDescription="Swipe Lock" />
-
-        <View
-            android:layout_width="1dp"
-            android:layout_height="match_parent"
-            android:background="#2a3f5f" />
-
-        <ImageButton
-            android:id="@+id/btnSettings"
-            android:layout_width="56dp"
-            android:layout_height="match_parent"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:src="@drawable/ic_settings_gear"
-            android:contentDescription="Einstellungen" />
-
-    </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/buttonBarRow2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal" />
+            </HorizontalScrollView>
+        </LinearLayout>
+    </FrameLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

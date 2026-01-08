@@ -6,6 +6,10 @@ data class Planet(
     val coordinates: String
 ) {
     fun getUrl(page: String = "overview"): String {
-        return "https://pr0game.com/game.php?page=$page&cp=$id"
+        return "${Config.BASE_URL}/game.php?page=$page&cp=$id"
+    }
+    
+    fun getCoordinatesString(): String {
+        return "[$coordinates]"
     }
 }

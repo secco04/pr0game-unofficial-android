@@ -11,292 +11,642 @@
         android:orientation="vertical"
         android:padding="16dp">
 
-        <!-- Header -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:layout_marginBottom="24dp">
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Einstellungen"
-                android:textSize="24sp"
-                android:textColor="#ffffff"
-                android:textStyle="bold" />
-
-            <Button
-                android:id="@+id/btnClose"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Schließen"
-                android:textColor="#ffffff"
-                android:backgroundTint="#64b5f6" />
-
-        </LinearLayout>
-
-        <!-- Galaxy-Ansicht Section -->
+        <!-- Title -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Galaxy-Ansicht"
+            android:text="@string/settings_title"
+            android:textSize="24sp"
+            android:textColor="#64b5f6"
+            android:textStyle="bold"
+            android:layout_marginBottom="24dp" />
+
+        <!-- Language Section -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/language"
             android:textSize="18sp"
             android:textColor="#64b5f6"
             android:textStyle="bold"
             android:layout_marginBottom="8dp" />
 
-        <!-- Galaxy Formatter Toggle -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/language_desc"
+            android:textSize="12sp"
+            android:textColor="#aaaaaa"
+            android:layout_marginBottom="12dp" />
+
+        <Spinner
+            android:id="@+id/spinnerLanguage"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:background="#16213e"
+            android:padding="12dp"
+            android:layout_marginBottom="24dp" />
+
+        <!-- Button Bar Configuration -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/button_bar"
+            android:textSize="18sp"
+            android:textColor="#64b5f6"
+            android:textStyle="bold"
+            android:layout_marginBottom="8dp" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center_vertical"
-            android:layout_marginBottom="16dp">
+            android:paddingVertical="8dp">
 
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Mobile Galaxy-Ansicht aktivieren"
+                android:text="@string/two_row_buttons"
+                android:textSize="16sp"
+                android:textColor="#ffffff" />
+
+            <Switch
+                android:id="@+id/switchTwoRowButtons"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/button_alignment"
+            android:textSize="14sp"
+            android:textColor="#ffffff"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="8dp" />
+
+        <RadioGroup
+            android:id="@+id/radioGroupAlignment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="12dp">
+
+            <RadioButton
+                android:id="@+id/radioAlignLeft"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/align_left"
+                android:textColor="#ffffff" />
+
+            <RadioButton
+                android:id="@+id/radioAlignCenter"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/align_center"
+                android:textColor="#ffffff" />
+
+            <RadioButton
+                android:id="@+id/radioAlignRight"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/align_right"
+                android:textColor="#ffffff"
+                android:checked="true" />
+        </RadioGroup>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/button_size"
+            android:textSize="14sp"
+            android:textColor="#ffffff"
+            android:layout_marginBottom="8dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <SeekBar
+                android:id="@+id/seekBarButtonSize"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:max="32"
+                android:progress="8" />
+
+            <TextView
+                android:id="@+id/tvButtonSizeValue"
+                android:layout_width="60dp"
+                android:layout_height="wrap_content"
+                android:text="56dp"
+                android:textColor="#ffffff"
+                android:gravity="end"
+                android:layout_marginStart="8dp" />
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/visible_buttons"
+            android:textSize="14sp"
+            android:textColor="#aaaaaa"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="8dp" />
+
+        <!-- Button Toggles -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingVertical="4dp">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/btn_overview"
                 android:textSize="14sp"
+                android:textColor="#ffffff" />
+            <Switch
+                android:id="@+id/switchShowOverview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingVertical="4dp">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/btn_empire"
+                android:textSize="14sp"
+                android:textColor="#ffffff" />
+            <Switch
+                android:id="@+id/switchShowEmpire"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingVertical="4dp">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/btn_buildings"
+                android:textSize="14sp"
+                android:textColor="#ffffff" />
+            <Switch
+                android:id="@+id/switchShowBuildings"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingVertical="4dp">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/btn_shipyard"
+                android:textSize="14sp"
+                android:textColor="#ffffff" />
+            <Switch
+                android:id="@+id/switchShowShipyard"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingVertical="4dp">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/btn_defense"
+                android:textSize="14sp"
+                android:textColor="#ffffff" />
+            <Switch
+                android:id="@+id/switchShowDefense"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingVertical="4dp">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/btn_research"
+                android:textSize="14sp"
+                android:textColor="#ffffff" />
+            <Switch
+                android:id="@+id/switchShowResearch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingVertical="4dp">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/btn_fleet"
+                android:textSize="14sp"
+                android:textColor="#ffffff" />
+            <Switch
+                android:id="@+id/switchShowFleet"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingVertical="4dp">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/btn_galaxy"
+                android:textSize="14sp"
+                android:textColor="#ffffff" />
+            <Switch
+                android:id="@+id/switchShowGalaxy"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingVertical="4dp">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/btn_messages"
+                android:textSize="14sp"
+                android:textColor="#ffffff" />
+            <Switch
+                android:id="@+id/switchShowMessages"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingVertical="4dp">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/btn_spy_reports"
+                android:textSize="14sp"
+                android:textColor="#ffffff" />
+            <Switch
+                android:id="@+id/switchShowSpyReports"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+        <!-- Galaxy View Section -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/galaxy_view"
+            android:textSize="18sp"
+            android:textColor="#64b5f6"
+            android:textStyle="bold"
+            android:layout_marginTop="24dp"
+            android:layout_marginBottom="8dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingVertical="8dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/galaxy_formatter"
+                android:textSize="16sp"
                 android:textColor="#ffffff" />
 
             <Switch
                 android:id="@+id/switchGalaxyFormatter"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:checked="true" />
-
+                android:layout_height="wrap_content" />
         </LinearLayout>
 
-        <!-- Galaxy Navigation Toggle -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/galaxy_formatter_desc"
+            android:textSize="12sp"
+            android:textColor="#aaaaaa"
+            android:layout_marginBottom="16dp" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center_vertical"
-            android:layout_marginBottom="16dp">
+            android:paddingVertical="8dp">
 
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Galaxie Navigation (Swipe zwischen Systemen)"
-                android:textSize="14sp"
+                android:text="@string/galaxy_navigation"
+                android:textSize="16sp"
                 android:textColor="#ffffff" />
 
             <Switch
                 android:id="@+id/switchGalaxyNavigation"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:checked="true" />
-
+                android:layout_height="wrap_content" />
         </LinearLayout>
 
-        <!-- Delay Slider -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Lade-Verzögerung (Wartezeit bis Formatierung)"
+            android:text="@string/galaxy_navigation_desc"
+            android:textSize="12sp"
+            android:textColor="#aaaaaa"
+            android:layout_marginBottom="16dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/loading_delay"
             android:textSize="14sp"
             android:textColor="#ffffff"
-            android:layout_marginBottom="4dp" />
+            android:layout_marginBottom="8dp" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:layout_marginBottom="16dp">
+            android:gravity="center_vertical">
 
             <SeekBar
                 android:id="@+id/seekBarDelay"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:max="10"
-                android:progress="4"
-                android:progressTint="#64b5f6"
-                android:thumbTint="#64b5f6" />
+                android:layout_weight="1" />
 
             <TextView
                 android:id="@+id/tvDelayValue"
-                android:layout_width="70dp"
+                android:layout_width="60dp"
                 android:layout_height="wrap_content"
-                android:text="200ms"
-                android:textSize="14sp"
+                android:text="0ms"
                 android:textColor="#ffffff"
                 android:gravity="end"
                 android:layout_marginStart="8dp" />
-
         </LinearLayout>
 
-        <!-- Row Height Slider -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Zeilenhöhe"
+            android:text="@string/row_height"
             android:textSize="14sp"
             android:textColor="#ffffff"
-            android:layout_marginBottom="4dp" />
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="8dp" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:layout_marginBottom="24dp">
+            android:gravity="center_vertical">
 
             <SeekBar
                 android:id="@+id/seekBarRowHeight"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:max="20"
-                android:progress="8"
-                android:progressTint="#64b5f6"
-                android:thumbTint="#64b5f6" />
+                android:layout_weight="1" />
 
             <TextView
                 android:id="@+id/tvRowHeightValue"
-                android:layout_width="70dp"
+                android:layout_width="60dp"
                 android:layout_height="wrap_content"
-                android:text="20px"
-                android:textSize="14sp"
+                android:text="30px"
                 android:textColor="#ffffff"
                 android:gravity="end"
                 android:layout_marginStart="8dp" />
-
         </LinearLayout>
 
-        <!-- Generelle UI Anpassung Section -->
+        <!-- UI Customization -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Generelle UI Anpassung"
+            android:text="@string/ui_customization"
             android:textSize="18sp"
             android:textColor="#64b5f6"
             android:textStyle="bold"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="24dp"
             android:layout_marginBottom="8dp" />
 
-        <!-- Planet Dropdown ausblenden -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center_vertical"
-            android:layout_marginBottom="16dp">
+            android:paddingVertical="8dp">
 
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Planeten-Dropdown ausblenden"
-                android:textSize="14sp"
+                android:text="@string/hide_planet_selector"
+                android:textSize="16sp"
                 android:textColor="#ffffff" />
 
             <Switch
                 android:id="@+id/switchHidePlanetSelector"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:checked="true" />
-
+                android:layout_height="wrap_content" />
         </LinearLayout>
 
-        <!-- Nachrichten-Banner ausblenden -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center_vertical"
-            android:layout_marginBottom="16dp">
+            android:paddingVertical="8dp">
 
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Nachrichten-Banner ausblenden"
-                android:textSize="14sp"
+                android:text="@string/hide_message_banner"
+                android:textSize="16sp"
                 android:textColor="#ffffff" />
 
             <Switch
                 android:id="@+id/switchHideMessageBanner"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:checked="true" />
-
+                android:layout_height="wrap_content" />
         </LinearLayout>
 
-        <!-- Info Section -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingVertical="8dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/fullscreen_mode"
+                    android:textSize="16sp"
+                    android:textColor="#ffffff" />
+
+                <Switch
+                    android:id="@+id/switchFullscreen"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/fullscreen_mode_desc"
+                android:textSize="12sp"
+                android:textColor="#aaaaaa"
+                android:layout_marginTop="4dp" />
+        </LinearLayout>
+
+        <!-- App Info -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="App Info"
+            android:text="@string/app_info"
             android:textSize="18sp"
             android:textColor="#64b5f6"
             android:textStyle="bold"
+            android:layout_marginTop="24dp"
             android:layout_marginBottom="8dp" />
 
         <TextView
             android:id="@+id/tvVersion"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Version 1.0"
+            android:text="@string/version"
             android:textSize="14sp"
-            android:textColor="#ffffff"
-            android:layout_marginBottom="24dp" />
+            android:textColor="#aaaaaa"
+            android:layout_marginBottom="16dp" />
 
-        <!-- Daten Section -->
+        <!-- Data -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Daten"
+            android:text="@string/data"
             android:textSize="18sp"
             android:textColor="#64b5f6"
             android:textStyle="bold"
+            android:layout_marginTop="24dp"
             android:layout_marginBottom="8dp" />
 
         <Button
-            android:id="@+id/btnClearData"
+            android:id="@+id/btnClearCache"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Planeten-Cache löschen (Neu einloggen)"
+            android:text="@string/clear_cache"
             android:textColor="#ffffff"
-            android:backgroundTint="#e53935"
-            android:layout_marginBottom="24dp" />
+            android:backgroundTint="#FF4444"
+            android:layout_marginBottom="16dp" />
 
-        <!-- Spenden Section -->
+        <!-- Support -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Unterstützen"
+            android:text="@string/support"
             android:textSize="18sp"
             android:textColor="#64b5f6"
             android:textStyle="bold"
+            android:layout_marginTop="24dp"
             android:layout_marginBottom="8dp" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Gefällt dir die App? Unterstütze die Entwicklung! ☕"
-            android:textSize="14sp"
-            android:textColor="#ffffff"
+            android:text="@string/support_desc"
+            android:textSize="12sp"
+            android:textColor="#aaaaaa"
             android:layout_marginBottom="12dp" />
 
         <Button
             android:id="@+id/btnDonate"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="☕ Buy me a coffee"
-            android:textColor="#000000"
+            android:text="@string/buy_coffee"
+            android:textColor="#ffffff"
             android:backgroundTint="#FFDD00"
-            android:textStyle="bold"
-            android:textSize="16sp" />
+            android:layout_marginBottom="16dp" />
+
+        <!-- Close Button -->
+        <Button
+            android:id="@+id/btnClose"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/settings_close"
+            android:textColor="#ffffff"
+            android:backgroundTint="#64b5f6"
+            android:layout_marginTop="24dp" />
 
     </LinearLayout>
-
 </ScrollView>

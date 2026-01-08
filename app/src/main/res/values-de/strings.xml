@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">pr0game Unofficial</string>
+    
+    <!-- Buttons -->
+    <string name="btn_overview">Übersicht</string>
+    <string name="btn_empire">Imperium</string>
+    <string name="btn_buildings">Gebäude</string>
+    <string name="btn_shipyard">Schiffswerft</string>
+    <string name="btn_defense">Verteidigung</string>
+    <string name="btn_research">Forschung</string>
+    <string name="btn_fleet">Flotte</string>
+    <string name="btn_galaxy">Galaxie</string>
+    <string name="btn_messages">Nachrichten</string>
+    <string name="btn_spy_reports">Spionageberichte</string>
+    <string name="btn_swipe_lock">Sperre</string>
+    <string name="btn_settings">Einstellungen</string>
+    
+    <!-- Settings -->
+    <string name="settings_title">Einstellungen</string>
+    <string name="settings_close">Schließen</string>
+    <string name="galaxy_view">Galaxy-Ansicht</string>
+    <string name="galaxy_formatter">Galaxy Formatter</string>
+    <string name="galaxy_formatter_desc">Optimiert die Galaxy-Darstellung</string>
+    <string name="galaxy_navigation">Galaxy Swipe-Navigation</string>
+    <string name="galaxy_navigation_desc">Zwischen Systemen wischen wenn gesperrt</string>
+    <string name="loading_delay">Ladeanimations-Verzögerung</string>
+    <string name="row_height">Zeilenhöhe</string>
+    <string name="ui_customization">UI Anpassung</string>
+    <string name="hide_planet_selector">Planeten-Dropdown ausblenden</string>
+    <string name="hide_message_banner">Nachrichten-Banner ausblenden</string>
+    <string name="button_bar">Button-Leiste</string>
+    <string name="two_row_buttons">Zwei Zeilen anzeigen</string>
+    <string name="visible_buttons">Sichtbare Buttons auswählen</string>
+    <string name="language">Sprache</string>
+    <string name="language_desc">Interface-Sprache auswählen</string>
+    <string name="app_info">App Info</string>
+    <string name="version">Version</string>
+    <string name="data">Daten</string>
+    <string name="clear_cache">Planeten-Cache löschen (Neu einloggen)</string>
+    <string name="support">Unterstützen</string>
+    <string name="support_desc">Gefällt dir die App? Unterstütze die Entwicklung!</string>
+    <string name="buy_coffee">☕ Buy me a coffee</string>
+    <string name="swipe_locked">Planeten-Navigation gesperrt</string>
+    <string name="swipe_unlocked">Planeten-Navigation entsperrt</string>
+    <string name="cache_cleared">Cache gelöscht! Bitte neu einloggen.</string>
+    <string name="browser_error">Browser konnte nicht geöffnet werden</string>
+    
+    <!-- Languages -->
+    <string name="lang_turkish">Türkçe</string>
+    <string name="lang_portuguese">Português</string>
+    <string name="lang_polish">Polski</string>
+    <string name="lang_ogre">Ogerfränkisch</string>
+    <string name="lang_russian">Русский</string>
+    <string name="lang_german">Deutsch</string>
+    <string name="lang_pirate">SetSails</string>
+    <string name="lang_english">English</string>
+    <string name="lang_spanish">Español</string>
+    <string name="lang_french">Français</string>
+</resources>

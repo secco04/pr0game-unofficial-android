@@ -38,7 +38,7 @@ class InitialLoadFragment : Fragment() {
         statusText = view.findViewById(R.id.statusText)
 
         setupWebView()
-        webView.loadUrl("https://pr0game.com")
+        webView.loadUrl(Config.BASE_URL)
     }
 
     private fun setupWebView() {

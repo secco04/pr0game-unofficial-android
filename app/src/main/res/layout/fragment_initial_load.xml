@@ -13,6 +13,7 @@
 
     <!-- Loading Screen -->
     <LinearLayout
+        android:id="@+id/loadingLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"

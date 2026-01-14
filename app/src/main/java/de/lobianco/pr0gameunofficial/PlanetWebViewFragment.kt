@@ -62,11 +62,67 @@ class PlanetWebViewFragment : Fragment() {
 
             setupSwipeRefresh()
             setupWebView()
+            setupHorizontalScrollPriority()
 
             // Lade Planet Overview
             webView.loadUrl(planet.getUrl("overview"))
         } catch (e: Exception) {
             e.printStackTrace()
+        }
+    }
+
+    private fun setupHorizontalScrollPriority() {
+        // Allow ViewPager2 swiping when WebView is at horizontal scroll edges
+        var startX = 0f
+        var startY = 0f
+        val SWIPE_THRESHOLD = 30 // Minimum pixels to recognize as intentional horizontal swipe
+
+        webView.setOnTouchListener { v, event ->
+            when (event.action) {
+                android.view.MotionEvent.ACTION_DOWN -> {
+                    startX = event.x
+                    startY = event.y
+                    // Allow parent to intercept initially
+                    v.parent.requestDisallowInterceptTouchEvent(false)
+                }
+                android.view.MotionEvent.ACTION_MOVE -> {
+                    val deltaX = event.x - startX
+                    val deltaY = event.y - startY
+                    val absDeltaX = Math.abs(deltaX)
+                    val absDeltaY = Math.abs(deltaY)
+
+                    // Require significant horizontal movement before considering it a swipe
+                    if (absDeltaX > SWIPE_THRESHOLD || absDeltaY > SWIPE_THRESHOLD) {
+                        // Clearly vertical scroll - always allow WebView to handle
+                        if (absDeltaY > absDeltaX * 1.5) {
+                            v.parent.requestDisallowInterceptTouchEvent(true)
+                        }
+                        // Clearly horizontal swipe
+                        else if (absDeltaX > absDeltaY * 1.5) {
+                            // Check if WebView can scroll in the direction of the swipe
+                            val swipingLeft = deltaX < 0  // Moving finger left (content scrolls right)
+
+                            val canScrollInSwipeDirection = if (swipingLeft) {
+                                webView.canScrollHorizontally(1)  // Can scroll content right
+                            } else {
+                                webView.canScrollHorizontally(-1) // Can scroll content left
+                            }
+
+                            if (canScrollInSwipeDirection) {
+                                // WebView needs the scroll - block ViewPager
+                                v.parent.requestDisallowInterceptTouchEvent(true)
+                            } else {
+                                // WebView is at edge - allow ViewPager to handle tab switch
+                                v.parent.requestDisallowInterceptTouchEvent(false)
+                            }
+                        }
+                    }
+                }
+                android.view.MotionEvent.ACTION_UP, android.view.MotionEvent.ACTION_CANCEL -> {
+                    v.parent.requestDisallowInterceptTouchEvent(false)
+                }
+            }
+            false // Don't consume the event, let WebView handle it
         }
     }
 
@@ -84,9 +140,12 @@ class PlanetWebViewFragment : Fragment() {
             webView.reload()
         }
 
-        // OPTIMIERT: Nutze setOnScrollChangeListener statt ViewTreeObserver
-        webView.setOnScrollChangeListener { _, _, scrollY, _, _ ->
-            swipeRefresh.isEnabled = scrollY == 0
+        // FIX: SwipeRefresh wird nur aktiviert wenn:
+        // 1. Man ganz oben ist (mit kleiner Toleranz)
+        // 2. Die WebView NICHT horizontal scrollen kann
+        webView.setOnScrollChangeListener { _, scrollX, scrollY, _, _ ->
+            val canScrollHorizontally = webView.canScrollHorizontally(-1) || webView.canScrollHorizontally(1)
+            swipeRefresh.isEnabled = scrollY <= 10 && !canScrollHorizontally
         }
     }
 
@@ -100,11 +159,66 @@ class PlanetWebViewFragment : Fragment() {
                 progressBar.visibility = View.GONE
                 swipeRefresh.isRefreshing = false // Stop refresh animation
 
+                // CHECK FOR SESSION EXPIRY - if redirected to login page
+                if (url?.contains("/index.php") == true && !url.contains("page=")) {
+                    // We're on login page - session expired!
+                    android.util.Log.d("PlanetFragment", "Session expired - on login page")
+                    (activity as? MainActivity)?.handleSessionExpired()
+                    return
+                }
+
                 // OPTIMIERT: Planeten nur alle 30 Sekunden überprüfen (nicht bei jeder Seite!)
                 val currentTime = System.currentTimeMillis()
                 if (currentTime - lastPlanetCheckTime > 30000) { // 30 Sekunden
                     checkAndUpdatePlanets()
                     lastPlanetCheckTime = currentTime
+                }
+
+                // Check if redirected to login page (session timeout)
+                if (url?.contains("index.php") == true || url?.contains("login") == true) {
+                    android.util.Log.d("PlanetFragment", "========== LOGIN PAGE DETECTED ==========")
+                    android.util.Log.d("PlanetFragment", "URL: $url")
+
+                    // Unlock swipe (important for touch events!)
+                    val mainActivity = activity as? MainActivity
+                    android.util.Log.d("PlanetFragment", "MainActivity: $mainActivity")
+                    android.util.Log.d("PlanetFragment", "isSwipeLocked: ${mainActivity?.isSwipeLocked}")
+                    mainActivity?.unlockSwipe()
+
+                    // Force remove all touch listeners and re-enable WebView
+                    android.util.Log.d("PlanetFragment", "Removing touch listener and re-enabling WebView")
+                    webView.setOnTouchListener(null)  // Remove touch listener completely!
+
+                    // Enable WebView interaction
+                    webView.requestFocus()
+                    webView.isFocusable = true
+                    webView.isFocusableInTouchMode = true
+                    webView.isEnabled = true
+                    webView.isClickable = true
+                    webView.isLongClickable = true
+
+                    android.util.Log.d("PlanetFragment", "WebView enabled: ${webView.isEnabled}")
+                    android.util.Log.d("PlanetFragment", "WebView clickable: ${webView.isClickable}")
+                    android.util.Log.d("PlanetFragment", "WebView focusable: ${webView.isFocusable}")
+
+                    // Make sure parent ViewPager allows touch events
+                    webView.parent?.requestDisallowInterceptTouchEvent(false)
+
+                    // Inject JavaScript to test if page is interactive
+                    webView.evaluateJavascript("""
+                        (function() {
+                            document.body.style.border = '5px solid red';
+                            return 'Login page marked';
+                        })();
+                    """.trimIndent()) { result ->
+                        android.util.Log.d("PlanetFragment", "JS test result: $result")
+                    }
+
+                    webView.postDelayed({
+                        autoFillLoginCredentials()
+                    }, 500)
+
+                    android.util.Log.d("PlanetFragment", "========== LOGIN PAGE SETUP COMPLETE ==========")
                 }
 
                 // Injiziere JavaScript um cp Parameter zu erzwingen
@@ -124,9 +238,23 @@ class PlanetWebViewFragment : Fragment() {
                             injectGalaxyFormatter()
                         }, delay)
                     }
-                    
+
                     // Aktiviere Galaxy Navigation wenn Swipe gelockt ist
                     setupGalaxySwipeNavigation()
+                }
+
+                // Injiziere Empire Formatter auf Empire-Seite
+                if (url?.contains("page=empire") == true || url?.contains("page=Empire") == true) {
+                    webView.postDelayed({
+                        injectEmpireFormatter()
+                    }, 200)
+                }
+
+                // Injiziere Fleet Table Formatter auf Flotten-Seite
+                if (url?.contains("page=fleetTable") == true || url?.contains("page=FleetTable") == true) {
+                    webView.postDelayed({
+                        injectFleetTableFormatter()
+                    }, 200)
                 }
 
                 // Deaktiviere ViewPager Swipen auf Seiten mit horizontalem Scrollen
@@ -171,16 +299,16 @@ class PlanetWebViewFragment : Fragment() {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
             settings.offscreenPreRaster = true
         }
-        
+
         // Hardware-Beschleunigung aktivieren
         webView.setLayerType(android.view.View.LAYER_TYPE_HARDWARE, null)
-        
+
         // Unnötige Features deaktivieren für bessere Performance
         settings.setGeolocationEnabled(false)
         settings.setSupportZoom(false)
         settings.builtInZoomControls = false
         settings.displayZoomControls = false
-        
+
         // Medien nur auf Anfrage laden (spart CPU/Bandbreite)
         settings.mediaPlaybackRequiresUserGesture = true
 
@@ -212,24 +340,24 @@ class PlanetWebViewFragment : Fragment() {
     private fun setupGalaxySwipeNavigation() {
         val mainActivity = activity as? MainActivity
         val isSwipeLocked = mainActivity?.isSwipeLocked ?: false
-        
+
         // Prüfe ob Galaxy Navigation in den Einstellungen aktiviert ist
         val prefs = requireContext().getSharedPreferences("pr0game_settings", android.content.Context.MODE_PRIVATE)
         val isNavigationEnabled = prefs.getBoolean("galaxy_navigation_enabled", true)
-        
+
         if (isSwipeLocked && isNavigationEnabled) {
             injectGalaxySwipeHandler()
         } else {
             removeGalaxySwipeHandler()
         }
     }
-    
+
     /**
      * Injiziert den Touch-Handler für Galaxy Swipe Navigation
      */
     private fun injectGalaxySwipeHandler() {
         android.util.Log.d("GalaxySwipe", "Injecting galaxy swipe handler")
-        
+
         val js = """
             (function() {
                 // Entferne alten Handler falls vorhanden
@@ -317,16 +445,16 @@ class PlanetWebViewFragment : Fragment() {
                 };
             })();
         """.trimIndent()
-        
+
         webView.evaluateJavascript(js, null)
     }
-    
+
     /**
      * Entfernt den Galaxy Swipe Handler
      */
     private fun removeGalaxySwipeHandler() {
         android.util.Log.d("GalaxySwipe", "Removing galaxy swipe handler")
-        
+
         val js = """
             (function() {
                 if (window.galaxySwipeHandler) {
@@ -337,10 +465,10 @@ class PlanetWebViewFragment : Fragment() {
                 }
             })();
         """.trimIndent()
-        
+
         webView.evaluateJavascript(js, null)
     }
-    
+
     /**
      * Wird von MainActivity aufgerufen wenn sich der Lock-Status ändert
      */
@@ -350,14 +478,14 @@ class PlanetWebViewFragment : Fragment() {
             android.util.Log.d("PlanetFragment", "WebView not initialized yet, ignoring lock change")
             return
         }
-        
+
         // Nur auf Galaxy-Seite reagieren
         webView.url?.let { url ->
             if (url.contains("page=galaxy")) {
                 // Prüfe ob Galaxy Navigation aktiviert ist
                 val prefs = requireContext().getSharedPreferences("pr0game_settings", android.content.Context.MODE_PRIVATE)
                 val isNavigationEnabled = prefs.getBoolean("galaxy_navigation_enabled", true)
-                
+
                 if (isLocked && isNavigationEnabled) {
                     injectGalaxySwipeHandler()
                 } else {
@@ -376,13 +504,13 @@ class PlanetWebViewFragment : Fragment() {
             android.util.Log.d("PlanetFragment", "WebView not initialized yet, ignoring setting change")
             return
         }
-        
+
         // Nur auf Galaxy-Seite reagieren
         webView.url?.let { url ->
             if (url.contains("page=galaxy")) {
                 val mainActivity = activity as? MainActivity
                 val isSwipeLocked = mainActivity?.isSwipeLocked ?: false
-                
+
                 if (enabled && isSwipeLocked) {
                     injectGalaxySwipeHandler()
                 } else {
@@ -406,7 +534,7 @@ class PlanetWebViewFragment : Fragment() {
                 return 0;
             })();
         """.trimIndent()
-        
+
         webView.evaluateJavascript(jsMessages) { result ->
             try {
                 val count = result?.replace("\"", "")?.toIntOrNull() ?: 0
@@ -415,7 +543,7 @@ class PlanetWebViewFragment : Fragment() {
                 android.util.Log.e("Messages", "Error parsing message count: ${e.message}")
             }
         }
-        
+
         // Spionageberichte (unread_0)
         val jsSpyReports = """
             (function() {
@@ -426,7 +554,7 @@ class PlanetWebViewFragment : Fragment() {
                 return 0;
             })();
         """.trimIndent()
-        
+
         webView.evaluateJavascript(jsSpyReports) { result ->
             try {
                 val count = result?.replace("\"", "")?.toIntOrNull() ?: 0
@@ -459,7 +587,7 @@ class PlanetWebViewFragment : Fragment() {
             // Füge cp Parameter hinzu
             val urlWithCp = ensurePlanetParameter(url)
             android.util.Log.d("PlanetFragment", "Direct loadUrl: $urlWithCp")
-            
+
             // Lade direkt - wird durch shouldOverrideUrlLoading gehen aber URL ist schon korrekt
             webView.loadUrl(urlWithCp)
         } else {
@@ -474,22 +602,24 @@ class PlanetWebViewFragment : Fragment() {
         if (::webView.isInitialized) {
             val js = """
                 (function() {
-                    // Prüfe ob wir bereits auf der Nachrichten-Seite sind
+                    // Prüfe ob wir bereits auf der "Alle Nachrichten"-Seite sind
                     const currentUrl = window.location.href;
-                    if (currentUrl.includes('page=messages') && !currentUrl.includes('category=')) {
+                    if (currentUrl.includes('page=messages') && currentUrl.includes('category=100')) {
                         return 'already on page';
                     }
                     
-                    // Finde den Nachrichten-Link im Menü (ohne category)
-                    const links = document.querySelectorAll('a[href*="page=messages"]:not([href*="category"])');
+                    // Finde den "Alle Nachrichten"-Link (category=100)
+                    const links = document.querySelectorAll('a[href*="page=messages"][href*="category=100"]');
                     if (links.length > 0) {
                         links[0].click();
                         return 'clicked';
                     }
-                    return 'not found';
+                    // Fallback: Lade URL direkt
+                    window.location.href = 'game.php?page=messages&category=100';
+                    return 'fallback';
                 })();
             """.trimIndent()
-            
+
             webView.evaluateJavascript(js) { result ->
                 android.util.Log.d("PlanetFragment", "Click messages link result: $result")
             }
@@ -520,7 +650,7 @@ class PlanetWebViewFragment : Fragment() {
                     return 'fallback';
                 })();
             """.trimIndent()
-            
+
             webView.evaluateJavascript(js) { result ->
                 android.util.Log.d("PlanetFragment", "Click spy reports link result: $result")
             }
@@ -549,7 +679,7 @@ class PlanetWebViewFragment : Fragment() {
                     return 'not found';
                 })();
             """.trimIndent()
-            
+
             webView.evaluateJavascript(js) { result ->
                 android.util.Log.d("PlanetFragment", "Click empire link result: $result")
             }
@@ -578,7 +708,7 @@ class PlanetWebViewFragment : Fragment() {
                     return 'not found';
                 })();
             """.trimIndent()
-            
+
             webView.evaluateJavascript(js) { result ->
                 android.util.Log.d("PlanetFragment", "Click fleet link result: $result")
             }
@@ -586,29 +716,14 @@ class PlanetWebViewFragment : Fragment() {
     }
 
     /**
-     * Klickt auf den Übersicht-Link via JavaScript
+     * Lädt die Übersichtsseite direkt mit dem korrekten Planeten-Parameter
      */
     fun clickOverviewLink() {
         if (::webView.isInitialized) {
-            val js = """
-                (function() {
-                    const currentUrl = window.location.href;
-                    if (currentUrl.includes('page=overview') || currentUrl.includes('page=Overview')) {
-                        return 'already on page';
-                    }
-                    
-                    const links = document.querySelectorAll('a[href*="page=overview"], a[href*="page=Overview"]');
-                    if (links.length > 0) {
-                        links[0].click();
-                        return 'clicked';
-                    }
-                    return 'not found';
-                })();
-            """.trimIndent()
-            
-            webView.evaluateJavascript(js) { result ->
-                android.util.Log.d("PlanetFragment", "Click overview link result: $result")
-            }
+            // Direkt die Overview-URL für diesen Planeten laden
+            val overviewUrl = planet.getUrl("overview")
+            android.util.Log.d("PlanetFragment", "Loading overview for planet ${planet.id}: $overviewUrl")
+            webView.loadUrl(overviewUrl)
         }
     }
 
@@ -632,7 +747,7 @@ class PlanetWebViewFragment : Fragment() {
                     return 'not found';
                 })();
             """.trimIndent()
-            
+
             webView.evaluateJavascript(js) { result ->
                 android.util.Log.d("PlanetFragment", "Click galaxy link result: $result")
             }
@@ -666,7 +781,7 @@ class PlanetWebViewFragment : Fragment() {
                     // Entferne Anführungszeichen und parse JSON
                     val cleanResult = result.trim('"').replace("\\\"", "\"")
                     val jsonArray = org.json.JSONArray(cleanResult)
-                    
+
                     val newPlanets = mutableListOf<Planet>()
                     for (i in 0 until jsonArray.length()) {
                         val obj = jsonArray.getJSONObject(i)
@@ -680,7 +795,7 @@ class PlanetWebViewFragment : Fragment() {
                     }
 
                     // Vergleiche mit aktuellen Planeten
-                    val prefs = requireContext().getSharedPreferences("pr0game_data", android.content.Context.MODE_PRIVATE)
+                    val prefs = requireContext().getSharedPreferences("pr0game_settings", android.content.Context.MODE_PRIVATE)
                     val savedPlanets = prefs.getString("planets_json", null)
                     val currentPlanets = if (savedPlanets != null) {
                         PlanetParser.fromJson(savedPlanets)
@@ -689,11 +804,11 @@ class PlanetWebViewFragment : Fragment() {
                     }
 
                     // Prüfe ob sich die Liste geändert hat
-                    if (newPlanets.size != currentPlanets.size || 
+                    if (newPlanets.size != currentPlanets.size ||
                         newPlanets.map { it.id }.toSet() != currentPlanets.map { it.id }.toSet()) {
-                        
+
                         android.util.Log.d("PlanetUpdate", "Planet list changed! Old: ${currentPlanets.size}, New: ${newPlanets.size}")
-                        
+
                         // Aktualisiere MainActivity mit neuer Planetenliste
                         (activity as? MainActivity)?.onPlanetsLoaded(newPlanets)
                     }
@@ -711,7 +826,25 @@ class PlanetWebViewFragment : Fragment() {
         val prefs = requireContext().getSharedPreferences("pr0game_settings", android.content.Context.MODE_PRIVATE)
         val hidePlanetSelector = prefs.getBoolean("hide_planet_selector", true)
         val hideMessageBanner = prefs.getBoolean("hide_message_banner", true)
-        
+
+        // Individual category settings - hide when show=false
+        val hideCategories = mapOf(
+            "0" to !prefs.getBoolean("show_category_spy_reports", true),
+            "7" to !prefs.getBoolean("show_category_spy_defense", true),
+            "1" to !prefs.getBoolean("show_category_player", true),
+            "2" to !prefs.getBoolean("show_category_alliance", true),
+            "3" to !prefs.getBoolean("show_category_combat", true),
+            "4" to !prefs.getBoolean("show_category_system", true),
+            "5" to !prefs.getBoolean("show_category_transport", true),
+            "6" to !prefs.getBoolean("show_category_foreign_transport", true),
+            "15" to !prefs.getBoolean("show_category_expedition", true),
+            "50" to !prefs.getBoolean("show_category_game", true),
+            "99" to !prefs.getBoolean("show_category_build_queue", true),
+            "100" to !prefs.getBoolean("show_category_all", true),
+            "998" to !prefs.getBoolean("show_category_favorites", true),
+            "999" to !prefs.getBoolean("show_category_search", true)
+        )
+
         val js = """
             (function() {
                 // CSS injizieren basierend auf Einstellungen
@@ -728,15 +861,36 @@ class PlanetWebViewFragment : Fragment() {
                 
                 ${if (hideMessageBanner) """
                 css += `
+                    /* Nur das orange "Du hast eine Nachricht" Banner verstecken */
                     .message-box,
-                    div.message-box {
+                    div.message-box,
+                    .message-box .message,
+                    div.message {
                         display: none !important;
+                        visibility: hidden !important;
+                        height: 0 !important;
+                        overflow: hidden !important;
                     }
                 `;
                 """ else ""}
                 
+                
                 style.textContent = css;
                 document.head.appendChild(style);
+                
+                // JavaScript-basiertes Verstecken von Nachrichtenkategorien (präzises Matching)
+                ${hideCategories.filter { it.value }.map { (categoryId, _) -> """
+                document.querySelectorAll('.message-category-item').forEach(function(item) {
+                    const link = item.querySelector('a[href*="category="]');
+                    if (link) {
+                        const href = link.getAttribute('href');
+                        // Exaktes Match: category=$categoryId mit & oder Ende der URL
+                        if (href.includes('category=$categoryId&') || href.includes('category=$categoryId\'') || href.match(/category=$categoryId$/)) {
+                            item.style.display = 'none';
+                        }
+                    }
+                });
+                """ }.joinToString("\n")}
                 
                 // Blockiere planetSelector Änderungen
                 const selector = document.getElementById('planetSelector');
@@ -752,14 +906,80 @@ class PlanetWebViewFragment : Fragment() {
                     selector.value = '${planet.id}';
                 }
                 
-                // Überschreibe alle Links mit cp Parameter
-                document.querySelectorAll('a').forEach(function(link) {
-                    if (link.href.includes('${Config.BASE_DOMAIN}')) {
-                        const url = new URL(link.href);
-                        url.searchParams.set('cp', '${planet.id}');
-                        link.href = url.toString();
+                // Überschreibe alle Links mit cp Parameter AGGRESSIV
+                const forcePlanetId = '${planet.id}';
+                
+                // Funktion um cp Parameter zu erzwingen
+                function forceCpParameter() {
+                    document.querySelectorAll('a').forEach(function(link) {
+                        if (link.href && link.href.includes('${Config.BASE_DOMAIN}')) {
+                            try {
+                                const url = new URL(link.href);
+                                url.searchParams.set('cp', forcePlanetId);
+                                link.href = url.toString();
+                            } catch(e) {}
+                        }
+                    });
+                }
+                
+                // Sofort ausführen
+                forceCpParameter();
+                
+                // Bei jedem Klick prüfen
+                document.addEventListener('click', function(e) {
+                    forceCpParameter();
+                }, true);
+                
+                // MutationObserver für dynamisch erstellte Links
+                const linkObserver = new MutationObserver(function() {
+                    forceCpParameter();
+                });
+                linkObserver.observe(document.body, { childList: true, subtree: true });
+                
+                // Erzwinge cp auch bei Form-Submits
+                document.querySelectorAll('form').forEach(function(form) {
+                    const cpInput = form.querySelector('input[name="cp"]');
+                    if (!cpInput) {
+                        const hidden = document.createElement('input');
+                        hidden.type = 'hidden';
+                        hidden.name = 'cp';
+                        hidden.value = forcePlanetId;
+                        form.appendChild(hidden);
+                    } else {
+                        cpInput.value = forcePlanetId;
                     }
                 });
+                
+                ${if (hideMessageBanner) """
+                // MutationObserver um das orange Nachrichten-Banner zu verstecken
+                const hideMessageBanner = function() {
+                    // Nur das spezifische orange Banner verstecken, nicht die Nachrichtenkategorien
+                    const messageBanners = document.querySelectorAll('div.message-box');
+                    messageBanners.forEach(function(banner) {
+                        // Prüfe ob es wirklich das Banner ist (enthält einen Link zu messages)
+                        const link = banner.querySelector('a[href*="page=messages"]');
+                        if (link && banner.querySelector('.message')) {
+                            banner.style.display = 'none';
+                            banner.style.visibility = 'hidden';
+                            banner.style.height = '0';
+                            banner.style.overflow = 'hidden';
+                        }
+                    });
+                };
+                
+                // Sofort ausführen
+                hideMessageBanner();
+                
+                // Observer für neue Elemente
+                const observer = new MutationObserver(function(mutations) {
+                    hideMessageBanner();
+                });
+                
+                observer.observe(document.body, {
+                    childList: true,
+                    subtree: true
+                });
+                """ else ""}
             })();
         """.trimIndent()
 
@@ -782,6 +1002,138 @@ class PlanetWebViewFragment : Fragment() {
 
         webView.evaluateJavascript(script) { result ->
             android.util.Log.d("GalaxyFormatter", "Script executed: $result")
+        }
+    }
+
+    /**
+     * Injiziert Empire Formatter für mobile Ansicht
+     */
+    private fun injectEmpireFormatter() {
+        val prefs = requireContext().getSharedPreferences("pr0game_settings", android.content.Context.MODE_PRIVATE)
+        val empireStickyHeadersEnabled = prefs.getBoolean("empire_sticky_headers_enabled", true)
+
+        if (!empireStickyHeadersEnabled) {
+            android.util.Log.d("EmpireFormatter", "Empire Sticky Headers disabled in settings")
+            return
+        }
+
+        val empireColumnWidth = prefs.getInt("empire_first_column_width", 120)
+        val empireAlternatingColors = prefs.getBoolean("empire_alternating_colors_enabled", true)
+        val script = EmpireFormatter.getFormatterScript(empireColumnWidth, empireAlternatingColors)
+
+        android.util.Log.d("EmpireFormatter", "Injecting Empire Formatter Script with column width: $empireColumnWidth, alternating colors: $empireAlternatingColors")
+
+        webView.evaluateJavascript(script) { result ->
+            android.util.Log.d("EmpireFormatter", "Script executed: $result")
+        }
+    }
+
+    private fun injectFleetTableFormatter() {
+        val prefs = requireContext().getSharedPreferences("pr0game_settings", android.content.Context.MODE_PRIVATE)
+        val fleetFontSize = prefs.getInt("fleet_font_size", 11)
+        val script = FleetTableFormatter.getFormatterScript(fleetFontSize)
+
+        android.util.Log.d("FleetTableFormatter", "Injecting Fleet Table Formatter Script with font size: ${fleetFontSize}px")
+
+        webView.evaluateJavascript(script) { result ->
+            android.util.Log.d("FleetTableFormatter", "Script executed: $result")
+        }
+    }
+
+    private fun autoFillLoginCredentials(attempt: Int = 1) {
+        // Check if fragment is still attached
+        if (!isAdded || context == null) {
+            android.util.Log.d("PlanetFragment", "Fragment not attached - skipping auto-fill")
+            return
+        }
+
+        val prefs = requireContext().getSharedPreferences("pr0game_settings", android.content.Context.MODE_PRIVATE)
+        val savedUsername = prefs.getString("login_username", "") ?: ""
+        val savedPassword = prefs.getString("login_password", "") ?: ""
+
+        android.util.Log.d("PlanetFragment", "Auto-fill attempt $attempt - Username: ${if (savedUsername.isNotEmpty()) "***" else "empty"}, Password: ${if (savedPassword.isNotEmpty()) "***" else "empty"}")
+
+        if (savedUsername.isEmpty() || savedPassword.isEmpty()) {
+            android.util.Log.d("PlanetFragment", "No credentials saved - opening keyboard for manual input")
+            // Focus email field to open keyboard
+            webView.evaluateJavascript("""
+                (function() {
+                    var emailField = document.querySelector('input[name="email"]') || 
+                                    document.getElementById('email') ||
+                                    document.querySelector('input[type="email"]');
+                    if (emailField) {
+                        emailField.focus();
+                        return 'Focused email field';
+                    }
+                    return 'Email field not found';
+                })();
+            """.trimIndent(), null)
+            return
+        }
+
+        // Escape quotes in credentials
+        val escapedUsername = savedUsername.replace("\\", "\\\\").replace("'", "\\'").replace("\"", "\\\"")
+        val escapedPassword = savedPassword.replace("\\", "\\\\").replace("'", "\\'").replace("\"", "\\\"")
+
+        val jsCode = """
+            (function() {
+                // pr0game uses email field, not username
+                var emailField = document.querySelector('input[name="email"]') || 
+                                document.getElementById('email') ||
+                                document.querySelector('input[type="email"]');
+                var passwordField = document.querySelector('input[name="password"]') || 
+                                   document.getElementById('password') ||
+                                   document.querySelector('input[type="password"]');
+                
+                if (emailField && passwordField) {
+                    emailField.value = '$escapedUsername';
+                    passwordField.value = '$escapedPassword';
+                    
+                    // Trigger all possible events for validation
+                    ['input', 'change', 'blur', 'keyup', 'keydown'].forEach(function(eventType) {
+                        emailField.dispatchEvent(new Event(eventType, { bubbles: true }));
+                        passwordField.dispatchEvent(new Event(eventType, { bubbles: true }));
+                    });
+                    
+                    // Find and enable login button
+                    var loginButton = document.querySelector('input[type="submit"]') ||
+                                     document.querySelector('button[type="submit"]') ||
+                                     document.querySelector('button[name="login"]') ||
+                                     document.querySelector('input[name="login"]');
+                    
+                    if (loginButton) {
+                        loginButton.disabled = false;
+                        loginButton.removeAttribute('disabled');
+                        
+                        // Also trigger form validation if it exists
+                        var form = emailField.form || passwordField.form;
+                        if (form && form.checkValidity) {
+                            try {
+                                form.checkValidity();
+                            } catch(e) {}
+                        }
+                    }
+                    
+                    // Focus password field to show keyboard
+                    passwordField.focus();
+                    
+                    return 'SUCCESS: Auto-filled, button enabled, focused';
+                }
+                
+                return 'FAIL: Email or password field not found';
+            })();
+        """.trimIndent()
+
+        webView.evaluateJavascript(jsCode) { result ->
+            android.util.Log.d("PlanetFragment", "Auto-fill result: $result")
+
+            // Retry if fields not found and we haven't tried too many times
+            if (result.contains("FAIL") && attempt < 5 && isAdded) {
+                android.util.Log.d("PlanetFragment", "Retrying auto-fill in 300ms...")
+                webView.postDelayed({
+                    autoFillLoginCredentials(attempt + 1)
+                }, 300)
+            }
         }
     }
 

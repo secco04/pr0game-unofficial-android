@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">pr0game Unofficial</string>
-    
-    <!-- Buttons -->
+    <string name="app_name">pr0game (gayri resmi)</string>
+    <string name="settings_title">Ayarlar</string>
     <string name="btn_overview">Genel Bakış</string>
     <string name="btn_empire">İmparatorluk</string>
     <string name="btn_buildings">Binalar</string>
@@ -13,40 +12,60 @@
     <string name="btn_galaxy">Galaksi</string>
     <string name="btn_messages">Mesajlar</string>
     <string name="btn_spy_reports">Casus Raporları</string>
-    <string name="btn_swipe_lock">Kilit</string>
-    <string name="btn_settings">Ayarlar</string>
-    
-    <!-- Settings -->
-    <string name="settings_title">Ayarlar</string>
+    <string name="btn_swipe_lock">Swipe Lock</string>
+    <string name="btn_settings">Settings</string>
     <string name="settings_close">Kapat</string>
     <string name="galaxy_view">Galaksi Görünümü</string>
     <string name="galaxy_formatter">Galaksi Biçimlendirici</string>
-    <string name="galaxy_formatter_desc">Galaksi görüntüsünü optimize eder</string>
-    <string name="galaxy_navigation">Galaksi Kaydırma Navigasyonu</string>
-    <string name="galaxy_navigation_desc">Kilitliyken sistemler arasında kaydırın</string>
-    <string name="loading_delay">Yükleme Animasyon Gecikmesi</string>
+    <string name="galaxy_formatter_desc">Optimizes galaxy display</string>
+    <string name="galaxy_navigation">Galaksi Navigasyonu</string>
+    <string name="galaxy_navigation_desc">Swipe between systems when locked</string>
+    <string name="loading_delay">Yükleme Gecikmesi</string>
     <string name="row_height">Satır Yüksekliği</string>
     <string name="ui_customization">Arayüz Özelleştirme</string>
-    <string name="hide_planet_selector">Gezegen Menüsünü Gizle</string>
-    <string name="hide_message_banner">Mesaj Başlığını Gizle</string>
+    <string name="hide_planet_selector">Gezegen Seçiciyi Gizle</string>
+    <string name="hide_message_banner">Mesaj Bildirimini Gizle</string>
+    <string name="fullscreen_mode">Tam Ekran Modu</string>
+    <string name="fullscreen_mode_desc">Gezinti çubuğunu gizle (yeniden başlatma gerektirir)</string>
     <string name="button_bar">Düğme Çubuğu</string>
     <string name="two_row_buttons">İki Satır Göster</string>
     <string name="visible_buttons">Görünür Düğmeleri Seç</string>
+    <string name="button_size">Düğme Boyutu</string>
+    <string name="first_row_buttons">İlk Satırdaki Düğmeler</string>
     <string name="language">Dil</string>
-    <string name="language_desc">Arayüz dilini seçin</string>
+    <string name="language_desc">Arayüz dilini seç</string>
     <string name="app_info">Uygulama Bilgisi</string>
     <string name="version">Sürüm</string>
     <string name="data">Veri</string>
-    <string name="clear_cache">Gezegen Önbelleğini Temizle (Yeniden Giriş)</string>
+    <string name="clear_cache">Gezegen Önbelleğini Temizle</string>
     <string name="support">Destek</string>
     <string name="support_desc">Uygulamayı beğendiniz mi? Geliştirmeyi destekleyin!</string>
     <string name="buy_coffee">☕ Bana bir kahve ısmarla</string>
     <string name="swipe_locked">Gezegen navigasyonu kilitli</string>
-    <string name="swipe_unlocked">Gezegen navigasyonu kilidi açık</string>
-    <string name="cache_cleared">Önbellek temizlendi! Lütfen tekrar giriş yapın.</string>
+    <string name="swipe_unlocked">Gezegen navigasyonu açık</string>
+    <string name="cache_cleared">Önbellek temizlendi!</string>
     <string name="browser_error">Tarayıcı açılamadı</string>
-    
-    <!-- Languages -->
+    <string name="screen_orientation">Ekran Yönü</string>
+    <string name="screen_orientation_desc">Ekran dönüşünü kilitle</string>
+    <string name="orientation_auto">Otomatik (Sistem)</string>
+    <string name="orientation_portrait">Dikey</string>
+    <string name="orientation_landscape">Yatay</string>
+    <string name="message_categories">Mesaj Kategorileri</string>
+    <string name="message_categories_desc">Kategorileri göster/gizle (AÇIK = görünür)</string>
+    <string name="category_spy_reports">Casus Raporları</string>
+    <string name="category_spy_defense">Casus Savunması</string>
+    <string name="category_player">Oyuncu Mesajları</string>
+    <string name="category_alliance">İttifak Mesajları</string>
+    <string name="category_combat">Savaş Raporları</string>
+    <string name="category_system">Sistem Mesajları</string>
+    <string name="category_transport">Nakliye</string>
+    <string name="category_foreign_transport">Yabancı Nakliye</string>
+    <string name="category_expedition">Keşif Raporları</string>
+    <string name="category_game">Oyun Mesajları</string>
+    <string name="category_build_queue">Yapı Kuyruğu</string>
+    <string name="category_all">Tüm Mesajlar</string>
+    <string name="category_favorites">Favoriler</string>
+    <string name="category_search">Mesajları Ara</string>
     <string name="lang_turkish">Türkçe</string>
     <string name="lang_portuguese">Português</string>
     <string name="lang_polish">Polski</string>

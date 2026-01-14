@@ -20,27 +20,58 @@
     <string name="settings_title">Settings</string>
     <string name="settings_close">Close</string>
     <string name="galaxy_view">Galaxy View</string>
+    <string name="empire_view">Empire View</string>
+    <string name="fleet_view">Fleet View</string>
     <string name="galaxy_formatter">Galaxy Formatter</string>
     <string name="galaxy_formatter_desc">Optimizes galaxy display</string>
     <string name="galaxy_navigation">Galaxy Swipe Navigation</string>
     <string name="galaxy_navigation_desc">Swipe between systems when locked</string>
+    <string name="empire_sticky_headers">Empire Sticky Headers</string>
+    <string name="empire_alternating_colors">Empire Alternating Column Colors</string>
+    <string name="empire_first_column_width">Empire First Column Width</string>
+    <string name="fleet_font_size">Fleet Table Font Size</string>
     <string name="loading_delay">Loading Animation Delay</string>
     <string name="row_height">Row Height</string>
     <string name="ui_customization">UI Customization</string>
     <string name="hide_planet_selector">Hide Planet Dropdown</string>
     <string name="hide_message_banner">Hide Message Banner</string>
+    <string name="message_categories">Message Categories</string>
+    <string name="message_categories_desc">Show/hide message categories (ON = visible)</string>
+    <string name="category_spy_reports">Spionageberichte</string>
+    <string name="category_spy_defense">Spionageabwehr</string>
+    <string name="category_player">Spieler Nachrichten</string>
+    <string name="category_alliance">Allianz Nachrichten</string>
+    <string name="category_combat">Kampfberichte</string>
+    <string name="category_system">System Nachrichten</string>
+    <string name="category_transport">Transport</string>
+    <string name="category_foreign_transport">Fremdtransport</string>
+    <string name="category_expedition">Expeditionsberichte</string>
+    <string name="category_game">Game Nachrichten</string>
+    <string name="category_build_queue">Bauschleife</string>
+    <string name="category_all">Alle Nachrichten</string>
+    <string name="category_favorites">Favoriten</string>
+    <string name="category_search">Nachrichten durchsuchen</string>
     <string name="fullscreen_mode">Fullscreen Mode</string>
     <string name="fullscreen_mode_desc">Hide navigation bar (requires app restart)</string>
+    <string name="use_default_opera">Use Default (Opera)</string>
     <string name="button_bar">Button Bar</string>
     <string name="two_row_buttons">Show Two Rows</string>
     <string name="visible_buttons">Select Visible Buttons</string>
     <string name="button_size">Button Size</string>
+    <string name="first_row_buttons">Buttons in First Row</string>
     <string name="language">Language</string>
     <string name="language_desc">Select interface language</string>
     <string name="app_info">App Info</string>
     <string name="version">Version</string>
     <string name="data">Data</string>
+    <string name="auto_login_credentials">Auto-Fill Credentials</string>
+    <string name="auto_login_desc">Save email and password for auto-fill</string>
+    <string name="username">Email Address</string>
+    <string name="password">Password</string>
+    <string name="save_credentials">Save Login Credentials</string>
+    <string name="credentials_saved">Login credentials saved successfully</string>
     <string name="clear_cache">Clear Planet Cache (Re-login)</string>
+    <string name="reset_settings">Reset All Settings to Default</string>
     <string name="support">Support</string>
     <string name="support_desc">Like the app? Support development!</string>
     <string name="buy_coffee">☕ Buy me a coffee</string>
@@ -48,6 +79,13 @@
     <string name="swipe_unlocked">Planet navigation unlocked</string>
     <string name="cache_cleared">Cache cleared! Please log in again.</string>
     <string name="browser_error">Could not open browser</string>
+
+    <!-- Screen Orientation -->
+    <string name="screen_orientation">Screen Orientation</string>
+    <string name="screen_orientation_desc">Lock screen rotation</string>
+    <string name="orientation_auto">Auto (System)</string>
+    <string name="orientation_portrait">Portrait</string>
+    <string name="orientation_landscape">Landscape</string>
 
     <!-- Languages -->
     <string name="lang_turkish">Türkçe</string>

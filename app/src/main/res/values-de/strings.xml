@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">pr0game Unofficial</string>
-    
+    <!-- App -->
+    <string name="app_name">pr0game (unofficial)</string>
+    <string name="settings_title">Einstellungen</string>
+
     <!-- Buttons -->
     <string name="btn_overview">Übersicht</string>
     <string name="btn_empire">Imperium</string>
@@ -13,39 +15,79 @@
     <string name="btn_galaxy">Galaxie</string>
     <string name="btn_messages">Nachrichten</string>
     <string name="btn_spy_reports">Spionageberichte</string>
-    <string name="btn_swipe_lock">Sperre</string>
-    <string name="btn_settings">Einstellungen</string>
-    
-    <!-- Settings -->
-    <string name="settings_title">Einstellungen</string>
+    <string name="btn_swipe_lock">Swipe Lock</string>
+    <string name="btn_settings">Settings</string>
     <string name="settings_close">Schließen</string>
-    <string name="galaxy_view">Galaxy-Ansicht</string>
-    <string name="galaxy_formatter">Galaxy Formatter</string>
-    <string name="galaxy_formatter_desc">Optimiert die Galaxy-Darstellung</string>
-    <string name="galaxy_navigation">Galaxy Swipe-Navigation</string>
-    <string name="galaxy_navigation_desc">Zwischen Systemen wischen wenn gesperrt</string>
-    <string name="loading_delay">Ladeanimations-Verzögerung</string>
+
+    <!-- Galaxy -->
+    <string name="galaxy_view">Galaxieansicht</string>
+    <string name="galaxy_formatter">Galaxie-Formatter</string>
+    <string name="galaxy_formatter_desc">Optimizes galaxy display</string>
+    <string name="galaxy_navigation">Galaxie-Navigation</string>
+    <string name="galaxy_navigation_desc">Swipe between systems when locked</string>
+    <string name="loading_delay">Ladeverzögerung</string>
     <string name="row_height">Zeilenhöhe</string>
-    <string name="ui_customization">UI Anpassung</string>
-    <string name="hide_planet_selector">Planeten-Dropdown ausblenden</string>
-    <string name="hide_message_banner">Nachrichten-Banner ausblenden</string>
+
+    <!-- UI Customization -->
+    <string name="ui_customization">UI-Anpassung</string>
+    <string name="hide_planet_selector">Planetenauswahl ausblenden</string>
+    <string name="hide_message_banner">Nachrichtenbanner ausblenden</string>
+    <string name="fullscreen_mode">Vollbildmodus</string>
+    <string name="fullscreen_mode_desc">Navigationsleiste ausblenden (App-Neustart erforderlich)</string>
+
+    <!-- Button Bar -->
     <string name="button_bar">Button-Leiste</string>
     <string name="two_row_buttons">Zwei Zeilen anzeigen</string>
     <string name="visible_buttons">Sichtbare Buttons auswählen</string>
+    <string name="button_size">Button-Größe</string>
+    <string name="first_row_buttons">Buttons in erster Zeile</string>
+
+    <!-- Language -->
     <string name="language">Sprache</string>
-    <string name="language_desc">Interface-Sprache auswählen</string>
-    <string name="app_info">App Info</string>
+    <string name="language_desc">Oberflächensprache auswählen</string>
+
+    <!-- App Info -->
+    <string name="app_info">App-Info</string>
     <string name="version">Version</string>
+
+    <!-- Data -->
     <string name="data">Daten</string>
-    <string name="clear_cache">Planeten-Cache löschen (Neu einloggen)</string>
-    <string name="support">Unterstützen</string>
+    <string name="clear_cache">Planeten-Cache leeren (Neu anmelden)</string>
+
+    <!-- Support -->
+    <string name="support">Unterstützung</string>
     <string name="support_desc">Gefällt dir die App? Unterstütze die Entwicklung!</string>
-    <string name="buy_coffee">☕ Buy me a coffee</string>
-    <string name="swipe_locked">Planeten-Navigation gesperrt</string>
-    <string name="swipe_unlocked">Planeten-Navigation entsperrt</string>
-    <string name="cache_cleared">Cache gelöscht! Bitte neu einloggen.</string>
+    <string name="buy_coffee">☕ Spendiere mir einen Kaffee</string>
+    <string name="swipe_locked">Planetennavigation gesperrt</string>
+    <string name="swipe_unlocked">Planetennavigation entsperrt</string>
+    <string name="cache_cleared">Cache geleert! Bitte erneut anmelden.</string>
     <string name="browser_error">Browser konnte nicht geöffnet werden</string>
-    
+
+    <!-- Screen Orientation -->
+    <string name="screen_orientation">Bildschirm-Ausrichtung</string>
+    <string name="screen_orientation_desc">Bildschirmdrehung sperren</string>
+    <string name="orientation_auto">Automatisch (System)</string>
+    <string name="orientation_portrait">Hochformat</string>
+    <string name="orientation_landscape">Querformat</string>
+
+    <!-- Message Categories -->
+    <string name="message_categories">Nachrichtenkategorien</string>
+    <string name="message_categories_desc">Nachrichtenkategorien ein-/ausblenden (AN = sichtbar)</string>
+    <string name="category_spy_reports">Spionageberichte</string>
+    <string name="category_spy_defense">Spionageabwehr</string>
+    <string name="category_player">Spieler-Nachrichten</string>
+    <string name="category_alliance">Allianz-Nachrichten</string>
+    <string name="category_combat">Kampfberichte</string>
+    <string name="category_system">System-Nachrichten</string>
+    <string name="category_transport">Transport</string>
+    <string name="category_foreign_transport">Fremdtransport</string>
+    <string name="category_expedition">Expeditionsberichte</string>
+    <string name="category_game">Game-Nachrichten</string>
+    <string name="category_build_queue">Bauschleife</string>
+    <string name="category_all">Alle Nachrichten</string>
+    <string name="category_favorites">Favoriten</string>
+    <string name="category_search">Nachrichten durchsuchen</string>
+
     <!-- Languages -->
     <string name="lang_turkish">Türkçe</string>
     <string name="lang_portuguese">Português</string>

@@ -30,6 +30,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var adapter: PlanetPagerAdapter
     private lateinit var prefs: android.content.SharedPreferences
+    private lateinit var sessionManager: SessionManager
 
     private var planets: MutableList<Planet> = mutableListOf()
     var isSwipeLocked = false
@@ -46,35 +47,48 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        setContentView(R.layout.activity_main)
-
         // Fullscreen Mode (optional, user configurable)
         prefs = getSharedPreferences("pr0game_settings", Context.MODE_PRIVATE)
-        val fullscreenEnabled = prefs.getBoolean("fullscreen_enabled", true)
+        val fullscreenEnabled = prefs.getBoolean("fullscreen_enabled", false)
 
-        if (fullscreenEnabled) {
-            // Modern approach using WindowInsetsController (less intrusive)
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
-                window.setDecorFitsSystemWindows(false)
-                window.insetsController?.let {
-                    it.hide(android.view.WindowInsets.Type.statusBars() or android.view.WindowInsets.Type.navigationBars())
-                    it.systemBarsBehavior = android.view.WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
-                }
-            } else {
-                // Fallback for older Android versions
-                @Suppress("DEPRECATION")
-                window.decorView.systemUiVisibility = (
-                        android.view.View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                                or android.view.View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                                or android.view.View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                                or android.view.View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                                or android.view.View.SYSTEM_UI_FLAG_FULLSCREEN
-                                or android.view.View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-                        )
-            }
+        // Apply screen orientation setting
+        val orientation = prefs.getString("screen_orientation", "auto") ?: "auto"
+        requestedOrientation = when (orientation) {
+            "portrait" -> android.content.pm.ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+            "landscape" -> android.content.pm.ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+            else -> android.content.pm.ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
         }
 
-        prefs = getSharedPreferences("pr0game_settings", Context.MODE_PRIVATE)
+        // Configure window BEFORE setContentView for proper initialization
+        // Force dark status bar and navigation bar colors
+        window.statusBarColor = Color.parseColor("#0a0e27")
+        window.navigationBarColor = Color.parseColor("#0a0e27")
+
+        if (fullscreenEnabled) {
+            // Fullscreen mode with dark bars
+            @Suppress("DEPRECATION")
+            window.decorView.systemUiVisibility = (
+                    android.view.View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                            or android.view.View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                            or android.view.View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                            or android.view.View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                            or android.view.View.SYSTEM_UI_FLAG_FULLSCREEN
+                            or android.view.View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+                    )
+        } else {
+            // Non-fullscreen mode: show system bars with dark background
+            @Suppress("DEPRECATION")
+            window.decorView.systemUiVisibility = (
+                    android.view.View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                            or android.view.View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                    )
+        }
+
+        setContentView(R.layout.activity_main)
+
+        // Apply fitsSystemWindows to root layout based on fullscreen setting
+        val rootView = findViewById<View>(R.id.root)
+        rootView.fitsSystemWindows = !fullscreenEnabled
 
         viewPager = findViewById(R.id.viewPager)
         tabLayout = findViewById(R.id.tabLayout)
@@ -91,9 +105,14 @@ class MainActivity : AppCompatActivity() {
     private fun loadPlanetsAndSetup() {
         val savedPlanets = prefs.getString("planets_json", null)
 
+        // Initialize SessionManager but DON'T start monitoring automatically
+        sessionManager = SessionManager(this)
+
         if (savedPlanets != null) {
             planets = PlanetParser.fromJson(savedPlanets).toMutableList()
             setupPlanets()
+            // DON'T start session monitoring - it causes issues
+            // startSessionMonitoring()
         } else {
             showInitialLoadFragment()
         }
@@ -106,16 +125,23 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun onPlanetsLoaded(loadedPlanets: List<Planet>) {
+        // Save current position before updating
+        val currentPosition = if (::viewPager.isInitialized && planets.isNotEmpty()) {
+            viewPager.currentItem
+        } else {
+            0
+        }
+
         planets.clear()
         planets.addAll(loadedPlanets)
 
         val json = PlanetParser.toJson(planets)
         prefs.edit().putString("planets_json", json).apply()
 
-        setupPlanets()
+        setupPlanets(currentPosition)
     }
 
-    private fun setupPlanets() {
+    private fun setupPlanets(restorePosition: Int = 0) {
         supportFragmentManager.findFragmentById(R.id.container)?.let {
             supportFragmentManager.beginTransaction().remove(it).commit()
         }
@@ -123,6 +149,11 @@ class MainActivity : AppCompatActivity() {
         adapter = PlanetPagerAdapter(this, planets)
         viewPager.adapter = adapter
         viewPager.offscreenPageLimit = 2
+
+        // Restore position if valid
+        if (restorePosition in 0 until planets.size) {
+            viewPager.setCurrentItem(restorePosition, false)
+        }
 
         setupTabs()
         setupButtons()
@@ -146,6 +177,20 @@ class MainActivity : AppCompatActivity() {
 
             tab.customView = customView
         }.attach()
+
+        // Unlock swipe when user manually selects a tab
+        tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+            override fun onTabSelected(tab: TabLayout.Tab?) {
+                // Unlock swipe when user clicks on a tab
+                if (isSwipeLocked) {
+                    android.util.Log.d("MainActivity", "Tab selected - unlocking swipe")
+                    toggleSwipeLock()
+                }
+            }
+
+            override fun onTabUnselected(tab: TabLayout.Tab?) {}
+            override fun onTabReselected(tab: TabLayout.Tab?) {}
+        })
     }
 
     private fun setupButtons() {
@@ -180,8 +225,8 @@ class MainActivity : AppCompatActivity() {
         val buttons = getButtonConfigs()
         val visibleButtons = buttons.filter { isButtonVisible(it.id) }
 
-        // Fill horizontally: first 6 buttons in row 1, rest in row 2
-        val maxFirstRow = 6
+        // Get max first row buttons from settings (default 6)
+        val maxFirstRow = prefs.getInt("first_row_buttons", 6)
 
         visibleButtons.take(maxFirstRow).forEach { config ->
             addButton(buttonBarRow1, config)
@@ -341,7 +386,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun toggleSwipeLock() {
+    fun toggleSwipeLock() {
         isSwipeLocked = !isSwipeLocked
         updateSwipeLockIcon()
 
@@ -351,6 +396,15 @@ class MainActivity : AppCompatActivity() {
         android.widget.Toast.makeText(this, message, android.widget.Toast.LENGTH_SHORT).show()
 
         notifyFragmentsOfSwipeLockChange(isSwipeLocked)
+    }
+
+    fun unlockSwipe() {
+        if (isSwipeLocked) {
+            isSwipeLocked = false
+            updateSwipeLockIcon()
+            viewPager.isUserInputEnabled = true
+            notifyFragmentsOfSwipeLockChange(false)
+        }
     }
 
     private fun updateSwipeLockIcon() {
@@ -425,6 +479,11 @@ class MainActivity : AppCompatActivity() {
     override fun onPause() {
         super.onPause()
         CookieManager.getInstance().flush()
+
+        // Stop session monitoring while app is paused
+        if (::sessionManager.isInitialized) {
+            sessionManager.stopMonitoring()
+        }
     }
 
     override fun onBackPressed() {
@@ -447,6 +506,64 @@ class MainActivity : AppCompatActivity() {
         }
 
         // Default back behavior
+        @Suppress("DEPRECATION")
         super.onBackPressed()
+    }
+
+    // Session monitoring disabled - using URL-based detection instead
+    // private fun startSessionMonitoring() {
+    //     if (::sessionManager.isInitialized) {
+    //         sessionManager.startMonitoring {
+    //             onSessionExpired()
+    //         }
+    //     }
+    // }
+
+    fun handleSessionExpired() {
+        android.util.Log.d("MainActivity", "Session expired - showing login")
+
+        // Hide tabs and button bar
+        tabLayout.visibility = View.GONE
+        buttonBarContainer.visibility = View.GONE
+
+        // IMPORTANT: Hide ViewPager to prevent touch blocking
+        viewPager.visibility = View.GONE
+        android.util.Log.d("MainActivity", "ViewPager hidden for login")
+
+        // Clear saved planets
+        prefs.edit().remove("planets_json").apply()
+
+        // Show initial load fragment (login screen)
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.container, InitialLoadFragment())
+            .commitAllowingStateLoss()
+
+        // Clear adapter
+        planets.clear()
+        if (::adapter.isInitialized) {
+            adapter.notifyDataSetChanged()
+        }
+
+        // Show toast
+        android.widget.Toast.makeText(
+            this,
+            "Session expired. Please login again.",
+            android.widget.Toast.LENGTH_LONG
+        ).show()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        if (::sessionManager.isInitialized) {
+            sessionManager.stopMonitoring()
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        // Session monitoring disabled - causes issues with false positives
+        // if (::sessionManager.isInitialized && planets.isNotEmpty()) {
+        //     startSessionMonitoring()
+        // }
     }
 }

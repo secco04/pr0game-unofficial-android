@@ -37,9 +37,9 @@ object GalaxyFormatter {
     header.style.cssText = 'display: flex; background: #13181f; font-weight: bold; padding: 10px 4px; border-bottom: 2px solid #64b5f6; font-size: 14px; color: #849ab7;';
     header.innerHTML = `
         <div style="width: 35px; text-align: center;">Pos</div>
-        <div style="width: 150px; padding-left: 4px;">Planet</div>
-        <div style="width: 30px; text-align: center;">M</div>
-        <div style="width: 30px; text-align: center;">T</div>
+        <div style="width: 120px; padding-left: 4px;">Planet</div>
+        <div style="width: 20px; text-align: center;">M</div>
+        <div style="width: 20px; text-align: center;">T</div>
         <div style="flex: 1; min-width: 130px; padding-left: 4px;">Spieler (Status) [Allianz]</div>
         <div style="width: 50px; text-align: center;">Aktion</div>
     `;
@@ -109,7 +109,7 @@ object GalaxyFormatter {
         
         // Spalte 2: Planet
         const planetCell = document.createElement('div');
-        planetCell.style.cssText = 'width: 150px; padding-left: 4px; display: flex; align-items: center; gap: 4px; overflow: hidden;';
+        planetCell.style.cssText = 'width: 120px; padding-left: 4px; display: flex; align-items: center; gap: 4px; overflow: hidden;';
         
         const originalPlanetCell = originalRow.querySelector('.galaxy-planet');
         if (originalPlanetCell) {
@@ -117,6 +117,11 @@ object GalaxyFormatter {
             const img = originalPlanetCell.querySelector('img');
             
             if (originalLink) {
+                // Get planet name to check length
+                const planetNameText = originalLink.textContent.trim();
+                const isLongPlanetName = planetNameText.length > 12;
+                const planetFontSize = isLongPlanetName ? '10.5px' : '14px';
+                
                 // Kopiere Original-Link komplett mit allen Attributen
                 const newLink = originalLink.cloneNode(true);
                 newLink.style.cssText = 'display: flex; align-items: center; gap: 4px; text-decoration: none; overflow: hidden;';
@@ -127,13 +132,13 @@ object GalaxyFormatter {
                     img.style.cssText = 'width: 14px; height: 14px; flex-shrink: 0;';
                 }
                 
-                // Passe Textgröße an
+                // Passe Textgröße an - dynamisch basierend auf Länge
                 const textNodes = newLink.childNodes;
                 textNodes.forEach(node => {
                     if (node.nodeType === Node.TEXT_NODE && node.textContent.trim()) {
                         const span = document.createElement('span');
                         span.textContent = node.textContent;
-                        span.style.cssText = 'font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;';
+                        span.style.cssText = 'font-size: ' + planetFontSize + '; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;';
                         node.replaceWith(span);
                     }
                 });
@@ -156,27 +161,32 @@ object GalaxyFormatter {
         }
         row.appendChild(planetCell);
         
-        // Spalte 3: Mond (M)
+        // Spalte 3: Mond (M) - with complete tooltip
         const moonCell = document.createElement('div');
-        moonCell.style.cssText = 'width: 30px; height: ' + ROW_HEIGHT + 'px; display: flex; align-items: center; justify-content: center;';
+        moonCell.style.cssText = 'width: 20px; height: ' + ROW_HEIGHT + 'px; display: flex; align-items: center; justify-content: center;';
         const originalMoonCell = originalRow.querySelector('.galaxy-moon');
-        const moonImg = originalMoonCell ? originalMoonCell.querySelector('img') : null;
-        if (moonImg) {
-            const newMoonImg = document.createElement('img');
-            newMoonImg.src = moonImg.src;
-            newMoonImg.style.cssText = 'width: 14px; height: 14px;';
-            moonCell.appendChild(newMoonImg);
+        if (originalMoonCell) {
+            // Clone complete moon link with tooltip
+            const moonLink = originalMoonCell.querySelector('a');
+            if (moonLink) {
+                const newMoonLink = moonLink.cloneNode(true);
+                const moonImg = newMoonLink.querySelector('img');
+                if (moonImg) {
+                    moonImg.style.cssText = 'width: 12px; height: 12px;';
+                }
+                moonCell.appendChild(newMoonLink);
+            }
         }
         row.appendChild(moonCell);
         
         // Spalte 4: Trümmerfeld (T)
         const debrisCell = document.createElement('div');
-        debrisCell.style.cssText = 'width: 30px; height: ' + ROW_HEIGHT + 'px; display: flex; align-items: center; justify-content: center; font-size: 14px;';
+        debrisCell.style.cssText = 'width: 20px; height: ' + ROW_HEIGHT + 'px; display: flex; align-items: center; justify-content: center; font-size: 14px;';
         const originalDebrisCell = originalRow.querySelector('.galaxy-debris');
         if (originalDebrisCell && originalDebrisCell.textContent.trim() !== '') {
             // Clone kompletten Debris Inhalt
             const debrisClone = originalDebrisCell.cloneNode(true);
-            debrisClone.style.cssText = 'font-size: 14px; line-height: ' + ROW_HEIGHT + 'px;';
+            debrisClone.style.cssText = 'font-size: 12px; line-height: ' + ROW_HEIGHT + 'px;';
             debrisCell.appendChild(debrisClone);
         }
         row.appendChild(debrisCell);
@@ -187,27 +197,54 @@ object GalaxyFormatter {
         
         const originalPlayerCell = originalRow.querySelector('.galaxy-player');
         if (originalPlayerCell) {
+            // Wrapper for all player content with overflow handling
+            const playerWrapper = document.createElement('div');
+            playerWrapper.style.cssText = 'display: flex; align-items: center; overflow: hidden; width: 100%;';
+            
             // Kopiere die Original Player Links mit Tooltips
             const playerLink = originalPlayerCell.querySelector('a');
             const allianceLink = originalPlayerCell.querySelector('a[allyid]');
             const statusDiv = originalPlayerCell.querySelector('div');
             
             if (playerLink) {
-                // Clone Player Link
-                const newPlayerLink = playerLink.cloneNode(false);
+                // Extract rank from tooltip first
+                const tooltipContent = playerLink.getAttribute('data-tooltip-content') || '';
+                const tempDiv = document.createElement('div');
+                tempDiv.innerHTML = tooltipContent;
+                const decodedText = tempDiv.textContent || tempDiv.innerText;
+                const rankMatch = decodedText.match(/auf Platz\s+(\d+)/);
+                
                 const playerSpan = playerLink.querySelector('.galaxy-username');
+                const playerName = playerSpan ? playerSpan.textContent.trim() : '';
+                
+                // Check if name is long (>15 chars) - only then make text smaller
+                const isLongName = playerName.length > 15;
+                const fontSize = isLongName ? '10.5px' : '14px';
+                const rankSize = isLongName ? '7.875px' : '10.5px';
+                
+                // Add rank FIRST if found
+                if (rankMatch) {
+                    const rankSpan = document.createElement('span');
+                    rankSpan.textContent = '#' + rankMatch[1];
+                    rankSpan.style.cssText = 'flex-shrink: 0; font-size: ' + rankSize + '; color: #849ab7;';
+                    playerWrapper.appendChild(rankSpan);
+                }
+                
+                // Then add player name link
+                const newPlayerLink = playerLink.cloneNode(false);
+                newPlayerLink.style.cssText = 'text-decoration: none; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; flex-shrink: 1; min-width: 0;';
                 
                 if (playerSpan) {
                     const newPlayerSpan = document.createElement('span');
                     newPlayerSpan.className = playerSpan.className;
-                    newPlayerSpan.textContent = playerSpan.textContent.trim();
+                    newPlayerSpan.textContent = playerName;
                     // Kopiere Original-Farbe
                     newPlayerSpan.style.color = window.getComputedStyle(playerSpan).color;
+                    newPlayerSpan.style.cssText += ' overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: ' + fontSize + ';';
                     newPlayerLink.appendChild(newPlayerSpan);
                 }
                 
-                newPlayerLink.style.cssText = 'text-decoration: none;';
-                playerCell.appendChild(newPlayerLink);
+                playerWrapper.appendChild(newPlayerLink);
                 
                 // Status
                 if (statusDiv) {
@@ -218,28 +255,31 @@ object GalaxyFormatter {
                         newStatusSpan.textContent = ' (' + statusSpan.textContent.trim() + ')';
                         // Kopiere Original-Farbe
                         newStatusSpan.style.color = window.getComputedStyle(statusSpan).color;
-                        playerCell.appendChild(newStatusSpan);
+                        newStatusSpan.style.cssText += ' flex-shrink: 0; font-size: ' + fontSize + ';';
+                        playerWrapper.appendChild(newStatusSpan);
                     }
                 }
                 
                 // Alliance
                 if (allianceLink) {
-                    playerCell.appendChild(document.createTextNode(' '));
                     const newAllianceLink = allianceLink.cloneNode(false);
                     const allianceSpan = allianceLink.querySelector('.galaxy-alliance');
                     
                     if (allianceSpan) {
                         const newAllianceSpan = document.createElement('span');
                         newAllianceSpan.className = allianceSpan.className;
-                        newAllianceSpan.textContent = allianceSpan.textContent.trim();
+                        newAllianceSpan.textContent = ' ' + allianceSpan.textContent.trim();
                         // Kopiere Original-Farbe
                         newAllianceSpan.style.color = window.getComputedStyle(allianceSpan).color;
+                        newAllianceSpan.style.cssText += ' font-size: ' + fontSize + ';';
                         newAllianceLink.appendChild(newAllianceSpan);
                     }
                     
-                    newAllianceLink.style.cssText = 'text-decoration: none;';
-                    playerCell.appendChild(newAllianceLink);
+                    newAllianceLink.style.cssText = 'text-decoration: none; flex-shrink: 0;';
+                    playerWrapper.appendChild(newAllianceLink);
                 }
+                
+                playerCell.appendChild(playerWrapper);
             } else {
                 playerCell.textContent = '-';
                 playerCell.style.color = '#666';

@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <!-- Empire Sticky Headers -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingVertical="8dp">
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/empire_sticky_headers"
+            android:textSize="14sp"
+            android:textColor="#ffffff" />
+        <Switch
+            android:id="@+id/switchEmpireStickyHeaders"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <!-- Empire Alternating Colors -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingVertical="8dp">
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/empire_alternating_colors"
+            android:textSize="14sp"
+            android:textColor="#ffffff" />
+        <Switch
+            android:id="@+id/switchEmpireAlternatingColors"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <!-- Empire First Column Width -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/empire_first_column_width"
+        android:textSize="14sp"
+        android:textColor="#ffffff"
+        android:layout_marginTop="12dp"
+        android:layout_marginBottom="8dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+        <SeekBar
+            android:id="@+id/seekBarEmpireColumnWidth"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:max="50"
+            android:progress="20" />
+        <TextView
+            android:id="@+id/tvEmpireColumnWidthValue"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:text="120px"
+            android:textColor="#ffffff"
+            android:gravity="end"
+            android:layout_marginStart="8dp" />
+    </LinearLayout>
+
+</LinearLayout>

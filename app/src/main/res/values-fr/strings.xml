@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">pr0game Unofficial</string>
-    
+    <!-- App -->
+    <string name="app_name">pr0game (unofficial)</string>
+    <string name="settings_title">Paramètres</string>
+
     <!-- Buttons -->
-    <string name="btn_overview">Aperçu</string>
+    <string name="btn_overview">Vue densemble</string>
     <string name="btn_empire">Empire</string>
     <string name="btn_buildings">Bâtiments</string>
     <string name="btn_shipyard">Chantier Naval</string>
@@ -12,40 +14,80 @@
     <string name="btn_fleet">Flotte</string>
     <string name="btn_galaxy">Galaxie</string>
     <string name="btn_messages">Messages</string>
-    <string name="btn_spy_reports">Rapports d\'Espionnage</string>
-    <string name="btn_swipe_lock">Verrouillage</string>
-    <string name="btn_settings">Paramètres</string>
-    
-    <!-- Settings -->
-    <string name="settings_title">Paramètres</string>
+    <string name="btn_spy_reports">Spionageberichte</string>
+    <string name="btn_swipe_lock">Swipe Lock</string>
+    <string name="btn_settings">Settings</string>
     <string name="settings_close">Fermer</string>
-    <string name="galaxy_view">Vue Galaxie</string>
-    <string name="galaxy_formatter">Formateur de Galaxie</string>
-    <string name="galaxy_formatter_desc">Optimise l\'affichage de la galaxie</string>
-    <string name="galaxy_navigation">Navigation par Balayage de Galaxie</string>
-    <string name="galaxy_navigation_desc">Balayer entre systèmes quand verrouillé</string>
-    <string name="loading_delay">Délai d\'Animation de Chargement</string>
-    <string name="row_height">Hauteur de Ligne</string>
-    <string name="ui_customization">Personnalisation de l\'Interface</string>
-    <string name="hide_planet_selector">Masquer le Menu des Planètes</string>
-    <string name="hide_message_banner">Masquer la Bannière de Messages</string>
-    <string name="button_bar">Barre de Boutons</string>
-    <string name="two_row_buttons">Afficher Deux Lignes</string>
-    <string name="visible_buttons">Sélectionner les Boutons Visibles</string>
-    <string name="language">Langue</string>
-    <string name="language_desc">Sélectionner la langue de l\'interface</string>
-    <string name="app_info">Informations sur l\'App</string>
+
+    <!-- Galaxy -->
+    <string name="galaxy_view">Galaxieansicht</string>
+    <string name="galaxy_formatter">Galaxie-Formatter</string>
+    <string name="galaxy_formatter_desc">Optimizes galaxy display</string>
+    <string name="galaxy_navigation">Galaxie-Navigation</string>
+    <string name="galaxy_navigation_desc">Swipe between systems when locked</string>
+    <string name="loading_delay">Ladeverzögerung</string>
+    <string name="row_height">Zeilenhöhe</string>
+
+    <!-- UI Customization -->
+    <string name="ui_customization">UI-Anpassung</string>
+    <string name="hide_planet_selector">Planetenauswahl ausblenden</string>
+    <string name="hide_message_banner">Messagesbanner ausblenden</string>
+    <string name="fullscreen_mode">Vollbildmodus</string>
+    <string name="fullscreen_mode_desc">Navigationsleiste ausblenden (App-Neustart erforderlich)</string>
+
+    <!-- Button Bar -->
+    <string name="button_bar">Button-Leiste</string>
+    <string name="two_row_buttons">Zwei Zeilen anzeigen</string>
+    <string name="visible_buttons">Sichtbare Buttons auswählen</string>
+    <string name="button_size">Button-Größe</string>
+    <string name="first_row_buttons">Buttons in erster Zeile</string>
+
+    <!-- Language -->
+    <string name="language">Sprache</string>
+    <string name="language_desc">Oberflächensprache auswählen</string>
+
+    <!-- App Info -->
+    <string name="app_info">App-Info</string>
     <string name="version">Version</string>
-    <string name="data">Données</string>
-    <string name="clear_cache">Effacer le Cache des Planètes (Se Reconnecter)</string>
-    <string name="support">Soutien</string>
-    <string name="support_desc">Vous aimez l\'app? Soutenez le développement!</string>
-    <string name="buy_coffee">☕ Offrez-moi un café</string>
-    <string name="swipe_locked">Navigation des planètes verrouillée</string>
-    <string name="swipe_unlocked">Navigation des planètes déverrouillée</string>
-    <string name="cache_cleared">Cache effacé! Veuillez vous reconnecter.</string>
-    <string name="browser_error">Impossible d\'ouvrir le navigateur</string>
-    
+
+    <!-- Data -->
+    <string name="data">Daten</string>
+    <string name="clear_cache">Planeten-Cache leeren (Neu anmelden)</string>
+
+    <!-- Support -->
+    <string name="support">Unterstützung</string>
+    <string name="support_desc">Gefällt dir die App? Unterstütze die Entwicklung!</string>
+    <string name="buy_coffee">☕ Spendiere mir einen Kaffee</string>
+    <string name="swipe_locked">Planetennavigation gesperrt</string>
+    <string name="swipe_unlocked">Planetennavigation entsperrt</string>
+    <string name="cache_cleared">Cache geleert! Bitte erneut anmelden.</string>
+    <string name="browser_error">Browser konnte nicht geöffnet werden</string>
+
+    <!-- Screen Orientation -->
+    <string name="screen_orientation">Bildschirm-Ausrichtung</string>
+    <string name="screen_orientation_desc">Bildschirmdrehung sperren</string>
+    <string name="orientation_auto">Automatisch (System)</string>
+    <string name="orientation_portrait">Hochformat</string>
+    <string name="orientation_landscape">Querformat</string>
+
+    <!-- Message Categories -->
+    <string name="message_categories">Messageskategorien</string>
+    <string name="message_categories_desc">Messageskategorien ein-/ausblenden (AN = sichtbar)</string>
+    <string name="category_spy_reports">Spionageberichte</string>
+    <string name="category_spy_defense">Spionageabwehr</string>
+    <string name="category_player">Spieler-Messages</string>
+    <string name="category_alliance">Allianz-Messages</string>
+    <string name="category_combat">Kampfberichte</string>
+    <string name="category_system">System-Messages</string>
+    <string name="category_transport">Transport</string>
+    <string name="category_foreign_transport">Fremdtransport</string>
+    <string name="category_expedition">Expeditionsberichte</string>
+    <string name="category_game">Game-Messages</string>
+    <string name="category_build_queue">Bauschleife</string>
+    <string name="category_all">Alle Messages</string>
+    <string name="category_favorites">Favoriten</string>
+    <string name="category_search">Messages durchsuchen</string>
+
     <!-- Languages -->
     <string name="lang_turkish">Türkçe</string>
     <string name="lang_portuguese">Português</string>

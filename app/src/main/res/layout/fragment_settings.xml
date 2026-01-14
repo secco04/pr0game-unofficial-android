@@ -21,484 +21,137 @@
             android:textStyle="bold"
             android:layout_marginBottom="24dp" />
 
-        <!-- Language Section -->
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/language"
-            android:textSize="18sp"
-            android:textColor="#64b5f6"
-            android:textStyle="bold"
-            android:layout_marginBottom="8dp" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/language_desc"
-            android:textSize="12sp"
-            android:textColor="#aaaaaa"
-            android:layout_marginBottom="12dp" />
-
-        <Spinner
-            android:id="@+id/spinnerLanguage"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:background="#16213e"
-            android:padding="12dp"
-            android:layout_marginBottom="24dp" />
-
-        <!-- Button Bar Configuration -->
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/button_bar"
-            android:textSize="18sp"
-            android:textColor="#64b5f6"
-            android:textStyle="bold"
-            android:layout_marginBottom="8dp" />
-
+        <!-- ========== LANGUAGE SECTION ========== -->
         <LinearLayout
+            android:id="@+id/sectionLanguageHeader"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center_vertical"
-            android:paddingVertical="8dp">
-
+            android:background="?attr/selectableItemBackground"
+            android:paddingVertical="8dp"
+            android:paddingHorizontal="12dp"
+            android:layout_marginBottom="2dp">
+            
+            <TextView
+                android:id="@+id/expandLanguage"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:text="▶"
+                android:textSize="14sp"
+                android:textColor="#64b5f6"
+                android:gravity="center" />
+            
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/two_row_buttons"
-                android:textSize="16sp"
-                android:textColor="#ffffff" />
-
-            <Switch
-                android:id="@+id/switchTwoRowButtons"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-        </LinearLayout>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/button_size"
-            android:textSize="14sp"
-            android:textColor="#ffffff"
-            android:layout_marginTop="12dp"
-            android:layout_marginBottom="8dp" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical">
-
-            <SeekBar
-                android:id="@+id/seekBarButtonSize"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:max="32"
-                android:progress="8" />
-
-            <TextView
-                android:id="@+id/tvButtonSizeValue"
-                android:layout_width="60dp"
-                android:layout_height="wrap_content"
-                android:text="56dp"
-                android:textColor="#ffffff"
-                android:gravity="end"
+                android:text="@string/language"
+                android:textSize="14sp"
+                android:textColor="#64b5f6"
+                android:textStyle="bold"
                 android:layout_marginStart="8dp" />
         </LinearLayout>
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/visible_buttons"
-            android:textSize="14sp"
-            android:textColor="#aaaaaa"
-            android:layout_marginTop="12dp"
-            android:layout_marginBottom="8dp" />
-
-        <!-- Button Toggles -->
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:paddingVertical="4dp">
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/btn_overview"
-                android:textSize="14sp"
-                android:textColor="#ffffff" />
-            <Switch
-                android:id="@+id/switchShowOverview"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:paddingVertical="4dp">
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/btn_empire"
-                android:textSize="14sp"
-                android:textColor="#ffffff" />
-            <Switch
-                android:id="@+id/switchShowEmpire"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:paddingVertical="4dp">
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/btn_buildings"
-                android:textSize="14sp"
-                android:textColor="#ffffff" />
-            <Switch
-                android:id="@+id/switchShowBuildings"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:paddingVertical="4dp">
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/btn_shipyard"
-                android:textSize="14sp"
-                android:textColor="#ffffff" />
-            <Switch
-                android:id="@+id/switchShowShipyard"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:paddingVertical="4dp">
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/btn_defense"
-                android:textSize="14sp"
-                android:textColor="#ffffff" />
-            <Switch
-                android:id="@+id/switchShowDefense"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:paddingVertical="4dp">
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/btn_research"
-                android:textSize="14sp"
-                android:textColor="#ffffff" />
-            <Switch
-                android:id="@+id/switchShowResearch"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:paddingVertical="4dp">
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/btn_fleet"
-                android:textSize="14sp"
-                android:textColor="#ffffff" />
-            <Switch
-                android:id="@+id/switchShowFleet"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:paddingVertical="4dp">
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/btn_galaxy"
-                android:textSize="14sp"
-                android:textColor="#ffffff" />
-            <Switch
-                android:id="@+id/switchShowGalaxy"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:paddingVertical="4dp">
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/btn_messages"
-                android:textSize="14sp"
-                android:textColor="#ffffff" />
-            <Switch
-                android:id="@+id/switchShowMessages"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:paddingVertical="4dp">
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/btn_spy_reports"
-                android:textSize="14sp"
-                android:textColor="#ffffff" />
-            <Switch
-                android:id="@+id/switchShowSpyReports"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-        </LinearLayout>
-
-        <!-- Galaxy View Section -->
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/galaxy_view"
-            android:textSize="18sp"
-            android:textColor="#64b5f6"
-            android:textStyle="bold"
-            android:layout_marginTop="24dp"
-            android:layout_marginBottom="8dp" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:paddingVertical="8dp">
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/galaxy_formatter"
-                android:textSize="16sp"
-                android:textColor="#ffffff" />
-
-            <Switch
-                android:id="@+id/switchGalaxyFormatter"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-        </LinearLayout>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/galaxy_formatter_desc"
-            android:textSize="12sp"
-            android:textColor="#aaaaaa"
-            android:layout_marginBottom="16dp" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:paddingVertical="8dp">
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/galaxy_navigation"
-                android:textSize="16sp"
-                android:textColor="#ffffff" />
-
-            <Switch
-                android:id="@+id/switchGalaxyNavigation"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-        </LinearLayout>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/galaxy_navigation_desc"
-            android:textSize="12sp"
-            android:textColor="#aaaaaa"
-            android:layout_marginBottom="16dp" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/loading_delay"
-            android:textSize="14sp"
-            android:textColor="#ffffff"
-            android:layout_marginBottom="8dp" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical">
-
-            <SeekBar
-                android:id="@+id/seekBarDelay"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1" />
-
-            <TextView
-                android:id="@+id/tvDelayValue"
-                android:layout_width="60dp"
-                android:layout_height="wrap_content"
-                android:text="0ms"
-                android:textColor="#ffffff"
-                android:gravity="end"
-                android:layout_marginStart="8dp" />
-        </LinearLayout>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/row_height"
-            android:textSize="14sp"
-            android:textColor="#ffffff"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="8dp" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical">
-
-            <SeekBar
-                android:id="@+id/seekBarRowHeight"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1" />
-
-            <TextView
-                android:id="@+id/tvRowHeightValue"
-                android:layout_width="60dp"
-                android:layout_height="wrap_content"
-                android:text="30px"
-                android:textColor="#ffffff"
-                android:gravity="end"
-                android:layout_marginStart="8dp" />
-        </LinearLayout>
-
-        <!-- UI Customization -->
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/ui_customization"
-            android:textSize="18sp"
-            android:textColor="#64b5f6"
-            android:textStyle="bold"
-            android:layout_marginTop="24dp"
-            android:layout_marginBottom="8dp" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:paddingVertical="8dp">
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/hide_planet_selector"
-                android:textSize="16sp"
-                android:textColor="#ffffff" />
-
-            <Switch
-                android:id="@+id/switchHidePlanetSelector"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:paddingVertical="8dp">
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/hide_message_banner"
-                android:textSize="16sp"
-                android:textColor="#ffffff" />
-
-            <Switch
-                android:id="@+id/switchHideMessageBanner"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-        </LinearLayout>
-
-        <LinearLayout
+            android:id="@+id/sectionLanguageContent"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingVertical="8dp">
+            android:paddingStart="40dp"
+            android:paddingEnd="16dp"
+            android:paddingBottom="16dp"
+            android:visibility="gone">
+
+            <Spinner
+                android:id="@+id/spinnerLanguage"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:background="#16213e"
+                android:paddingVertical="8dp"
+            android:paddingHorizontal="12dp" />
+        </LinearLayout>
+
+        <!-- Divider -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#1a1a2e"
+            android:layout_marginVertical="8dp" />
+
+        <!-- ========== BUTTON BAR SECTION ========== -->
+        <LinearLayout
+            android:id="@+id/sectionButtonBarHeader"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:background="?attr/selectableItemBackground"
+            android:paddingVertical="8dp"
+            android:paddingHorizontal="12dp"
+            android:layout_marginBottom="2dp">
+            
+            <TextView
+                android:id="@+id/expandButtonBar"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:text="▶"
+                android:textSize="14sp"
+                android:textColor="#64b5f6"
+                android:gravity="center" />
+            
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/button_bar"
+                android:textSize="16sp"
+                android:textColor="#64b5f6"
+                android:textStyle="bold"
+                android:layout_marginStart="8dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/sectionButtonBarContent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingStart="40dp"
+            android:paddingEnd="16dp"
+            android:paddingBottom="16dp"
+            android:visibility="gone">
+
+            <!-- Two Row Switch -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:paddingVertical="8dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/two_row_buttons"
+                    android:textSize="14sp"
+                    android:textColor="#ffffff" />
+
+                <Switch
+                    android:id="@+id/switchTwoRowButtons"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <!-- Button Size -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/button_size"
+                android:textSize="14sp"
+                android:textColor="#ffffff"
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="8dp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -506,42 +159,481 @@
                 android:orientation="horizontal"
                 android:gravity="center_vertical">
 
-                <TextView
+                <SeekBar
+                    android:id="@+id/seekBarButtonSize"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="@string/fullscreen_mode"
-                    android:textSize="16sp"
-                    android:textColor="#ffffff" />
+                    android:max="32"
+                    android:progress="8" />
 
-                <Switch
-                    android:id="@+id/switchFullscreen"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                <TextView
+                    android:id="@+id/tvButtonSizeValue"
+                    android:layout_width="60dp"
+                    android:layout_height="wrap_content"
+                    android:text="56dp"
+                    android:textColor="#ffffff"
+                    android:gravity="end"
+                    android:layout_marginStart="8dp" />
             </LinearLayout>
+
+            <!-- First Row Buttons Count -->
+            <TextView
+                android:id="@+id/tvFirstRowButtonsLabel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/first_row_buttons"
+                android:textSize="14sp"
+                android:textColor="#ffffff"
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="8dp"
+                android:visibility="gone" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <SeekBar
+                    android:id="@+id/seekBarFirstRowButtons"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:max="10"
+                    android:progress="5"
+                    android:visibility="gone" />
+
+                <TextView
+                    android:id="@+id/tvFirstRowButtonsValue"
+                    android:layout_width="60dp"
+                    android:layout_height="wrap_content"
+                    android:text="6"
+                    android:textColor="#ffffff"
+                    android:gravity="end"
+                    android:layout_marginStart="8dp"
+                    android:visibility="gone" />
+            </LinearLayout>
+
+            <!-- Button Toggles -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/visible_buttons"
+                android:textSize="14sp"
+                android:textColor="#aaaaaa"
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="8dp" />
+
+            <include layout="@layout/button_toggles" />
+        </LinearLayout>
+
+        <!-- Divider -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#1a1a2e"
+            android:layout_marginVertical="8dp" />
+
+        <!-- ========== UI CUSTOMIZATION SECTION ========== -->
+        <LinearLayout
+            android:id="@+id/sectionUIHeader"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:background="?attr/selectableItemBackground"
+            android:paddingVertical="8dp"
+            android:paddingHorizontal="12dp"
+            android:layout_marginBottom="2dp">
+            
+            <TextView
+                android:id="@+id/expandUI"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:text="▶"
+                android:textSize="14sp"
+                android:textColor="#64b5f6"
+                android:gravity="center" />
+            
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/ui_customization"
+                android:textSize="16sp"
+                android:textColor="#64b5f6"
+                android:textStyle="bold"
+                android:layout_marginStart="8dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/sectionUIContent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingStart="40dp"
+            android:paddingEnd="16dp"
+            android:paddingBottom="16dp"
+            android:visibility="gone">
+
+            <include layout="@layout/ui_customization_options" />
+        </LinearLayout>
+
+        <!-- Divider -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#1a1a2e"
+            android:layout_marginVertical="8dp" />
+
+        <!-- ========== MESSAGE CATEGORIES SECTION ========== -->
+        <LinearLayout
+            android:id="@+id/sectionMessageCategoriesHeader"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:background="?attr/selectableItemBackground"
+            android:paddingVertical="8dp"
+            android:paddingHorizontal="12dp"
+            android:layout_marginBottom="2dp">
+            
+            <TextView
+                android:id="@+id/expandMessageCategories"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:text="▶"
+                android:textSize="14sp"
+                android:textColor="#64b5f6"
+                android:gravity="center" />
+            
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/message_categories"
+                android:textSize="16sp"
+                android:textColor="#64b5f6"
+                android:textStyle="bold"
+                android:layout_marginStart="8dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/sectionMessageCategoriesContent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingStart="40dp"
+            android:paddingEnd="16dp"
+            android:paddingBottom="16dp"
+            android:visibility="gone">
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/fullscreen_mode_desc"
+                android:text="@string/message_categories_desc"
                 android:textSize="12sp"
                 android:textColor="#aaaaaa"
-                android:layout_marginTop="4dp" />
+                android:layout_marginBottom="12dp" />
+
+            <include layout="@layout/message_category_toggles" />
         </LinearLayout>
 
-        <!-- App Info -->
+        <!-- Divider -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#1a1a2e"
+            android:layout_marginVertical="8dp" />
+
+        <!-- ========== GALAXY SECTION ========== -->
+        <LinearLayout
+            android:id="@+id/sectionGalaxyHeader"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:background="?attr/selectableItemBackground"
+            android:paddingVertical="8dp"
+            android:paddingHorizontal="12dp"
+            android:layout_marginBottom="2dp">
+            
+            <TextView
+                android:id="@+id/expandGalaxy"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:text="▶"
+                android:textSize="14sp"
+                android:textColor="#64b5f6"
+                android:gravity="center" />
+            
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/galaxy_view"
+                android:textSize="16sp"
+                android:textColor="#64b5f6"
+                android:textStyle="bold"
+                android:layout_marginStart="8dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/sectionGalaxyContent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingStart="40dp"
+            android:paddingEnd="16dp"
+            android:paddingBottom="16dp"
+            android:visibility="gone">
+
+            <include layout="@layout/galaxy_settings" />
+        </LinearLayout>
+
+        <!-- Divider -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#1a1a2e"
+            android:layout_marginVertical="8dp" />
+
+        <!-- ========== EMPIRE SECTION ========== -->
+        <LinearLayout
+            android:id="@+id/sectionEmpireHeader"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:background="?attr/selectableItemBackground"
+            android:paddingVertical="8dp"
+            android:paddingHorizontal="12dp"
+            android:layout_marginBottom="2dp">
+            
+            <TextView
+                android:id="@+id/expandEmpire"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:text="▶"
+                android:textSize="14sp"
+                android:textColor="#64b5f6"
+                android:gravity="center" />
+            
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/empire_view"
+                android:textSize="16sp"
+                android:textColor="#64b5f6"
+                android:textStyle="bold"
+                android:layout_marginStart="8dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/sectionEmpireContent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingStart="40dp"
+            android:paddingEnd="16dp"
+            android:paddingBottom="16dp"
+            android:visibility="gone">
+
+            <include layout="@layout/empire_settings" />
+        </LinearLayout>
+
+        <!-- Divider -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#1a1a2e"
+            android:layout_marginVertical="8dp" />
+
+        <!-- ========== FLEET SECTION ========== -->
+        <LinearLayout
+            android:id="@+id/sectionFleetHeader"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:background="?attr/selectableItemBackground"
+            android:paddingVertical="8dp"
+            android:paddingHorizontal="12dp"
+            android:layout_marginBottom="2dp">
+            
+            <TextView
+                android:id="@+id/expandFleet"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:text="▶"
+                android:textSize="14sp"
+                android:textColor="#64b5f6"
+                android:gravity="center" />
+            
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/fleet_view"
+                android:textSize="16sp"
+                android:textColor="#64b5f6"
+                android:textStyle="bold"
+                android:layout_marginStart="8dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/sectionFleetContent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingStart="40dp"
+            android:paddingEnd="16dp"
+            android:paddingBottom="16dp"
+            android:visibility="gone">
+
+            <include layout="@layout/fleet_settings" />
+        </LinearLayout>
+
+        <!-- Divider -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#1a1a2e"
+            android:layout_marginVertical="8dp" />
+
+        <!-- ========== DATA SECTION ========== -->
+        <LinearLayout
+            android:id="@+id/sectionDataHeader"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:background="?attr/selectableItemBackground"
+            android:paddingVertical="8dp"
+            android:paddingHorizontal="12dp"
+            android:layout_marginBottom="2dp">
+            
+            <TextView
+                android:id="@+id/expandData"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:text="▶"
+                android:textSize="14sp"
+                android:textColor="#64b5f6"
+                android:gravity="center" />
+            
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/data"
+                android:textSize="16sp"
+                android:textColor="#64b5f6"
+                android:textStyle="bold"
+                android:layout_marginStart="8dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/sectionDataContent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingStart="40dp"
+            android:paddingEnd="16dp"
+            android:paddingBottom="16dp"
+            android:visibility="gone">
+
+            <!-- Auto-Login Credentials -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/auto_login_credentials"
+                android:textSize="14sp"
+                android:textColor="#ffffff"
+                android:textStyle="bold"
+                android:layout_marginBottom="8dp" />
+            
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/auto_login_desc"
+                android:textSize="12sp"
+                android:textColor="#aaaaaa"
+                android:layout_marginBottom="12dp" />
+
+            <EditText
+                android:id="@+id/etLoginUsername"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/username"
+                android:textColor="#ffffff"
+                android:textColorHint="#666666"
+                android:background="#16213e"
+                android:padding="12dp"
+                android:inputType="textEmailAddress"
+                android:layout_marginBottom="8dp" />
+
+            <EditText
+                android:id="@+id/etLoginPassword"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/password"
+                android:textColor="#ffffff"
+                android:textColorHint="#666666"
+                android:background="#16213e"
+                android:padding="12dp"
+                android:inputType="textPassword"
+                android:layout_marginBottom="16dp" />
+
+            <Button
+                android:id="@+id/btnSaveLoginCredentials"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/save_credentials"
+                android:textColor="#ffffff"
+                android:backgroundTint="#4CAF50"
+                android:layout_marginBottom="24dp" />
+
+            <Button
+                android:id="@+id/btnClearCache"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/clear_cache"
+                android:textColor="#ffffff"
+                android:backgroundTint="#ff6b6b"
+                android:layout_marginBottom="12dp" />
+            
+            <Button
+                android:id="@+id/btnResetSettings"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/reset_settings"
+                android:textColor="#ffffff"
+                android:backgroundTint="#ff9800" />
+        </LinearLayout>
+
+        <!-- Divider -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#1a1a2e"
+            android:layout_marginVertical="8dp" />
+
+        <!-- App Info (Always visible) -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/app_info"
-            android:textSize="18sp"
+            android:textSize="16sp"
             android:textColor="#64b5f6"
             android:textStyle="bold"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="12dp"
             android:layout_marginBottom="8dp" />
 
         <TextView
-            android:id="@+id/tvVersion"
+            android:id="@+id/tvAppVersion"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/version"
@@ -549,35 +641,14 @@
             android:textColor="#aaaaaa"
             android:layout_marginBottom="16dp" />
 
-        <!-- Data -->
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/data"
-            android:textSize="18sp"
-            android:textColor="#64b5f6"
-            android:textStyle="bold"
-            android:layout_marginTop="24dp"
-            android:layout_marginBottom="8dp" />
-
-        <Button
-            android:id="@+id/btnClearCache"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/clear_cache"
-            android:textColor="#ffffff"
-            android:backgroundTint="#FF4444"
-            android:layout_marginBottom="16dp" />
-
-        <!-- Support -->
+        <!-- Support Section (Always visible) -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/support"
-            android:textSize="18sp"
+            android:textSize="16sp"
             android:textColor="#64b5f6"
             android:textStyle="bold"
-            android:layout_marginTop="24dp"
             android:layout_marginBottom="8dp" />
 
         <TextView
@@ -589,13 +660,13 @@
             android:layout_marginBottom="12dp" />
 
         <Button
-            android:id="@+id/btnDonate"
+            android:id="@+id/btnBuyCoffee"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="56dp"
             android:text="@string/buy_coffee"
             android:textColor="#ffffff"
-            android:backgroundTint="#FFDD00"
-            android:layout_marginBottom="16dp" />
+            android:backgroundTint="#4CAF50"
+            android:layout_marginBottom="24dp" />
 
         <!-- Close Button -->
         <Button
@@ -604,8 +675,7 @@
             android:layout_height="wrap_content"
             android:text="@string/settings_close"
             android:textColor="#ffffff"
-            android:backgroundTint="#64b5f6"
-            android:layout_marginTop="24dp" />
+            android:backgroundTint="#16213e" />
 
     </LinearLayout>
 </ScrollView>

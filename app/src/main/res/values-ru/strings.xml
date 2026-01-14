@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">pr0game Unofficial</string>
-    
+    <!-- App -->
+    <string name="app_name">pr0game (unofficial)</string>
+    <string name="settings_title">Настройки</string>
+
     <!-- Buttons -->
     <string name="btn_overview">Обзор</string>
     <string name="btn_empire">Империя</string>
@@ -12,40 +14,80 @@
     <string name="btn_fleet">Флот</string>
     <string name="btn_galaxy">Галактика</string>
     <string name="btn_messages">Сообщения</string>
-    <string name="btn_spy_reports">Шпионские Отчеты</string>
-    <string name="btn_swipe_lock">Блокировка</string>
-    <string name="btn_settings">Настройки</string>
-    
-    <!-- Settings -->
-    <string name="settings_title">Настройки</string>
+    <string name="btn_spy_reports">Spionageberichte</string>
+    <string name="btn_swipe_lock">Swipe Lock</string>
+    <string name="btn_settings">Settings</string>
     <string name="settings_close">Закрыть</string>
-    <string name="galaxy_view">Вид Галактики</string>
-    <string name="galaxy_formatter">Форматирование Галактики</string>
-    <string name="galaxy_formatter_desc">Оптимизирует отображение галактики</string>
-    <string name="galaxy_navigation">Навигация Свайпом по Галактике</string>
-    <string name="galaxy_navigation_desc">Свайп между системами при блокировке</string>
-    <string name="loading_delay">Задержка Анимации Загрузки</string>
-    <string name="row_height">Высота Строки</string>
-    <string name="ui_customization">Настройка Интерфейса</string>
-    <string name="hide_planet_selector">Скрыть Меню Планет</string>
-    <string name="hide_message_banner">Скрыть Баннер Сообщений</string>
-    <string name="button_bar">Панель Кнопок</string>
-    <string name="two_row_buttons">Показать Два Ряда</string>
-    <string name="visible_buttons">Выбрать Видимые Кнопки</string>
-    <string name="language">Язык</string>
-    <string name="language_desc">Выбрать язык интерфейса</string>
-    <string name="app_info">Информация о Приложении</string>
-    <string name="version">Версия</string>
-    <string name="data">Данные</string>
-    <string name="clear_cache">Очистить Кэш Планет (Повторный Вход)</string>
-    <string name="support">Поддержка</string>
-    <string name="support_desc">Нравится приложение? Поддержите разработку!</string>
-    <string name="buy_coffee">☕ Купите мне кофе</string>
-    <string name="swipe_locked">Навигация планет заблокирована</string>
-    <string name="swipe_unlocked">Навигация планет разблокирована</string>
-    <string name="cache_cleared">Кэш очищен! Войдите снова.</string>
-    <string name="browser_error">Не удалось открыть браузер</string>
-    
+
+    <!-- Galaxy -->
+    <string name="galaxy_view">Галактикаansicht</string>
+    <string name="galaxy_formatter">Галактика-Formatter</string>
+    <string name="galaxy_formatter_desc">Optimizes galaxy display</string>
+    <string name="galaxy_navigation">Галактика-Navigation</string>
+    <string name="galaxy_navigation_desc">Swipe between systems when locked</string>
+    <string name="loading_delay">Ladeverzögerung</string>
+    <string name="row_height">Zeilenhöhe</string>
+
+    <!-- UI Customization -->
+    <string name="ui_customization">UI-Anpassung</string>
+    <string name="hide_planet_selector">Planetenauswahl ausblenden</string>
+    <string name="hide_message_banner">Сообщенияbanner ausblenden</string>
+    <string name="fullscreen_mode">Vollbildmodus</string>
+    <string name="fullscreen_mode_desc">Navigationsleiste ausblenden (App-Neustart erforderlich)</string>
+
+    <!-- Button Bar -->
+    <string name="button_bar">Button-Leiste</string>
+    <string name="two_row_buttons">Zwei Zeilen anzeigen</string>
+    <string name="visible_buttons">Sichtbare Buttons auswählen</string>
+    <string name="button_size">Button-Größe</string>
+    <string name="first_row_buttons">Buttons in erster Zeile</string>
+
+    <!-- Language -->
+    <string name="language">Sprache</string>
+    <string name="language_desc">Oberflächensprache auswählen</string>
+
+    <!-- App Info -->
+    <string name="app_info">App-Info</string>
+    <string name="version">Version</string>
+
+    <!-- Data -->
+    <string name="data">Daten</string>
+    <string name="clear_cache">Planeten-Cache leeren (Neu anmelden)</string>
+
+    <!-- Support -->
+    <string name="support">Unterstützung</string>
+    <string name="support_desc">Gefällt dir die App? Unterstütze die Entwicklung!</string>
+    <string name="buy_coffee">☕ Spendiere mir einen Kaffee</string>
+    <string name="swipe_locked">Planetennavigation gesperrt</string>
+    <string name="swipe_unlocked">Planetennavigation entsperrt</string>
+    <string name="cache_cleared">Cache geleert! Bitte erneut anmelden.</string>
+    <string name="browser_error">Browser konnte nicht geöffnet werden</string>
+
+    <!-- Screen Orientation -->
+    <string name="screen_orientation">Bildschirm-Ausrichtung</string>
+    <string name="screen_orientation_desc">Bildschirmdrehung sperren</string>
+    <string name="orientation_auto">Automatisch (System)</string>
+    <string name="orientation_portrait">Hochformat</string>
+    <string name="orientation_landscape">Querformat</string>
+
+    <!-- Message Categories -->
+    <string name="message_categories">Сообщенияkategorien</string>
+    <string name="message_categories_desc">Сообщенияkategorien ein-/ausblenden (AN = sichtbar)</string>
+    <string name="category_spy_reports">Spionageberichte</string>
+    <string name="category_spy_defense">Spionageabwehr</string>
+    <string name="category_player">Spieler-Сообщения</string>
+    <string name="category_alliance">Allianz-Сообщения</string>
+    <string name="category_combat">Kampfberichte</string>
+    <string name="category_system">System-Сообщения</string>
+    <string name="category_transport">Transport</string>
+    <string name="category_foreign_transport">Fremdtransport</string>
+    <string name="category_expedition">Expeditionsberichte</string>
+    <string name="category_game">Game-Сообщения</string>
+    <string name="category_build_queue">Bauschleife</string>
+    <string name="category_all">Alle Сообщения</string>
+    <string name="category_favorites">Favoriten</string>
+    <string name="category_search">Сообщения durchsuchen</string>
+
     <!-- Languages -->
     <string name="lang_turkish">Türkçe</string>
     <string name="lang_portuguese">Português</string>

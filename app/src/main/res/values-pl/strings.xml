@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">pr0game Unofficial</string>
-    
+    <!-- App -->
+    <string name="app_name">pr0game (unofficial)</string>
+    <string name="settings_title">Ustawienia</string>
+
     <!-- Buttons -->
     <string name="btn_overview">Przegląd</string>
     <string name="btn_empire">Imperium</string>
@@ -12,40 +14,80 @@
     <string name="btn_fleet">Flota</string>
     <string name="btn_galaxy">Galaktyka</string>
     <string name="btn_messages">Wiadomości</string>
-    <string name="btn_spy_reports">Raporty Szpiegowskie</string>
-    <string name="btn_swipe_lock">Blokada</string>
-    <string name="btn_settings">Ustawienia</string>
-    
-    <!-- Settings -->
-    <string name="settings_title">Ustawienia</string>
+    <string name="btn_spy_reports">Spionageberichte</string>
+    <string name="btn_swipe_lock">Swipe Lock</string>
+    <string name="btn_settings">Settings</string>
     <string name="settings_close">Zamknij</string>
-    <string name="galaxy_view">Widok Galaktyki</string>
-    <string name="galaxy_formatter">Formatowanie Galaktyki</string>
-    <string name="galaxy_formatter_desc">Optymalizuje wyświetlanie galaktyki</string>
-    <string name="galaxy_navigation">Nawigacja Przesuwania Galaktyki</string>
-    <string name="galaxy_navigation_desc">Przesuwaj między systemami gdy zablokowane</string>
-    <string name="loading_delay">Opóźnienie Animacji Ładowania</string>
-    <string name="row_height">Wysokość Wiersza</string>
-    <string name="ui_customization">Dostosowanie Interfejsu</string>
-    <string name="hide_planet_selector">Ukryj Menu Planet</string>
-    <string name="hide_message_banner">Ukryj Banner Wiadomości</string>
-    <string name="button_bar">Pasek Przycisków</string>
-    <string name="two_row_buttons">Pokaż Dwa Wiersze</string>
-    <string name="visible_buttons">Wybierz Widoczne Przyciski</string>
-    <string name="language">Język</string>
-    <string name="language_desc">Wybierz język interfejsu</string>
-    <string name="app_info">Informacje o Aplikacji</string>
-    <string name="version">Wersja</string>
-    <string name="data">Dane</string>
-    <string name="clear_cache">Wyczyść Pamięć Podręczną Planet (Zaloguj się ponownie)</string>
-    <string name="support">Wsparcie</string>
-    <string name="support_desc">Podoba Ci się aplikacja? Wesprzyj rozwój!</string>
-    <string name="buy_coffee">☕ Postaw mi kawę</string>
-    <string name="swipe_locked">Nawigacja planet zablokowana</string>
-    <string name="swipe_unlocked">Nawigacja planet odblokowana</string>
-    <string name="cache_cleared">Pamięć podręczna wyczyszczona! Zaloguj się ponownie.</string>
-    <string name="browser_error">Nie można otworzyć przeglądarki</string>
-    
+
+    <!-- Galaxy -->
+    <string name="galaxy_view">Galaktykaansicht</string>
+    <string name="galaxy_formatter">Galaktyka-Formatter</string>
+    <string name="galaxy_formatter_desc">Optimizes galaxy display</string>
+    <string name="galaxy_navigation">Galaktyka-Navigation</string>
+    <string name="galaxy_navigation_desc">Swipe between systems when locked</string>
+    <string name="loading_delay">Ladeverzögerung</string>
+    <string name="row_height">Zeilenhöhe</string>
+
+    <!-- UI Customization -->
+    <string name="ui_customization">UI-Anpassung</string>
+    <string name="hide_planet_selector">Planetenauswahl ausblenden</string>
+    <string name="hide_message_banner">Wiadomościbanner ausblenden</string>
+    <string name="fullscreen_mode">Vollbildmodus</string>
+    <string name="fullscreen_mode_desc">Navigationsleiste ausblenden (App-Neustart erforderlich)</string>
+
+    <!-- Button Bar -->
+    <string name="button_bar">Button-Leiste</string>
+    <string name="two_row_buttons">Zwei Zeilen anzeigen</string>
+    <string name="visible_buttons">Sichtbare Buttons auswählen</string>
+    <string name="button_size">Button-Größe</string>
+    <string name="first_row_buttons">Buttons in erster Zeile</string>
+
+    <!-- Language -->
+    <string name="language">Sprache</string>
+    <string name="language_desc">Oberflächensprache auswählen</string>
+
+    <!-- App Info -->
+    <string name="app_info">App-Info</string>
+    <string name="version">Version</string>
+
+    <!-- Data -->
+    <string name="data">Daten</string>
+    <string name="clear_cache">Planeten-Cache leeren (Neu anmelden)</string>
+
+    <!-- Support -->
+    <string name="support">Unterstützung</string>
+    <string name="support_desc">Gefällt dir die App? Unterstütze die Entwicklung!</string>
+    <string name="buy_coffee">☕ Spendiere mir einen Kaffee</string>
+    <string name="swipe_locked">Planetennavigation gesperrt</string>
+    <string name="swipe_unlocked">Planetennavigation entsperrt</string>
+    <string name="cache_cleared">Cache geleert! Bitte erneut anmelden.</string>
+    <string name="browser_error">Browser konnte nicht geöffnet werden</string>
+
+    <!-- Screen Orientation -->
+    <string name="screen_orientation">Bildschirm-Ausrichtung</string>
+    <string name="screen_orientation_desc">Bildschirmdrehung sperren</string>
+    <string name="orientation_auto">Automatisch (System)</string>
+    <string name="orientation_portrait">Hochformat</string>
+    <string name="orientation_landscape">Querformat</string>
+
+    <!-- Message Categories -->
+    <string name="message_categories">Wiadomościkategorien</string>
+    <string name="message_categories_desc">Wiadomościkategorien ein-/ausblenden (AN = sichtbar)</string>
+    <string name="category_spy_reports">Spionageberichte</string>
+    <string name="category_spy_defense">Spionageabwehr</string>
+    <string name="category_player">Spieler-Wiadomości</string>
+    <string name="category_alliance">Allianz-Wiadomości</string>
+    <string name="category_combat">Kampfberichte</string>
+    <string name="category_system">System-Wiadomości</string>
+    <string name="category_transport">Transport</string>
+    <string name="category_foreign_transport">Fremdtransport</string>
+    <string name="category_expedition">Expeditionsberichte</string>
+    <string name="category_game">Game-Wiadomości</string>
+    <string name="category_build_queue">Bauschleife</string>
+    <string name="category_all">Alle Wiadomości</string>
+    <string name="category_favorites">Favoriten</string>
+    <string name="category_search">Wiadomości durchsuchen</string>
+
     <!-- Languages -->
     <string name="lang_turkish">Türkçe</string>
     <string name="lang_portuguese">Português</string>

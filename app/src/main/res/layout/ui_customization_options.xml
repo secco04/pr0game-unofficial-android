@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <!-- Hide Planet Selector -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingVertical="8dp">
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/hide_planet_selector"
+            android:textSize="14sp"
+            android:textColor="#ffffff" />
+        <Switch
+            android:id="@+id/switchHidePlanetSelector"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <!-- Hide Message Banner -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingVertical="8dp">
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/hide_message_banner"
+            android:textSize="14sp"
+            android:textColor="#ffffff" />
+        <Switch
+            android:id="@+id/switchHideMessageBanner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <!-- Fullscreen Mode -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingVertical="8dp">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/fullscreen_mode"
+                android:textSize="14sp"
+                android:textColor="#ffffff" />
+            <Switch
+                android:id="@+id/switchFullscreen"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/fullscreen_mode_desc"
+            android:textSize="12sp"
+            android:textColor="#aaaaaa"
+            android:layout_marginTop="4dp" />
+    </LinearLayout>
+
+    <!-- Screen Orientation -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingVertical="8dp">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/screen_orientation"
+            android:textSize="14sp"
+            android:textColor="#ffffff"
+            android:layout_marginBottom="8dp" />
+        <Spinner
+            android:id="@+id/spinnerOrientation"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:background="#16213e"
+            android:padding="12dp" />
+    </LinearLayout>
+
+</LinearLayout>
